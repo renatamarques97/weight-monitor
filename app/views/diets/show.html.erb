@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @diet.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @diet.end_date %>
+</p>
+
+<p>
+  <strong>Initial weight:</strong>
+  <%= @diet.initial_weight %>
+</p>
+
+<p>
+  <strong>Target weight:</strong>
+  <%= @diet.target_weight %>
+</p>
+
+<p>
+  <strong>Height:</strong>
+  <%= @diet.height %>
+</p>
+
+<%= link_to 'Edit', edit_diet_path(@diet) %> |
+<%= link_to 'Back', diets_path %>
