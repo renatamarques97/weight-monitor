@@ -40,5 +40,8 @@ yarn-debug.log*
 *.swo
 *.swn
 
-# Ignore Log folder
+# Ignore log folder
 /log/*
+
+# Ignore simplecov folder
+/coverage
