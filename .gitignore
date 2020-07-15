@@ -45,3 +45,7 @@ yarn-debug.log*
 
 # Ignore simplecov folder
 /coverage
+
+# Ignore MacOS files
+.DS_Store
+
