@@ -1,5 +1,11 @@
 # Weight Monitor
-...
+This is a web solution for managing diets and
+weight monitoring. The system allows the
+registration and updating of a diet, which has a predetermined
+beginning and end, in addition to the idealized weight.
+During the diet period, the user must periodically inform his weight.
+From that information, the system presents a graph of the
+evolution of weight over the period of the diet.
 
 ### Ruby version
 ```
