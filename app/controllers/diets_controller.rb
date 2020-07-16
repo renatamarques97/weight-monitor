@@ -7,17 +7,10 @@ class DietsController < ApplicationController
     @diets = Diet.all
   end
 
-  # GET /diets/1
-  def show
-  end
-
   # GET /diets/new
   def new
     @diet = Diet.new
-  end
-
-  # GET /diets/1/edit
-  def edit
+    @diet.build_meal
   end
 
   # POST /diets
@@ -64,6 +57,15 @@ class DietsController < ApplicationController
   end
 
   def diet_params
-    params.require(:diet).permit(:start_date, :end_date, :initial_weight, :target_weight, :height, :user_id)
+    params.require(:diet)
+    .permit(
+      :start_date,
+      :end_date,
+      :initial_weight,
+      :target_weight,
+      :height,
+      :user_id,
+      meal_attributes: %i[schedule description meal_type _destroy]
+    )
   end
 end

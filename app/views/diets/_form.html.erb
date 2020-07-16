@@ -1,7 +1,10 @@
 <%= form_with(model: diet, local: true) do |form| %>
   <% if diet.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(diet.errors.count, "error") %> prohibited this diet from being saved:</h2>
+      <h2>
+        <%= pluralize(diet.errors.count, "error") %>
+        prohibited this diet from being saved:
+      </h2>
 
       <ul>
         <% diet.errors.full_messages.each do |message| %>
@@ -11,14 +14,15 @@
     </div>
   <% end %>
 
+  <h3>Diet</h3>
   <div class="field">
     <%= form.label :start_date %>
-    <%= form.date_select :start_date %>
+    <%= form.date_field :start_date %>
   </div>
 
   <div class="field">
     <%= form.label :end_date %>
-    <%= form.date_select :end_date %>
+    <%= form.date_field :end_date %>
   </div>
 
   <div class="field">
@@ -37,6 +41,28 @@
   </div>
 
   <%= form.hidden_field :user_id, :value => current_user.id %>
+
+  <h3>Meals</h3>
+  <%= form.fields_for :meal do |ff| %>
+    <div class="field">
+      <%= ff.label :schedule %>
+      <%= ff.time_field :schedule %>
+    </div>
+
+    <div class="field">
+      <%= ff.label :description %>
+      <%= ff.text_field :description %>
+    </div>
+
+    <div class="field">
+      <%= ff.label :meal_type %>
+      <%= ff.select :meal_type, Meal.meal_type.options %>
+    </div>
+
+    <div class="actions">
+      <%= ff.submit %>
+    </div>
+  <% end %>
 
   <div class="actions">
     <%= form.submit %>
