@@ -4,7 +4,7 @@ class CreateMeals < ActiveRecord::Migration[6.0]
       t.time :schedule, null: false
       t.text :description, null: false
       t.integer :meal_type, null: false
-      t.references :diet, null: false, foreign_key: true
+      t.references :diet, null: false, index: true, foreign_key: true
 
       t.timestamps
     end
