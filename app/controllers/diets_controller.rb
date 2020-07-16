@@ -10,7 +10,7 @@ class DietsController < ApplicationController
   # GET /diets/new
   def new
     @diet = Diet.new
-    @diet.build_meal
+    @diet.meals.build
   end
 
   # POST /diets
@@ -65,7 +65,7 @@ class DietsController < ApplicationController
       :target_weight,
       :height,
       :user_id,
-      meal_attributes: %i[schedule description meal_type _destroy]
+      meals_attributes: %i[schedule description meal_type _destroy]
     )
   end
 end

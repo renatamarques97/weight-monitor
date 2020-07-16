@@ -42,27 +42,20 @@
 
   <%= form.hidden_field :user_id, :value => current_user.id %>
 
-  <h3>Meals</h3>
-  <%= form.fields_for :meal do |ff| %>
-    <div class="field">
-      <%= ff.label :schedule %>
-      <%= ff.time_field :schedule %>
-    </div>
+  <%= link_to_add_association 'add meal', form, :meals,
+    'data-association-insertion-node' => "#meals-diet ol",
+    'data-association-insertion-method' => "append",
+    :wrap_object => Proc.new { |m| m.build_diet; m } %>
+  <hr/>
 
-    <div class="field">
-      <%= ff.label :description %>
-      <%= ff.text_field :description %>
-    </div>
-
-    <div class="field">
-      <%= ff.label :meal_type %>
-      <%= ff.select :meal_type, Meal.meal_type.options %>
-    </div>
-
-    <div class="actions">
-      <%= ff.submit %>
-    </div>
-  <% end %>
+  <fieldset id="meals-diet">
+    <ol>
+      <h3>Meals</h3>
+      <%= form.fields_for :meals do |ff| %>
+        <%= render 'meal_fields', :f => ff %>
+      <% end %>
+    </ol>
+  </fieldset>
 
   <div class="actions">
     <%= form.submit %>
