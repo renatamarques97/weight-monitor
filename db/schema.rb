@@ -10,21 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_161205) do
+ActiveRecord::Schema.define(version: 2020_07_15_230258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "diets", force: :cascade do |t|
-    t.date "start_date", null: false
-    t.date "end_date", null: false
-    t.string "initial_weight", null: false
-    t.string "target_weight", null: false
+    t.date "start_date", default: "2020-07-16", null: false
+    t.date "end_date", default: "2020-07-16", null: false
+    t.integer "initial_weight", default: 0, null: false
+    t.integer "target_weight", default: 0, null: false
     t.integer "height"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_diets_on_user_id"
+  end
+
+  create_table "meals", force: :cascade do |t|
+    t.time "schedule", null: false
+    t.text "description", null: false
+    t.integer "meal_type", null: false
+    t.bigint "diet_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["diet_id"], name: "index_meals_on_diet_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -41,4 +51,5 @@ ActiveRecord::Schema.define(version: 2020_07_15_161205) do
   end
 
   add_foreign_key "diets", "users"
+  add_foreign_key "meals", "diets"
 end
