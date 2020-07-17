@@ -35,6 +35,19 @@ jobs:
             gem update --system
             gem install bundler
             bundle install --jobs=4 --retry=3 --path vendor/bundle
+            set -ou pipefail
+            export PATH="$HOME/.nodenv/bin:$PATH"
+            if [ ! -x ~/.nodenv/bin/nodenv ]
+            then
+            git clone https://github.com/nodenv/nodenv.git ~/.nodenv
+            mkdir -p "$(nodenv root)"/plugins
+            git clone https://github.com/nodenv/node-build.git "$(nodenv root)"/plugins/node-build
+            nodenv install 12.1.0
+            fi
+            eval "$(nodenv init -)"
+            nodenv local 12.1.0
+            sudo apt-get install -y yarn
+            yarn install
             bundle exec rails webpacker:compile
       - save_cache:
           paths:
