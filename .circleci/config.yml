@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/ruby:2.7.1
+      - image: circleci/ruby:2.7.1-node
         environment:
           RAILS_ENV: test
           PGHOST: 127.0.0.1
@@ -17,12 +17,12 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-    
+
     working_directory: ~/repo
-    
+
     steps:
       - checkout
-    
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -35,21 +35,23 @@ jobs:
             gem update --system
             gem install bundler
             bundle install --jobs=4 --retry=3 --path vendor/bundle
-            NODE_ENV=test bundle exec rails webpacker:compile
+            sudo apt-get install -y yarn
+            yarn install
+            bundle exec rails webpacker:compile
       - save_cache:
           paths:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-    
+
       # Database setup
       - run: bundle exec rake db:create
       - run: bundle exec rails db:migrate
       - run: bundle exec rake db:schema:load
-    
+
       # run tests!
       - run:
           name: run tests
-          command: |            
+          command: |
             mkdir /tmp/test-results
             TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | \
               circleci tests split --split-by=timings)"
