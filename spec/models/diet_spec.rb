@@ -10,5 +10,11 @@ RSpec.describe Diet, type: :model do
     it { is_expected.to validate_presence_of(:target_weight) }
     it { is_expected.to validate_presence_of(:start_date) }
     it { is_expected.to validate_presence_of(:end_date) }
+    it { is_expected.to validate_numericality_of(:initial_weight).is_greater_than(0) }
+    it { is_expected.to validate_numericality_of(:target_weight).is_greater_than(0) }
+  end
+
+  describe "nested attributes" do
+    it{ is_expected.to accept_nested_attributes_for(:meals) }
   end
 end

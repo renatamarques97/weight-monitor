@@ -1,3 +1,5 @@
+[![Build Status](https://circleci.com/gh/renatamarques97/weight-monitor.svg?style=svg)](https://app.circleci.com/pipelines/github/renatamarques97/weight-monitor)
+
 # Weight Monitor
 This is a web solution for managing diets and
 weight monitoring. The system allows the
