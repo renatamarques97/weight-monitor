@@ -17,12 +17,12 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-    
+
     working_directory: ~/repo
-    
+
     steps:
       - checkout
-    
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -36,16 +36,6 @@ jobs:
             gem install bundler
             bundle install --jobs=4 --retry=3 --path vendor/bundle
             set -ou pipefail
-            export PATH="$HOME/.nodenv/bin:$PATH"
-            if [ ! -x ~/.nodenv/bin/nodenv ]
-            then
-            git clone https://github.com/nodenv/nodenv.git ~/.nodenv
-            mkdir -p "$(nodenv root)"/plugins
-            git clone https://github.com/nodenv/node-build.git "$(nodenv root)"/plugins/node-build
-            nodenv install 12.1.0
-            fi
-            eval "$(nodenv init -)"
-            nodenv local 12.1.0
             sudo apt-get install -y yarn
             yarn install
             bundle exec rails webpacker:compile
@@ -53,16 +43,16 @@ jobs:
           paths:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-    
+
       # Database setup
       - run: bundle exec rake db:create
       - run: bundle exec rails db:migrate
       - run: bundle exec rake db:schema:load
-    
+
       # run tests!
       - run:
           name: run tests
-          command: |            
+          command: |
             mkdir /tmp/test-results
             TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | \
               circleci tests split --split-by=timings)"
