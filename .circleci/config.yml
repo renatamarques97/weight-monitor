@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/ruby:2.7.1
+      - image: circleci/ruby:2.7.1-node
         environment:
           RAILS_ENV: test
           PGHOST: 127.0.0.1
@@ -35,7 +35,6 @@ jobs:
             gem update --system
             gem install bundler
             bundle install --jobs=4 --retry=3 --path vendor/bundle
-            set -ou pipefail
             sudo apt-get install -y yarn
             yarn install
             bundle exec rails webpacker:compile
