@@ -17,27 +17,21 @@ class DietsController < ApplicationController
   def create
     @diet = Diet.new(diet_params)
 
-    respond_to do |format|
-      if @diet.save
-        format.html { redirect_to @diet, notice: 'Diet was successfully created.' }
-        format.json { render :show, status: :created, location: @diet }
-      else
-        format.html { render :new }
-        format.json { render json: @diet.errors, status: :unprocessable_entity }
-      end
+    if @diet.save
+      flash[:notice] = "Diet was successfully created."
+      redirect_to(root_path)
+    else
+      render :new
     end
   end
 
   # PATCH/PUT /diets/1
   def update
-    respond_to do |format|
-      if @diet.update(diet_params)
-        format.html { redirect_to @diet, notice: 'Diet was successfully updated.' }
-        format.json { render :show, status: :ok, location: @diet }
-      else
-        format.html { render :edit }
-        format.json { render json: @diet.errors, status: :unprocessable_entity }
-      end
+    if @diet.update(diet_params)
+      flash[:notice] = "Diet was successfully updated."
+      redirect_to(root_path)
+    else
+      render :edit
     end
   end
 
@@ -45,7 +39,7 @@ class DietsController < ApplicationController
   def destroy
     @diet.destroy
     respond_to do |format|
-      format.html { redirect_to diets_url, notice: 'Diet was successfully destroyed.' }
+      format.html { redirect_to root_path, notice: 'Diet was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
