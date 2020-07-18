@@ -1,0 +1,15 @@
+<%= render "menu" %>
+
+</br>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h6 class="">Hello, <%= current_user.name %></h6>
+    <h4 class="">Your Progress </h4>
+
+    <%= render file: 'diets/index', diets: @diets %>
+  </body>
+</html>
