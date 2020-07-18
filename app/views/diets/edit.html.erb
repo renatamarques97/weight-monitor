@@ -1,6 +1,12 @@
+<%= render "dashboard/menu" %>
+
+</br>
+
 <h1>Editing Diet</h1>
 
 <%= render 'form', diet: @diet %>
 
-<%= link_to 'Show', @diet %> |
-<%= link_to 'Back', diets_path %>
+<br/>
+<button class="btn btn-primary">
+  <%= link_to 'Back', diets_path %>
+</button>
