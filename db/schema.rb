@@ -16,11 +16,11 @@ ActiveRecord::Schema.define(version: 2020_07_17_214445) do
   enable_extension "plpgsql"
 
   create_table "diets", force: :cascade do |t|
-    t.date "start_date", default: "2020-07-16", null: false
-    t.date "end_date", default: "2020-07-16", null: false
+    t.date "start_date", default: "2020-07-19", null: false
+    t.date "end_date", default: "2020-07-19", null: false
     t.integer "initial_weight", null: false
     t.integer "target_weight", null: false
-    t.integer "height"
+    t.float "height"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2020_07_17_214445) do
     t.time "schedule", null: false
     t.text "description", null: false
     t.integer "meal_type", null: false
-    t.bigint "diet_id"
+    t.bigint "diet_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["diet_id"], name: "index_meals_on_diet_id"
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 2020_07_17_214445) do
 
   create_table "weights", force: :cascade do |t|
     t.float "kg", null: false
-    t.date "weight_date", default: "2020-07-17", null: false
+    t.date "weight_date", default: "2020-07-19", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
