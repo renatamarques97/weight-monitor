@@ -1,6 +1,4 @@
 class ImcPresenter
-  attr_reader :user
-
   def initialize(user)
     @user = user
   end
@@ -9,6 +7,10 @@ class ImcPresenter
     return 0 if weight.nil? || height.nil?
     (weight / (height)**2).round(2)
   end
+
+  private
+
+  attr_reader :user
 
   def weight
     user.weights.last.try(:kg)

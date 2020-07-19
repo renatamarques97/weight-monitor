@@ -22,6 +22,7 @@
         <td><%= diet.initial_weight %></td>
         <td><%= diet.target_weight %></td>
         <td><%= diet.height %></td>
+        <td><%= link_to 'show', diet %>
         <td><%= link_to edit_diet_path(diet) do %>
           <i class="fa fa-pencil-square-o"></i>
         <% end %></td>
