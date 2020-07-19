@@ -121,31 +121,31 @@ a, a:hover {
   cursor: pointer;
 }
 
-@media (min-width: 768px) and (max-width: 1020px) {
-  .div-form-offer {
-    margin: 0px 200px;
+@media (min-width: 1200px) {
+  .div-login-sign {
+    margin: 50px 450px;
   }
+}
 
+@media (min-width: 869px) and (max-width: 1199px) {
+  .div-login-sign {
+    margin: 50px 250px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 868px) {
   .div-login-sign {
     margin: 50px 200px;
   }
 }
 
 @media (min-width: 480px) and (max-width: 767px) {
-  .div-form-offer {
-    margin: 0px 100px;
-  }
-
   .div-login-sign {
     margin: 50px 100px;
   }
 }
 
 @media (max-width: 480px) {
-  .div-form-offer {
-    margin: 0px 20px;
-  }
-
   .div-login-sign {
     margin: 50px 20px;
   }
