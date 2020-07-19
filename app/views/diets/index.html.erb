@@ -2,34 +2,39 @@
 
 <h1>Diets</h1>
 
-<table>
+<table class="table table-striped table-dark">
   <thead>
     <tr>
       <th>Start Date</th>
       <th>End Date</th>
-      <th>Initial Weight</th>
-      <th>Target Weight</th>
-      <th>Height(cm)</th>
-      <th colspan="3"></th>
+      <th>Initial Weight (kg)</th>
+      <th>Target Weight (kg)</th>
+      <th>Height (m)</th>
+      <th>Actions</th>
     </tr>
   </thead>
 
   <tbody>
     <% @diets.each do |diet| %>
       <tr>
-        <td><%= diet.start_date %></td>
-        <td><%= diet.end_date %></td>
+        <td><%= diet.start_date.strftime("%m/%d/%Y") %></td>
+        <td><%= diet.end_date.strftime("%m/%d/%Y") %></td>
         <td><%= diet.initial_weight %></td>
         <td><%= diet.target_weight %></td>
         <td><%= diet.height %></td>
-        <td><%= link_to 'Show', diet %></td>
-        <td><%= link_to 'Edit', edit_diet_path(diet) %></td>
-        <td><%= link_to 'Destroy', diet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'show', diet %>
+        <td><%= link_to edit_diet_path(diet) do %>
+          <i class="fa fa-pencil-square-o"></i>
+        <% end %></td>
+        <td><%= link_to diet, method: :delete, data: { confirm: 'Are you sure?' } do %>
+          <i class="fa fa-trash"></i>
+        <% end %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
+<button class="btn btn-primary">
+  <%= link_to 'New Diet', new_diet_path %>
+</button>
 
-<%= link_to 'New Diet', new_diet_path %>

@@ -1,0 +1,23 @@
+<%= render "menu" %>
+
+</br>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h6>Hello, <%= current_user.name %></h6>
+
+    <div class="info-box">
+      <span class="info-box-icon bg-green"><i class="fa fa-heartbeat" aria-hidden="true"></i></span>
+      <span class="info-box-text">IMC</span>
+      <span class="info-box-content"><%= @imc %></span>
+    </div>
+
+    <h4>Your Progress <i class="fa fa-line-chart" aria-hidden="true"></i></h4>
+    <%= area_chart(@weights) %>
+
+    <%= render file: 'diets/index', diets: @diets %>
+  </body>
+</html>

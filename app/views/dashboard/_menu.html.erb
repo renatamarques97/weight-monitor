@@ -1,0 +1,27 @@
+<div class="menu">
+  <a href=<%= root_path %>><h1>Weight Monitor</h1></a>
+
+  <div class="sign">
+    <% if current_user.present? %>
+      <button class="btn btn-primary">
+        <%= link_to 'Update Weight', new_weight_path %>
+      </button>
+      <button class="btn btn-primary">
+        <%= link_to('New diet', new_diet_path) %>
+      </button>
+    <% end %>
+    <% if current_user %>
+      <button class="btn btn-danger">
+        <i class="fa fa-sign-out" aria-hidden="true"></i>
+        <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
+      </button>
+    <% else %>
+      <button class="btn btn-primary">
+        <%= link_to 'Sign up', new_user_registration_path %>
+      </button>
+      <button class="btn btn-success">
+        <%= link_to 'Sign in', new_user_session_path %>
+      </button>
+    <% end %>
+  </div>
+</div>

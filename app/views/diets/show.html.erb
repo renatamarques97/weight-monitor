@@ -1,3 +1,7 @@
+<%= render "dashboard/menu" %>
+
+</br>
+
 <p id="notice"><%= notice %></p>
 
 <p>
@@ -25,5 +29,16 @@
   <%= @diet.height %>
 </p>
 
-<%= link_to 'Edit', edit_diet_path(@diet) %> |
-<%= link_to 'Back', diets_path %>
+<p>
+  <strong>Meals:</strong>
+  <% @diet.meals.each do |meal| %>
+    <%= meal.meal_type + "," %>
+    <%= meal.description + "," %>
+    <%= meal.schedule.strftime("%H:%M") %> |
+  <% end %>
+</p>
+
+<button class="btn btn-primary">
+  <%= link_to 'Edit', edit_diet_path(@diet) %>
+</button>
+

@@ -64,7 +64,7 @@ RSpec.describe "/diets", type: :request do
 
         it "redirects to the created diet" do
           post diets_url, params: { diet: valid_attributes }
-          expect(response).to redirect_to(diet_url(Diet.last))
+          expect(response).to redirect_to(root_path)
         end
       end
 
@@ -97,7 +97,7 @@ RSpec.describe "/diets", type: :request do
           diet = Diet.create! valid_attributes
           patch diet_url(diet), params: { diet: new_attributes }
           diet.reload
-          expect(response).to redirect_to(diet_url(diet))
+          expect(response).to redirect_to(root_path)
         end
       end
 
@@ -121,7 +121,7 @@ RSpec.describe "/diets", type: :request do
       it "redirects to the diets list" do
         diet = Diet.create! valid_attributes
         delete diet_url(diet)
-        expect(response).to redirect_to(diets_url)
+        expect(response).to redirect_to(root_path)
       end
     end
   end
