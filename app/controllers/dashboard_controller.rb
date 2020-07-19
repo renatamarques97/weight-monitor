@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
 
   def index
     @diets = Diet.all
-    # @dates = WeightHelper::weighting_dates(current_user)
-    # @weight_data = WeightHelper::weights(current_user)
+    @imc = ::ImcPresenter.new(current_user).call
+    @weights = ::WeightQuery.weights(current_user)
   end
 end

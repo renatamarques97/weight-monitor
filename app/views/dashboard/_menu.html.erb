@@ -12,6 +12,7 @@
     <% end %>
     <% if current_user %>
       <button class="btn btn-danger">
+        <i class="fa fa-sign-out" aria-hidden="true"></i>
         <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
       </button>
     <% else %>

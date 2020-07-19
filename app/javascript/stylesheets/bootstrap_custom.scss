@@ -43,6 +43,7 @@
 
 a, a:hover {
   color: white;
+  text-decoration: none;
 }
 
 .sign {
@@ -51,7 +52,7 @@ a, a:hover {
 }
 
 .menu {
-  background-color: gray;
+  background-color: darkgray;
   height: 75px;
 }
 
@@ -60,6 +61,42 @@ a, a:hover {
   background-color: #f2f8f9;
   padding: 20px;
   margin: 50px 400px;
+}
+
+.info-box {
+  display: block;
+  min-height: 90px;
+  background: #f0f0f0;
+  max-width: 200px;
+  border-radius: 2px;
+  margin-bottom: 15px;
+  margin: 20px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.info-box-icon {
+  display: block;
+  float: left;
+  height: 90px;
+  width: 90px;
+  text-align: center;
+  line-height: 90px;
+  font-weight: bold;
+  font-size: 45px;
+}
+
+.info-box-content {
+  padding: 5px 15px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.bg-green {
+  background-color: #00a65a;
+}
+
+.info-box-text {
+  padding: 0px 15px;
 }
 
 .field {
