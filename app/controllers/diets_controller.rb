@@ -15,7 +15,7 @@ class DietsController < ApplicationController
 
   # POST /diets
   def create
-    @diet = Diet.new(diet_params)
+    @diet = current_user.diets.build(diet_params)
 
     if @diet.save
       flash[:notice] = "Diet was successfully created."
