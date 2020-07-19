@@ -36,8 +36,8 @@
   </div>
 
   <div class="field">
-    <%= form.label "Height (cm)" %>
-    <%= form.number_field :height %>
+    <%= form.label :height %>
+    <%= form.text_field :height %>
   </div>
 
   <%= form.hidden_field :user_id, :value => current_user.id %>

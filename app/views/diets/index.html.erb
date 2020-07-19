@@ -9,7 +9,7 @@
       <th>End Date</th>
       <th>Initial Weight (kg)</th>
       <th>Target Weight (kg)</th>
-      <th>Height (cm)</th>
+      <th>Height (m)</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -22,8 +22,12 @@
         <td><%= diet.initial_weight %></td>
         <td><%= diet.target_weight %></td>
         <td><%= diet.height %></td>
-        <td><%= link_to '✏️', edit_diet_path(diet) %></td>
-        <td><%= link_to '🗑️', diet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to edit_diet_path(diet) do %>
+          <i class="fa fa-pencil-square-o"></i>
+        <% end %></td>
+        <td><%= link_to diet, method: :delete, data: { confirm: 'Are you sure?' } do %>
+          <i class="fa fa-trash"></i>
+        <% end %></td>
       </tr>
     <% end %>
   </tbody>
