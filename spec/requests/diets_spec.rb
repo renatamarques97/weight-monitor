@@ -31,6 +31,14 @@ RSpec.describe "/diets", type: :request do
       end
     end
 
+    describe "GET /show" do
+      it "renders a successful response" do
+        diet = Diet.create! valid_attributes
+        get diet_url(diet)
+        expect(response).to be_successful
+      end
+    end
+
     describe "GET /new" do
       it "renders a successful response" do
         get new_diet_url
