@@ -25,9 +25,15 @@
       </div>
 
       <div class="info-box">
-        <span class="info-box-icon bg-green"><i class="fa fa-heartbeat" aria-hidden="true"></i></span>
+        <span class="info-box-icon bg-green"><i class="fa fa-star" aria-hidden="true"></i></span>
         <span class="info-box-text">GOAL</span>
-        <span class="info-box-content"><%=  %></span>
+        <span class="info-box-content">
+          <% if @goal %>
+            <i class="fa fa-trophy" aria-hidden="true"></i>
+          <% else %>
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+          <% end %>
+        </span>
       </div>
     </div>
 
