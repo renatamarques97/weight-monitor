@@ -11,17 +11,19 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :kg %>
-    <%= form.number_field :kg %>
-  </div>
+  <div class="div-form">
+    <div class="field">
+      <%= form.label :kg %>
+      <%= form.number_field :kg %>
+    </div>
 
-  <div class="field">
-    <%= form.label :weight_date %>
-    <%= form.date_field :weight_date %>
-  </div>
+    <div class="field">
+      <%= form.label :weight_date %>
+      <%= form.date_field :weight_date %>
+    </div>
 
-  <div class="actions">
-    <%= form.submit class: 'btn btn-success' %>
+    <div class="actions">
+      <%= form.submit class: 'btn btn-success' %>
+    </div>
   </div>
 <% end %>

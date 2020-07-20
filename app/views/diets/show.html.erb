@@ -4,41 +4,43 @@
 
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Start date:</strong>
-  <%= @diet.start_date %>
-</p>
+<div class="div-form">
+  <p>
+    <strong>Start date:</strong>
+    <%= @diet.start_date %>
+  </p>
 
-<p>
-  <strong>End date:</strong>
-  <%= @diet.end_date %>
-</p>
+  <p>
+    <strong>End date:</strong>
+    <%= @diet.end_date %>
+  </p>
 
-<p>
-  <strong>Initial weight:</strong>
-  <%= @diet.initial_weight %>
-</p>
+  <p>
+    <strong>Initial weight:</strong>
+    <%= @diet.initial_weight %>
+  </p>
 
-<p>
-  <strong>Target weight:</strong>
-  <%= @diet.target_weight %>
-</p>
+  <p>
+    <strong>Target weight:</strong>
+    <%= @diet.target_weight %>
+  </p>
 
-<p>
-  <strong>Height:</strong>
-  <%= @diet.height %>
-</p>
+  <p>
+    <strong>Height:</strong>
+    <%= @diet.height %>
+  </p>
 
-<p>
-  <strong>Meals:</strong>
-  <% @diet.meals.each do |meal| %>
-    <%= meal.meal_type + "," %>
-    <%= meal.description + "," %>
-    <%= meal.schedule.strftime("%H:%M") %> |
-  <% end %>
-</p>
+  <p>
+    <strong>Meals:</strong>
+    <% @diet.meals.each do |meal| %>
+      <%= meal.meal_type + "," %>
+      <%= meal.description + "," %>
+      <%= meal.schedule.strftime("%H:%M") %> |
+    <% end %>
+  </p>
 
-<button class="btn btn-primary">
-  <%= link_to 'Edit', edit_diet_path(@diet) %>
-</button>
+  <button class="btn btn-primary">
+    <%= link_to 'Edit', edit_diet_path(@diet) %>
+  </button>
+</div>
 

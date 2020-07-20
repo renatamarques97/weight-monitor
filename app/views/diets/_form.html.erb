@@ -14,51 +14,53 @@
     </div>
   <% end %>
 
-  <h3>Diet</h3>
-  <div class="field">
-    <%= form.label :start_date %>
-    <%= form.date_field :start_date %>
-  </div>
+  <div class="div-form">
+    <h3>Diet</h3>
+    <div class="field">
+      <%= form.label :start_date %>
+      <%= form.date_field :start_date %>
+    </div>
 
-  <div class="field">
-    <%= form.label :end_date %>
-    <%= form.date_field :end_date %>
-  </div>
+    <div class="field">
+      <%= form.label :end_date %>
+      <%= form.date_field :end_date %>
+    </div>
 
-  <div class="field">
-    <%= form.label :initial_weight %>
-    <%= form.number_field :initial_weight %>
-  </div>
+    <div class="field">
+      <%= form.label :initial_weight %>
+      <%= form.number_field :initial_weight %>
+    </div>
 
-  <div class="field">
-    <%= form.label :target_weight %>
-    <%= form.number_field :target_weight %>
-  </div>
+    <div class="field">
+      <%= form.label :target_weight %>
+      <%= form.number_field :target_weight %>
+    </div>
 
-  <div class="field">
-    <%= form.label :height %>
-    <%= form.text_field :height %>
-  </div>
+    <div class="field">
+      <%= form.label :height %>
+      <%= form.text_field :height %>
+    </div>
 
-  <button class="btn btn-primary">
-    <%= link_to_add_association 'Add Meal', form, :meals,
-      'data-association-insertion-node' => "#meals-diet ol",
-      'data-association-insertion-method' => "append",
-      :wrap_object => Proc.new { |m| m.build_diet; m } %>
-  </button>
-  <hr/>
+    <button class="btn btn-primary">
+      <%= link_to_add_association 'Add Meal', form, :meals,
+        'data-association-insertion-node' => "#meals-diet ol",
+        'data-association-insertion-method' => "append",
+        :wrap_object => Proc.new { |m| m.build_diet; m } %>
+    </button>
+    <hr/>
 
-  <fieldset id="meals-diet">
-    <ol>
-      <h3>Meals</h3>
-      <%= form.fields_for :meals do |ff| %>
-        <%= render 'meal_fields', :f => ff %>
-      <% end %>
-    </ol>
-  </fieldset>
-  <hr/>
+    <fieldset id="meals-diet">
+      <ol>
+        <h3>Meals</h3>
+        <%= form.fields_for :meals do |ff| %>
+          <%= render 'meal_fields', :f => ff %>
+        <% end %>
+      </ol>
+    </fieldset>
+    <hr/>
 
-  <div class="actions">
-    <%= form.submit class: 'btn btn-success' %>
+    <div class="actions">
+      <%= form.submit class: 'btn btn-success' %>
+    </div>
   </div>
 <% end %>
