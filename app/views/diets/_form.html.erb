@@ -40,8 +40,6 @@
     <%= form.text_field :height %>
   </div>
 
-  <%= form.hidden_field :user_id, :value => current_user.id %>
-
   <button class="btn btn-primary">
     <%= link_to_add_association 'Add Meal', form, :meals,
       'data-association-insertion-node' => "#meals-diet ol",
