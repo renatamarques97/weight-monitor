@@ -7,6 +7,9 @@ RSpec.describe User, type: :model do
   end
 
   describe "validations" do
+    let!(:user) { create(:user) }
+
+    it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity }
   end
 end
