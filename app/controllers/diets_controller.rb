@@ -1,10 +1,11 @@
 class DietsController < ApplicationController
   before_action :set_diet, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
+  before_action :authorized?, only: [:show, :edit, :update, :destroy]
 
   # GET /diets
   def index
-    @diets = Diet.all
+    @diets = Diet.authorized_user(current_user)
   end
 
   # GET /diets/new
@@ -48,6 +49,12 @@ class DietsController < ApplicationController
 
   def set_diet
     @diet = Diet.find(params[:id])
+  end
+
+  def authorized?
+    unless ::UserDietPolicy.new(current_user, @diet).diet_belongs_to_user?
+      render :file => "public/404.html", :status => :unauthorized
+    end
   end
 
   def diet_params

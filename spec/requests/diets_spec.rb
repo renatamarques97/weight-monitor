@@ -10,6 +10,24 @@ RSpec.describe "/diets", type: :request do
     end
   end
 
+  describe "when user is not allowed" do
+    let(:user) { create(:user) }
+    let(:user_not_allowed) { create(:user) }
+    let(:valid_attributes) { attributes_for(:diet, user_id: user.id) }
+
+    before do
+      sign_in user_not_allowed
+    end
+
+    describe "GET /index" do
+      it "return code 401" do
+        diet = Diet.create! valid_attributes
+        get edit_diet_url(diet)
+        expect(response).to have_http_status(401)
+      end
+    end
+  end
+
   describe "When User is signed in" do
     let!(:user) { create(:user) }
 

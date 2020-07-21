@@ -63,6 +63,13 @@ a, a:hover {
   margin: 50px 400px;
 }
 
+.div-form {
+  border-radius: 5px;
+  background-color: #f2f8f9;
+  padding: 20px;
+  margin: 50px 400px;
+}
+
 .info-box {
   display: block;
   min-height: 90px;
@@ -89,10 +96,31 @@ a, a:hover {
   padding: 5px 15px;
   font-size: 25px;
   font-weight: bold;
+  color: black;
+}
+
+.fa {
+  color: white;
+}
+
+.fa-line-chart {
+  color: green;
+}
+
+.fa-clock-o, .fa-trophy {
+  color: black;
 }
 
 .bg-green {
   background-color: #00a65a;
+}
+
+.bg-aqua {
+  background-color: #00c0ef;
+}
+
+.bg-crimson {
+  background-color: crimson;
 }
 
 .info-box-text {
@@ -122,31 +150,31 @@ a, a:hover {
 }
 
 @media (min-width: 1200px) {
-  .div-login-sign {
+  .div-form, .div-login-sign {
     margin: 50px 450px;
   }
 }
 
 @media (min-width: 869px) and (max-width: 1199px) {
-  .div-login-sign {
+  .div-form, .div-login-sign {
     margin: 50px 250px;
   }
 }
 
 @media (min-width: 768px) and (max-width: 868px) {
-  .div-login-sign {
+  .div-form, .div-login-sign {
     margin: 50px 200px;
   }
 }
 
-@media (min-width: 480px) and (max-width: 767px) {
-  .div-login-sign {
+@media (min-width: 481px) and (max-width: 767px) {
+  .div-form, .div-login-sign {
     margin: 50px 100px;
   }
 }
 
 @media (max-width: 480px) {
-  .div-login-sign {
+  .div-form, .div-login-sign {
     margin: 50px 20px;
   }
 }
