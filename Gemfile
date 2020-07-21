@@ -16,6 +16,7 @@ gem 'enumerize'
 gem 'cocoon'
 gem 'chartkick'
 gem 'font-awesome-rails'
+gem 'date_validator'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

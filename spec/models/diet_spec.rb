@@ -17,4 +17,22 @@ RSpec.describe Diet, type: :model do
   describe "nested attributes" do
     it{ is_expected.to accept_nested_attributes_for(:meals) }
   end
+
+  describe "scope" do
+    let(:user) { create(:user) }
+    let(:diet) { create(:diet, user_id: user.id) }
+
+    context "when user has diets" do
+      it "returns valid diet" do
+        diet
+        expect(described_class.authorized_user(user)).to include(diet)
+      end
+    end
+
+    context "when user does not have diets" do
+      it "returns empty array" do
+        expect(described_class.authorized_user(user)).to eq([])
+      end
+    end
+  end
 end
