@@ -1,9 +1,9 @@
 <%= form_with(model: diet, local: true) do |form| %>
   <% if diet.errors.any? %>
-    <div id="error_explanation">
+    <div id="error_explanation" class="alert alert-danger">
       <h2>
         <%= pluralize(diet.errors.count, "error") %>
-        prohibited this diet from being saved:
+        <%= t('error.saved') %>
       </h2>
 
       <ul>
@@ -15,7 +15,7 @@
   <% end %>
 
   <div class="div-form">
-    <h3>Diet</h3>
+    <h3><%= t('diet.singular') %></h3>
     <div class="field">
       <%= form.label :start_date %>
       <%= form.date_field :start_date %>
@@ -42,7 +42,7 @@
     </div>
 
     <button class="btn btn-primary">
-      <%= link_to_add_association 'Add Meal', form, :meals,
+      <%= link_to_add_association t('meal.add'), form, :meals,
         'data-association-insertion-node' => "#meals-diet ol",
         'data-association-insertion-method' => "append",
         :wrap_object => Proc.new { |m| m.build_diet; m } %>
@@ -51,7 +51,7 @@
 
     <fieldset id="meals-diet">
       <ol>
-        <h3>Meals</h3>
+        <h3><%= t('meal.title') %></h3>
         <%= form.fields_for :meals do |ff| %>
           <%= render 'meal_fields', :f => ff %>
         <% end %>
