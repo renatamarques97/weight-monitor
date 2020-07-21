@@ -33,6 +33,20 @@ bundle exec rails db:create
 bundle exec rails db:migrate
 ```
 
+### Using Docker
+Make sure that you have docker installed on your system.
+
+```shell
+# Let open the console container
+$ docker-compose run --rm web bash
+
+# Then run the setup script
+$ DOCKER_SETUP=true bin/setup
+
+# With that all the depencies will be installed and you can run the project with:
+$ docker-compose up
+```
+
 ### Initialize postgres
 ```shell
 pg_ctl start
