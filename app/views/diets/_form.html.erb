@@ -1,6 +1,6 @@
 <%= form_with(model: diet, local: true) do |form| %>
   <% if diet.errors.any? %>
-    <div id="error_explanation">
+    <div id="error_explanation" class="alert alert-danger">
       <h2>
         <%= pluralize(diet.errors.count, "error") %>
         prohibited this diet from being saved:

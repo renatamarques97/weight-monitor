@@ -1,6 +1,6 @@
 <%= form_with(model: weight, local: true) do |form| %>
   <% if weight.errors.any? %>
-    <div id="error_explanation">
+    <div id="error_explanation" class="alert alert-danger">
       <h2><%= pluralize(weight.errors.count, "error") %> prohibited this weight from being saved:</h2>
 
       <ul>
@@ -12,6 +12,10 @@
   <% end %>
 
   <div class="div-form">
+    <div class="alert alert-danger">
+      Alert: update your weight just once a day.
+    </div>
+
     <div class="field">
       <%= form.label :kg %>
       <%= form.number_field :kg %>
