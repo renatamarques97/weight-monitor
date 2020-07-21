@@ -85,3 +85,10 @@ Weight Progress:
 Your weight progress is represented by a chart, you can inform your weight once a day, everyday.
 To update your weight, you will need the value (kg) and the date, that's all.
 
+### Author
+
+[Renata Marques](https://www.linkedin.com/in/renata-marques-b27877119/)
+
+### License
+
+This project is licensed under the MIT License
