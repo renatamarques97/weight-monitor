@@ -1,33 +1,36 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  title: "Weight Monitor"
+  sign:
+    in: 'Sign in'
+    out: 'Sign out'
+    up: 'Sign up'
+  log:
+    in: 'Log in'
+  diet:
+    title: 'Diets'
+    new: 'New Diet'
+    edit: 'Editing Diet'
+    singular: 'Diet'
+    start_date: 'Start Date'
+    end_date: 'End Date'
+    initial_weight: 'Initial Weight (kg)'
+    target_weight: 'Target Weight (kg)'
+    height: 'Height (m)'
+  weight:
+    update: 'Update Weight'
+    alert: 'Alert: update your weight just once a day.'
+  meal:
+    title: 'Meals'
+    add: 'Add Meal'
+  hello: 'Hello, '
+  actions: 'Actions'
+  sure: 'Are you sure?'
+  show: 'Show'
+  remove: 'Remove'
+  edit: 'Edit'
+  imc: 'IMC'
+  goal: 'GOAL'
+  progress: 'Your Progress '
+  error:
+    saved: 'prohibited this diet from being saved:'
+

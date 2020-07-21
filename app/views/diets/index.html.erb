@@ -5,17 +5,17 @@
 <p id="notice"><%= notice %></p>
 
 <hr/>
-<h1>Diets</h1>
+<h1><%= t('diet.title') %></h1>
 
 <table class="table table-striped table-dark">
   <thead>
     <tr>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Initial Weight (kg)</th>
-      <th>Target Weight (kg)</th>
-      <th>Height (m)</th>
-      <th>Actions</th>
+      <th><%= t('diet.start_date') %></th>
+      <th><%= t('diet.end_date') %></th>
+      <th><%= t('diet.initial_weight') %></th>
+      <th><%= t('diet.target_weight') %></th>
+      <th><%= t('diet.height') %></th>
+      <th><%= t('actions') %></th>
     </tr>
   </thead>
 
@@ -27,11 +27,11 @@
         <td><%= diet.initial_weight %></td>
         <td><%= diet.target_weight %></td>
         <td><%= diet.height %></td>
-        <td><%= link_to 'show', diet %>
+        <td><%= link_to t('show'), diet %>
         <td><%= link_to edit_diet_path(diet) do %>
           <i class="fa fa-pencil-square-o"></i>
         <% end %></td>
-        <td><%= link_to diet, method: :delete, data: { confirm: 'Are you sure?' } do %>
+        <td><%= link_to diet, method: :delete, data: { confirm: t('sure') } do %>
           <i class="fa fa-trash"></i>
         <% end %></td>
       </tr>
@@ -40,6 +40,6 @@
 </table>
 
 <button class="btn btn-primary">
-  <%= link_to 'New Diet', new_diet_path %>
+  <%= link_to t('diet.new'), new_diet_path %>
 </button>
 

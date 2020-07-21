@@ -6,32 +6,32 @@
 
 <div class="div-form">
   <p>
-    <strong>Start date:</strong>
+    <strong><%= t('diet.start_date') %></strong>
     <%= @diet.start_date %>
   </p>
 
   <p>
-    <strong>End date:</strong>
+    <strong><%= t('diet.end_date') %></strong>
     <%= @diet.end_date %>
   </p>
 
   <p>
-    <strong>Initial weight:</strong>
+    <strong><%= t('diet.initial_weight') %></strong>
     <%= @diet.initial_weight %>
   </p>
 
   <p>
-    <strong>Target weight:</strong>
+    <strong><%= t('diet.target_weight') %></strong>
     <%= @diet.target_weight %>
   </p>
 
   <p>
-    <strong>Height:</strong>
+    <strong><%= t('diet.height') %></strong>
     <%= @diet.height %>
   </p>
 
   <p>
-    <strong>Meals:</strong>
+    <strong><%= t('meal.title') %></strong>
     <% @diet.meals.each do |meal| %>
       <%= meal.meal_type + "," %>
       <%= meal.description + "," %>
@@ -40,7 +40,7 @@
   </p>
 
   <button class="btn btn-primary">
-    <%= link_to 'Edit', edit_diet_path(@diet) %>
+    <%= link_to t('edit'), edit_diet_path(@diet) %>
   </button>
 </div>
 
