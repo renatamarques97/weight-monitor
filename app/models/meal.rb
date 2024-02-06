@@ -7,5 +7,12 @@ class Meal < ApplicationRecord
 
   extend Enumerize
 
-  enumerize :meal_type, in: { breakfast: 0, lunch: 1, dinner: 2, supper: 3 }
+  enumerize :meal_type, in: {
+    breakfast: 0,
+    brunch: 1,
+    lunch: 2,
+    linner: 3,
+    dinner: 4,
+    supper: 5
+  }
 end
