@@ -1,0 +1,43 @@
+<%= form_with(model: running, local: true) do |form| %>
+  <% if running.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger">
+      <h2>
+        <%= pluralize(running.errors.count, "error") %>
+        <%= t('error.saved') %>
+      </h2>
+
+      <ul>
+        <% running.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="div-form">
+    <h3><%= t('running.title') %></h3>
+
+    <div class="alert alert-danger">
+      <%= t('running.alert') %>
+    </div>
+
+    <div class="field">
+      <%= form.label :distance %>
+      <%= form.number_field :distance, step: :any %>
+    </div>
+
+    <div class="field">
+      <%= form.label :duration %>
+      <%= form.number_field :duration, step: :any %>
+    </div>
+
+    <div class="field">
+      <%= form.label :running_date %>
+      <%= form.date_field :running_date %>
+    </div>
+
+    <div class="actions">
+      <%= form.submit class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>
