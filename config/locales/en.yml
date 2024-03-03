@@ -1,5 +1,5 @@
 en:
-  title: "Weight Monitor"
+  title: "Fit Tracker"
   sign:
     in: 'Sign in'
     out: 'Sign out'
@@ -17,8 +17,13 @@ en:
     target_weight: 'Target Weight (kg)'
     height: 'Height (m)'
   weight:
+    title: 'Weights'
     update: 'Update Weight'
     alert: 'Alert: update your weight just once a day.'
+  running:
+    title: 'Runnings'
+    new: 'Create Running'
+    alert: 'Alert: create a running just once a day.'
   meal:
     title: 'Meals'
     add: 'Add Meal'

@@ -38,6 +38,10 @@
     </div>
 
     <h4><%= t('progress') %><i class="fa fa-line-chart" aria-hidden="true"></i></h4>
+    <h6><%= t('weight.title') %></h6>
     <%= area_chart(@weights) %>
+
+    <h6><%= t('running.title') %></h6>
+    <%= area_chart(@runnings) %>
   </body>
 </html>

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DashboardController < ApplicationController
   before_action :authenticate_user!
 
@@ -6,5 +8,6 @@ class DashboardController < ApplicationController
     @diets = Diet.all
     @imc = ::ImcPresenter.new(current_user).call
     @weights = ::WeightQuery.weights(current_user)
+    @runnings = ::RunningQuery.runnings(current_user)
   end
 end

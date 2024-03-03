@@ -1,9 +1,8 @@
 [![Build Status](https://circleci.com/gh/renatamarques97/weight-monitor.svg?style=svg)](https://app.circleci.com/pipelines/github/renatamarques97/weight-monitor)
 
-# Weight Monitor
-This is a web solution for managing diets and
-weight monitoring. The system allows the
-registration and updating of a diet, which has a predetermined
+# Fit Tracker
+This is a web solution for managing meals, weight, runnings, sleep and water consumption.
+The system allows the registration and updating of a diet, which has a predetermined
 beginning and end, in addition to the idealized weight.
 During the diet period, the user must periodically inform his weight.
 From that information, the system presents a graph of the

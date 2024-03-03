@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MealsController < ApplicationController
   before_action :set_meal, only: [:show, :edit, :update, :destroy]
 
@@ -6,17 +8,9 @@ class MealsController < ApplicationController
     @meals = Meal.all
   end
 
-  # GET /meals/1
-  def show
-  end
-
   # GET /meals/new
   def new
     @meal = Meal.new
-  end
-
-  # GET /meals/1/edit
-  def edit
   end
 
   # POST /meals
