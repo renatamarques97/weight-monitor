@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WeightQuery
   WEIGHT_DATE = "weights.weight_date"
   WEIGHT_KG = "weights.kg"
