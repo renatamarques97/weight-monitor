@@ -14,4 +14,22 @@
  *= require_self
  *= require font-awesome
  */
+pre {
+  white-space: pre-wrap;
+}
 
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.chat-conversation {
+  overflow-y: auto;
+}
+
+.chat-input {
+  position: absolute;
+  bottom: 10px;
+  flex-shrink: 0;
+}

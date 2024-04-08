@@ -49,3 +49,6 @@ yarn-debug.log*
 # Ignore MacOS files
 .DS_Store
 
+# Ignore env
+.env
+
