@@ -12,6 +12,9 @@
       <button class="btn btn-primary">
         <%= link_to(t('diet.new'), new_diet_path) %>
       </button>
+      <button class="btn btn-primary">
+        <%= link_to(t('diet.suggestions'), chats_path) %>
+      </button>
     <% end %>
     <% if current_user %>
       <button class="btn btn-danger">

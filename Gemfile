@@ -17,6 +17,12 @@ gem 'cocoon'
 gem 'chartkick'
 gem 'font-awesome-rails'
 gem 'date_validator'
+gem 'ruby-openai'
+gem 'stimulus-rails'
+gem 'sprockets-rails'
+gem 'turbo-rails'
+gem 'importmap-rails'
+gem 'hotwire-rails'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -26,6 +32,7 @@ group :development, :test do
   gem 'ffaker'
   gem 'shoulda-matchers'
   gem 'pry-nav'
+  gem 'dotenv-rails'
 end
 
 group :development do
@@ -43,3 +50,6 @@ group :test do
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# Use Redis for Action Cable
+gem "redis", "~> 4.0"
