@@ -4,11 +4,7 @@ require File.expand_path('../config/environment', __dir__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 
-if ENV['RAILS_ENV'] == 'test'
-  require 'simplecov'
-  SimpleCov.start 'rails'
-  puts "required simplecov"
-end
+puts "required simplecov"
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
@@ -24,15 +20,13 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 
-begin
-  ActiveRecord::Migration.maintain_test_schema!
-rescue ActiveRecord::PendingMigrationError => e
-  puts e.to_s.strip
-  exit 1
-end
-
 RSpec.configure do |config|
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  # RSpec Rails 8 uses fixture_paths (plural).
+  if config.respond_to?(:fixture_paths=)
+    config.fixture_paths = ["#{::Rails.root}/spec/fixtures"]
+  else
+    config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  end
 
   config.use_transactional_fixtures = true
 
