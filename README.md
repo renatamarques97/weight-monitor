@@ -8,11 +8,9 @@ During the diet period, the user must periodically inform his weight.
 From that information, the system presents a graph of the
 evolution of weight over the period of the diet.
 
-### [Production App](https://weight-monitor-app.herokuapp.com/)
-
 ### Ruby version
 ```
-3.1.3
+3.2.2
 ```
 
 ### Rails version
