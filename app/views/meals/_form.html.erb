@@ -1,8 +1,8 @@
 <%= form_with(model: meal, local: true) do |form| %>
   <% if meal.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(meal.errors.count, "error") %> <%= t('error.saved') %></h2>
-      <ul>
+    <div id="error_explanation" class="mb-4 rounded-xl border border-rose-200 bg-rose-100 p-4 text-rose-800">
+      <h2 class="font-semibold"><%= pluralize(meal.errors.count, "error") %> <%= t('error.saved') %></h2>
+      <ul class="mt-2 list-disc pl-5 text-sm">
         <% meal.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -10,27 +10,31 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :schedule %>
-    <%= form.time_select :schedule %>
-  </div>
+  <section class="tw-card">
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <%= form.label :schedule, class: "tw-label" %>
+        <%= form.time_field :schedule, class: "tw-input" %>
+      </div>
 
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_area :description %>
-  </div>
+      <div>
+        <%= form.label :meal_type, class: "tw-label" %>
+        <%= form.text_field :meal_type, class: "tw-input" %>
+      </div>
 
-  <div class="field">
-    <%= form.label :diet_id %>
-    <%= form.text_field :diet_id %>
-  </div>
+      <div class="md:col-span-2">
+        <%= form.label :description, class: "tw-label" %>
+        <%= form.text_area :description, rows: 3, class: "tw-input" %>
+      </div>
 
-  <div class="field">
-    <%= form.label :meal_type %>
-    <%= form.text_field :meal_type %>
-  </div>
+      <div>
+        <%= form.label :diet_id, class: "tw-label" %>
+        <%= form.text_field :diet_id, class: "tw-input" %>
+      </div>
+    </div>
 
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+    <div class="mt-5">
+      <%= form.submit class: 'tw-btn-primary' %>
+    </div>
+  </section>
 <% end %>

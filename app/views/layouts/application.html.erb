@@ -2,18 +2,27 @@
 <html>
   <head>
     <title>Fit Tracker</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.min.js" defer></script>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-amber-50 text-slate-800">
+    <main class="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-10">
+      <% if notice.present? %>
+        <div class="mb-4 rounded-xl border border-emerald-200 bg-emerald-100 px-4 py-3 text-sm font-medium text-emerald-800" role="status"><%= notice %></div>
+      <% end %>
+      <% if alert.present? %>
+        <div class="mb-4 rounded-xl border border-rose-200 bg-rose-100 px-4 py-3 text-sm font-medium text-rose-800" role="alert"><%= alert %></div>
+      <% end %>
 
-    <p class="alert"><%= alert %></p>
+      <%= yield %>
+    </main>
   </body>
 </html>

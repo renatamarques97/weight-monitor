@@ -68,7 +68,7 @@ class DietsController < ApplicationController
       :target_weight,
       :height,
       :user_id,
-      meals_attributes: %i[schedule description meal_type _destroy]
+      meals_attributes: %i[id schedule description meal_type _destroy]
     )
   end
 end

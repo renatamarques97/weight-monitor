@@ -1,42 +1,38 @@
 <%= render "dashboard/menu" %>
 
-</br>
-
-<div class="div-login-sign">
-
-  <h2><%= t('sign.up') %></h2>
+<section class="mx-auto max-w-xl rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+  <h1 class="mb-4 text-2xl font-bold tracking-tight text-slate-900"><%= t('sign.up') %></h1>
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
 
-    <div class="field">
-      <%= f.label :name %><br />
-      <%= f.text_field :name %>
+    <div class="mb-3">
+      <%= f.label :name, class: "tw-label" %>
+      <%= f.text_field :name, class: "tw-input" %>
     </div>
 
-    <div class="field">
-      <%= f.label :email %><br />
-      <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+    <div class="mb-3">
+      <%= f.label :email, class: "tw-label" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "tw-input" %>
     </div>
 
-    <div class="field">
-      <%= f.label :password %>
+    <div class="mb-3">
+      <%= f.label :password, class: "tw-label" %>
       <% if @minimum_password_length %>
-        <em>(<%= @minimum_password_length %> characters minimum)</em>
-      <% end %><br />
-      <%= f.password_field :password, autocomplete: "new-password" %>
+        <small class="mt-1 block text-xs text-slate-500">(<%= @minimum_password_length %> characters minimum)</small>
+      <% end %>
+      <%= f.password_field :password, autocomplete: "new-password", class: "tw-input" %>
     </div>
 
-    <div class="field">
-      <%= f.label :password_confirmation %><br />
-      <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    <div class="mb-3">
+      <%= f.label :password_confirmation, class: "tw-label" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "tw-input" %>
     </div>
 
-    <br/>
-    <div class="actions">
-      <%= f.submit t('sign.up'), class: 'btn btn-success' %>
+    <div class="mb-3">
+      <%= f.submit t('sign.up'), class: 'tw-btn-primary w-full' %>
     </div>
   <% end %>
 
   <%= render "devise/shared/links" %>
-</div>
+</section>

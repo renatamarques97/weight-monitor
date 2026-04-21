@@ -1,31 +1,34 @@
-<p id="notice"><%= notice %></p>
+<section class="tw-card">
+  <div class="mb-4 flex items-center justify-between gap-3">
+    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Meals</h1>
+    <%= link_to 'New Meal', new_meal_path, class: 'tw-btn-primary' %>
+  </div>
 
-<h1>Meals</h1>
+  <div class="overflow-x-auto rounded-xl border border-slate-200">
+    <table class="min-w-full divide-y divide-slate-200 bg-white text-sm">
+      <thead class="bg-slate-50">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold text-slate-700">Schedule</th>
+          <th class="px-4 py-3 text-left font-semibold text-slate-700">Description</th>
+          <th class="px-4 py-3 text-left font-semibold text-slate-700">Meal type</th>
+          <th class="px-4 py-3 text-right font-semibold text-slate-700">Actions</th>
+        </tr>
+      </thead>
 
-<table>
-  <thead>
-    <tr>
-      <th>Schedule</th>
-      <th>Description</th>
-      <th>Meal type</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @meals.each do |meal| %>
-      <tr>
-        <td><%= meal.schedule %></td>
-        <td><%= meal.description %></td>
-        <td><%= meal.meal_type %></td>
-        <td><%= link_to 'Show', meal %></td>
-        <td><%= link_to 'Edit', edit_meal_path(meal) %></td>
-        <td><%= link_to 'Destroy', meal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Meal', new_meal_path %>
+      <tbody class="divide-y divide-slate-100">
+        <% @meals.each do |meal| %>
+          <tr class="hover:bg-slate-50">
+            <td class="px-4 py-3"><%= meal.schedule %></td>
+            <td class="px-4 py-3"><%= meal.description %></td>
+            <td class="px-4 py-3"><%= meal.meal_type %></td>
+            <td class="px-4 py-3 text-right">
+              <%= link_to 'Show', meal, class: 'tw-btn-soft py-1.5' %>
+              <%= link_to 'Edit', edit_meal_path(meal), class: 'inline-flex rounded-lg border border-slate-300 px-3 py-2 text-slate-600 hover:bg-slate-100' %>
+              <%= link_to 'Destroy', meal, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'inline-flex rounded-lg border border-rose-300 px-3 py-2 text-rose-700 hover:bg-rose-50' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
