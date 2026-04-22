@@ -21,7 +21,7 @@ class DietsController < ApplicationController
     @diet = current_user.diets.build(diet_params)
 
     if @diet.save
-      flash[:notice] = "Diet was successfully created."
+      flash[:notice] = t('diet.created')
       redirect_to(root_path)
     else
       render :new
@@ -31,7 +31,7 @@ class DietsController < ApplicationController
   # PATCH/PUT /diets/1
   def update
     if @diet.update(diet_params)
-      flash[:notice] = "Diet was successfully updated."
+      flash[:notice] = t('diet.updated')
       redirect_to(root_path)
     else
       render :edit
@@ -42,7 +42,7 @@ class DietsController < ApplicationController
   def destroy
     @diet.destroy
     respond_to do |format|
-      format.html { redirect_to root_path, notice: 'Diet was successfully destroyed.' }
+      format.html { redirect_to root_path, notice: t('diet.destroyed') }
       format.json { head :no_content }
     end
   end

@@ -1,11 +1,5 @@
-/* ─────────────────────────────────────────────
-   0. Tailwind core
-   ───────────────────────────────────────────── */
 @import "tailwindcss";
 
-/* ─────────────────────────────────────────────
-   1. Theme tokens
-   ───────────────────────────────────────────── */
 @theme {
   /* Brand palette (emerald-based) */
   --color-brand-50:  #ecfdf5;
@@ -14,9 +8,6 @@
   --color-brand-700: #047857;
 }
 
-/* ─────────────────────────────────────────────
-   2. Base layer – global element defaults
-   ───────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
@@ -35,17 +26,12 @@
   }
 }
 
-/* ─────────────────────────────────────────────
-   3. Components – reusable UI classes
-   ───────────────────────────────────────────── */
 @layer components {
 
-  /* ── Cards ── */
   .tw-card {
     @apply rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur;
   }
 
-  /* ── Form controls ── */
   .tw-label {
     @apply text-sm font-semibold text-slate-700;
   }
@@ -55,8 +41,6 @@
            text-sm shadow-sm transition
            focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200;
   }
-
-  /* ── Buttons ── */
 
   /* Base shape & spacing (standalone usable) */
   .tw-btn {
@@ -82,10 +66,5 @@
   }
 }
 
-/* ─────────────────────────────────────────────
-   4. Utilities – one-off overrides
-   ───────────────────────────────────────────── */
 @layer utilities {
-  /* Reserve this block for project-specific utility overrides */
 }
-

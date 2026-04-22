@@ -1,7 +1,7 @@
 <%= form_with(model: meal, local: true) do |form| %>
   <% if meal.errors.any? %>
     <div id="error_explanation" class="mb-4 rounded-xl border border-rose-200 bg-rose-100 p-4 text-rose-800">
-      <h2 class="font-semibold"><%= pluralize(meal.errors.count, "error") %> <%= t('error.saved') %></h2>
+      <h2 class="font-semibold"><%= pluralize(meal.errors.count, t('errors.single')) %> <%= t('error.saved') %></h2>
       <ul class="mt-2 list-disc pl-5 text-sm">
         <% meal.errors.full_messages.each do |message| %>
           <li><%= message %></li>

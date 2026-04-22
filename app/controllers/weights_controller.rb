@@ -13,7 +13,7 @@ class WeightsController < ApplicationController
     @weight = current_user.weights.build(weight_params)
 
     if @weight.save
-      flash[:notice] = "Weight was successfully created."
+      flash[:notice] = t('weight.created')
       redirect_to(root_path)
     else
       render :new

@@ -17,17 +17,24 @@ en:
     initial_weight: 'Initial Weight (kg)'
     target_weight: 'Target Weight (kg)'
     height: 'Height (m)'
+    created: 'Diet was successfully created.'
+    updated: 'Diet was successfully updated.'
+    destroyed: 'Diet was successfully destroyed.'
   weight:
     title: 'Weights'
     update: 'Update Weight'
     alert: 'Alert: update your weight just once a day.'
+    created: 'Weight was successfully created.'
   running:
     title: 'Runnings'
     new: 'Create Running'
     alert: 'Alert: create a running just once a day.'
+    created: 'Running was successfully created.'
   meal:
     title: 'Meals'
     add: 'Add Meal'
+    new: 'New Meal'
+    back: 'Back'
   hello: 'Hello, '
   actions: 'Actions'
   sure: 'Are you sure?'
@@ -39,5 +46,12 @@ en:
   progress: 'Your Progress '
   send: 'Send'
   error:
+    single: 'error'
+    plural: 'errors'
     saved: 'prohibited this diet from being saved:'
-
+  chat:
+    describe_goals: 'Describe your goals to receive a more useful suggestion.'
+    example: 'Ex: I want to lose 4kg in 2 months and run 3x per week'
+    message: 'Message'
+  dashboard:
+    description: 'Track your indicators and daily evolution in one place.'
