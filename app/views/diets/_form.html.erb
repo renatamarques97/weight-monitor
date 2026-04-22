@@ -2,7 +2,7 @@
   <% if diet.errors.any? %>
     <div id="error_explanation" class="mb-4 rounded-xl border border-rose-200 bg-rose-100 p-4 text-rose-800">
       <h2 class="font-semibold">
-        <%= pluralize(diet.errors.count, t('errors.single')) %>
+        <%= pluralize(diet.errors.count, t('error.single')) %>
         <%= t('error.saved') %>
       </h2>
 

@@ -1,5 +1,6 @@
 <%= render "menu" %>
 
+<turbo-frame id="main">
 <section class="tw-card">
   <h1 class="mb-1 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl"><%= t('hello') %><%= current_user.name %></h1>
   <p class="mb-5 text-sm text-slate-600 md:text-base"><%= t('dashboard.description') %></p>
@@ -45,3 +46,4 @@
     </div>
   </div>
 </section>
+</turbo-frame>

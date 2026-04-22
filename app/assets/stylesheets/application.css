@@ -4,3 +4,7 @@
  *= require_self
  *= require font-awesome
  */
+
+a.no-link-underline, a.no-link-underline:hover {
+  text-decoration-line: none !important;
+}

@@ -8,8 +8,8 @@
 
   <%= form_with data: { action: "chat#generateResponse" }, html: { class: "mt-4 grid gap-3 md:grid-cols-[1fr_auto] md:items-end" } do |form| %>
     <div>
-      <%= form.label :message, <%= t('chat.message') %>, class: "tw-label" %>
-      <%= form.text_area :message, id: "prompt", rows: 3, class: "tw-input", placeholder: <%= t('chat.example') %>, data: { chat_target: "prompt" } %>
+      <%= form.label :message, t('chat.message'), class: "tw-label" %>
+      <%= form.text_area :message, id: "prompt", rows: 3, class: "tw-input", placeholder: t('chat.example'), data: { chat_target: "prompt" } %>
     </div>
     <div>
       <%= form.submit t('send'), class: "tw-btn-primary w-full md:w-auto" %>
