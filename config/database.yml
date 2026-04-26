@@ -20,6 +20,12 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: localhost
+  port: 5432
+  # host: 192.168.0.12 # CASA BRISA NET
+  # port: 5432
+  username: postgres
+  # password: ma20nu333
 
 development:
   <<: *default

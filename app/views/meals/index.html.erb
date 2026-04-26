@@ -1,17 +1,17 @@
 <section class="tw-card">
   <div class="mb-4 flex items-center justify-between gap-3">
-    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Meals</h1>
-    <%= link_to 'New Meal', new_meal_path, class: 'tw-btn-primary' %>
+    <h1 class="text-2xl font-bold tracking-tight text-slate-900"><%= t('meal.title') %></h1>
+    <%= link_to t('meal.new'), new_meal_path, class: 'tw-btn-primary' %>
   </div>
 
   <div class="overflow-x-auto rounded-xl border border-slate-200">
     <table class="min-w-full divide-y divide-slate-200 bg-white text-sm">
       <thead class="bg-slate-50">
         <tr>
-          <th class="px-4 py-3 text-left font-semibold text-slate-700">Schedule</th>
-          <th class="px-4 py-3 text-left font-semibold text-slate-700">Description</th>
-          <th class="px-4 py-3 text-left font-semibold text-slate-700">Meal type</th>
-          <th class="px-4 py-3 text-right font-semibold text-slate-700">Actions</th>
+          <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t('meal.schedule') %></th>
+          <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t('meal.description') %></th>
+          <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t('meal.type') %></th>
+          <th class="px-4 py-3 text-right font-semibold text-slate-700"><%= t('actions') %></th>
         </tr>
       </thead>
 
@@ -22,9 +22,9 @@
             <td class="px-4 py-3"><%= meal.description %></td>
             <td class="px-4 py-3"><%= meal.meal_type %></td>
             <td class="px-4 py-3 text-right">
-              <%= link_to 'Show', meal, class: 'tw-btn-soft py-1.5' %>
-              <%= link_to 'Edit', edit_meal_path(meal), class: 'inline-flex rounded-lg border border-slate-300 px-3 py-2 text-slate-600 hover:bg-slate-100' %>
-              <%= link_to 'Destroy', meal, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'inline-flex rounded-lg border border-rose-300 px-3 py-2 text-rose-700 hover:bg-rose-50' %>
+              <%= link_to t('show'), meal, class: 'tw-btn-soft py-1.5' %>
+              <%= link_to t('edit'), edit_meal_path(meal), class: 'inline-flex rounded-lg border border-slate-300 px-3 py-2 text-slate-600 hover:bg-slate-100' %>
+              <%= link_to t('remove'), meal, data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: 'inline-flex rounded-lg border border-rose-300 px-3 py-2 text-rose-700 hover:bg-rose-50' %>
             </td>
           </tr>
         <% end %>

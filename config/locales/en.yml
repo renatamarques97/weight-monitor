@@ -32,9 +32,17 @@ en:
     created: 'Running was successfully created.'
   meal:
     title: 'Meals'
+    singular: 'Meal'
     add: 'Add Meal'
     new: 'New Meal'
+    edit: 'Edit Meal'
+    schedule: 'Schedule'
+    description: 'Description'
+    type: 'Meal type'
     back: 'Back'
+    created: 'Meal was successfully created.'
+    updated: 'Meal was successfully updated.'
+    destroyed: 'Meal was successfully destroyed.'
   hello: 'Hello, '
   actions: 'Actions'
   sure: 'Are you sure?'
@@ -45,6 +53,7 @@ en:
   goal: 'GOAL'
   progress: 'Your Progress '
   send: 'Send'
+  back: 'Back'
   error:
     single: 'error'
     plural: 'errors'
@@ -55,3 +64,5 @@ en:
     message: 'Message'
   dashboard:
     description: 'Track your indicators and daily evolution in one place.'
+    goal_achieved: 'Achieved'
+    goal_in_progress: 'In progress'
