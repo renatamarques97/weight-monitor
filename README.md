@@ -10,17 +10,18 @@ evolution of weight over the period of the diet.
 
 ### Ruby version
 ```
-3.2.2
+4.0.2
 ```
 
 ### Rails version
 ```
-7.1.3
+8.0.5
 ```
 
 ### Configuration
 ```shell
 bundle install
+rails tailwindcss:install
 yarn install
 ```
 
