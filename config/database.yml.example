@@ -22,9 +22,9 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   host: localhost
   port: 5432
-  # host: 192.168.0.12 # CASA BRISA NET
+  # host: 192.168.0.12
   # port: 5432
-  username: postgres
+  # username: postgres
   # password: ma20nu333
 
 development:
