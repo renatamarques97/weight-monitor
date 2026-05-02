@@ -10,13 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_02_08_011529) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_02_124000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "chat_messages", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "role", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "created_at"], name: "index_chat_messages_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_chat_messages_on_user_id"
+  end
+
   create_table "diets", force: :cascade do |t|
-    t.date "start_date", default: "2023-01-01", null: false
-    t.date "end_date", default: "2023-01-01", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
     t.float "initial_weight", null: false
     t.float "target_weight", null: false
     t.float "height"
@@ -52,8 +62,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_02_08_011529) do
     t.string "name", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at", precision: nil
-    t.datetime "remember_created_at", precision: nil
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "target_pace"
@@ -63,13 +73,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_02_08_011529) do
 
   create_table "weights", force: :cascade do |t|
     t.float "kg", null: false
-    t.date "weight_date", default: "2023-01-01", null: false
+    t.date "weight_date", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_weights_on_user_id"
   end
 
+  add_foreign_key "chat_messages", "users"
   add_foreign_key "diets", "users"
   add_foreign_key "meals", "diets"
   add_foreign_key "runnings", "users"
