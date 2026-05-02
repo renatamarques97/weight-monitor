@@ -7,7 +7,7 @@ class ChatResponsesController < ApplicationController
     response.headers['Content-type']  = 'text/event-stream'
     response.headers['Last-Modified'] = Time.now.httpdate
     sse                               = SSE.new(response.stream, event: "message")
-    client                            = OpenAI::Client.new(access_token: ENV["OPEN_API_KEY"])
+    client                            = OpenAI::Client.new(access_token: ENV["OPENAI_API_KEY"])
 
     begin
       client.chat(
