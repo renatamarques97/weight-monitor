@@ -6,16 +6,20 @@
   <p class="mb-5 text-sm text-slate-600 md:text-base"><%= t('dashboard.description') %></p>
 
   <div class="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-center justify-center gap-4">
-        <i class="fa fa-heartbeat text-7xl" style="color: #f43f5e;" aria-hidden="true"></i>
+    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4">
+        <span class="inline-flex self-start">
+          <i class="fa fa-heartbeat text-7xl" style="color: #f43f5e;" aria-hidden="true"></i>
+        </span>
         <div>
           <p class="text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t('imc') %></p>
           <p class="mt-1 text-2xl font-bold text-slate-900"><%= @imc %></p>
         </div>
     </article>
 
-    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-center justify-center gap-4">
-        <i class="fa fa-cutlery text-7xl" style="color: #0ea5e9;" aria-hidden="true"></i>
+    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4">
+        <span class="inline-flex self-start">
+          <i class="fa fa-cutlery text-7xl" style="color: #0ea5e9;" aria-hidden="true"></i>
+        </span>
         <div>
           <p class="text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t('diet.title') %></p>
           <p class="mt-1 text-2xl font-bold text-slate-900"><%= @diets.count %></p>
@@ -25,17 +29,23 @@
         </div>
     </article>
 
-    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-center justify-center gap-4">
-        <i class="fa fa-star text-7xl" style="color: #f59e0b;" aria-hidden="true"></i>
+    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4">
+        <span class="inline-flex self-start">
+          <i class="fa fa-star text-7xl" style="color: #f59e0b;" aria-hidden="true"></i>
+        </span>
         <div>
           <p class="text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t('goal') %></p>
           <p class="mt-1 text-lg font-semibold text-slate-900">
             <% if @goal %>
-              <i class="fa fa-trophy text-7xl mr-1 text-amber-500" aria-hidden="true"></i>
-              <%= t('dashboard.goal_achieved') %>
+              <span class="inline-flex items-center gap-1">
+                <i class="fa fa-trophy text-7xl text-amber-500" aria-hidden="true"></i>
+                <%= t('dashboard.goal_achieved') %>
+              </span>
             <% else %>
-              <i class="fa fa-clock-o text-7xl mr-1 text-slate-500" aria-hidden="true"></i>
-              <%= t('dashboard.goal_in_progress') %>
+              <span class="inline-flex items-center gap-1">
+                <i class="fa fa-clock-o text-7xl text-slate-500" aria-hidden="true"></i>
+                <%= t('dashboard.goal_in_progress') %>
+              </span>
             <% end %>
           </p>
         </div>
