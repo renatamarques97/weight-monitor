@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class WeightQuery
-  WEIGHT_DATE = "weights.weight_date"
-  WEIGHT_KG = "weights.kg"
-
   def self.weights(user)
-    user.weights.group(WEIGHT_DATE).sum(WEIGHT_KG)
+    user.weights
+      .order(weight_date: :asc, id: :desc)
+      .to_a
+      .group_by(&:weight_date)
+      .transform_values(&:first)
+      .each_with_object({}) { |(date, w), acc| acc[date] = w.kg }
   end
 end
