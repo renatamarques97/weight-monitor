@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :weights, dependent: :destroy
   has_many :diets, dependent: :destroy
   has_many :runnings, dependent: :destroy
+  has_many :chat_messages, dependent: :destroy
 
   validates_uniqueness_of :email
   validates :name, presence: true

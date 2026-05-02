@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="chat"
 export default class extends Controller {
-    static targets = ["prompt", "conversation"]
+    static targets = ["prompt", "conversation", "objective"]
 
     disconnect() {
         if (this.eventSource) {
@@ -44,7 +44,8 @@ export default class extends Controller {
 
     #setupEventSource() {
         const prompt = encodeURIComponent(this.promptTarget.value)
-        this.eventSource = new EventSource(`/chat_responses?prompt=${prompt}`)
+        const objective = this.hasObjectiveTarget ? encodeURIComponent(this.objectiveTarget.value) : ""
+        this.eventSource = new EventSource(`/chat_responses?prompt=${prompt}&objective=${objective}`)
         this.eventSource.addEventListener("message", this.#handleMessage.bind(this))
         this.eventSource.addEventListener("error", this.#handleError.bind(this))
     }
