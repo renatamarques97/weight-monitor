@@ -1,14 +1,18 @@
 <%= render "dashboard/menu" %>
 
-</br>
+<section class="tw-card" data-controller="chat">
+  <h1 class="mb-2 text-2xl font-bold tracking-tight text-slate-900"><%= t('diet.suggestions') %></h1>
+  <p class="mb-4 text-sm text-slate-600"><%= t('chat.describe_goals') %></p>
 
-<div class="chat-container" data-controller="chat">
-  <h1><%= t('diet.suggestions') %></h1>
-  <section class="chat-conversation" data-chat-target="conversation"></section>
-  <%= form_with data: { action: "chat#generateResponse" } do |form| %>
-    <div class="chat-input">
-      <%= form.text_area :message, id: "prompt", data: { chat_target: "prompt" } %>
-      <%= form.submit t('send') %>
+  <section class="max-h-[55vh] min-h-[300px] overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-4" data-chat-target="conversation"></section>
+
+  <%= form_with data: { action: "chat#generateResponse" }, html: { class: "mt-4 grid gap-3 md:grid-cols-[1fr_auto] md:items-end" } do |form| %>
+    <div>
+      <%= form.label :message, t('chat.message'), class: "tw-label" %>
+      <%= form.text_area :message, id: "prompt", rows: 3, class: "tw-input", placeholder: t('chat.example'), data: { chat_target: "prompt" } %>
+    </div>
+    <div>
+      <%= form.submit t('send'), class: "tw-btn-primary w-full md:w-auto" %>
     </div>
   <% end %>
-</div>
+</section>

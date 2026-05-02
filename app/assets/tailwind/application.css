@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette (emerald-based) */
+  --color-brand-50:  #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-500: #10b981;
+  --color-brand-700: #047857;
+}
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased;
+  }
+
+  h1 { @apply text-2xl font-bold text-slate-800; }
+  h2 { @apply text-xl  font-bold text-slate-800; }
+  h3 { @apply text-lg  font-semibold text-slate-700; }
+
+  a {
+    @apply text-emerald-700 underline-offset-2 hover:underline;
+  }
+}
+
+@layer components {
+
+  .tw-card {
+    @apply rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm backdrop-blur;
+  }
+
+  .tw-label {
+    @apply text-sm font-semibold text-slate-700;
+  }
+
+  .tw-input {
+    @apply mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2
+           text-sm shadow-sm transition
+           focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200;
+  }
+
+  /* Base shape & spacing (standalone usable) */
+  .tw-btn {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition;
+  }
+
+  /* Primary – solid emerald */
+  .tw-btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition
+           bg-emerald-600 text-white hover:bg-emerald-700;
+  }
+
+  /* Soft – outlined emerald */
+  .tw-btn-soft {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition
+           border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100;
+  }
+
+  /* Danger – outlined rose */
+  .tw-btn-danger {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition
+           border border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100;
+  }
+}
+
+@layer utilities {
+}

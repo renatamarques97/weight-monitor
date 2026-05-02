@@ -34,6 +34,7 @@
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+config/database.yml
 
 # Ignore vim temporary files
 *.swp
@@ -52,3 +53,8 @@ yarn-debug.log*
 # Ignore env
 .env
 
+
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
+/config/database.yml

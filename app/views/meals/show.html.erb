@@ -1,19 +1,10 @@
-<p id="notice"><%= notice %></p>
+<section class="tw-card">
+  <h1 class="mb-4 text-2xl font-bold tracking-tight text-slate-900"><%= t('meal.singular') %></h1>
 
-<p>
-  <strong>Schedule:</strong>
-  <%= @meal.schedule %>
-</p>
+  <p class="mb-1"><strong><%= t('meal.schedule') %>:</strong> <%= @meal.schedule %></p>
+  <p class="mb-1"><strong><%= t('meal.description') %>:</strong> <%= @meal.description %></p>
+  <p class="mb-4"><strong><%= t('meal.type') %>:</strong> <%= @meal.meal_type %></p>
 
-<p>
-  <strong>Description:</strong>
-  <%= @meal.description %>
-</p>
-
-<p>
-  <strong>Meal type:</strong>
-  <%= @meal.meal_type %>
-</p>
-
-<%= link_to 'Edit', edit_meal_path(@meal) %> |
-<%= link_to 'Back', meals_path %>
+  <%= link_to t('edit'), edit_meal_path(@meal), class: 'tw-btn-primary' %>
+  <%= link_to t('meal.back'), meals_path, class: 'tw-btn-soft' %>
+</section>

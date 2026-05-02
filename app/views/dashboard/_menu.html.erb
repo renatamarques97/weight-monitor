@@ -1,33 +1,31 @@
-<div class="menu">
-  <a href=<%= root_path %>><h1><%= t('title') %></h1></a>
+<nav class="mb-6 rounded-2xl bg-gradient-to-r from-emerald-700 to-teal-600 p-4 text-white shadow-lg">
+  <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <%= link_to root_path, class: "inline-flex items-center gap-2 text-xl font-bold tracking-tight text-white no-link-underline" do %>
+      <i class="fa fa-heartbeat" aria-hidden="true"></i>
+      <span><%= t('title') %></span>
+    <% end %>
 
-  <div class="sign">
-    <% if current_user.present? %>
-      <button class="btn btn-primary">
-        <%= link_to(t('weight.update'), new_weight_path) %>
-      </button>
-      <button class="btn btn-primary">
-        <%= link_to(t('running.new'), new_running_path) %>
-      </button>
-      <button class="btn btn-primary">
-        <%= link_to(t('diet.new'), new_diet_path) %>
-      </button>
-      <button class="btn btn-primary">
-        <%= link_to(t('diet.suggestions'), chats_path) %>
-      </button>
-    <% end %>
-    <% if current_user %>
-      <button class="btn btn-danger">
-        <i class="fa fa-sign-out" aria-hidden="true"></i>
-        <%= link_to t('sign.out'), destroy_user_session_path, method: :delete %>
-      </button>
-    <% else %>
-      <button class="btn btn-primary">
-        <%= link_to t('sign.up'), new_user_registration_path %>
-      </button>
-      <button class="btn btn-success">
-        <%= link_to t('sign.in'), new_user_session_path %>
-      </button>
-    <% end %>
+    <div class="flex flex-wrap items-center gap-2">
+      <% if current_user.present? %>
+        <%= link_to new_weight_path, data: { turbo_frame: "main" }, class: "tw-btn rounded-lg bg-white/20 text-white hover:bg-white/30 no-link-underline" do %>
+          <i class="fa fa-balance-scale mr-2" aria-hidden="true"></i><%= t('weight.update') %>
+        <% end %>
+        <%= link_to new_running_path, data: { turbo_frame: "main" }, class: "tw-btn rounded-lg bg-white/20 text-white hover:bg-white/30 no-link-underline" do %>
+          <i class="fa fa-road mr-2" aria-hidden="true"></i><%= t('running.new') %>
+        <% end %>
+        <%= link_to new_diet_path, data: { turbo_frame: "main" }, class: "tw-btn rounded-lg bg-white/20 text-white hover:bg-white/30 no-link-underline" do %>
+          <i class="fa fa-cutlery mr-2" aria-hidden="true"></i><%= t('diet.new') %>
+        <% end %>
+        <%= link_to chats_path, class: "tw-btn rounded-lg bg-amber-300 text-slate-900 hover:bg-amber-200 no-link-underline" do %>
+          <i class="fa fa-magic mr-2" aria-hidden="true"></i><%= t('diet.suggestions') %>
+        <% end %>
+        <%= link_to destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: "tw-btn rounded-lg border border-white/70 bg-transparent text-white hover:bg-white/15 no-underline no-link-underline" do %>
+          <i class="fa fa-sign-out mr-2" aria-hidden="true"></i><%= t('sign.out') %>
+        <% end %>
+      <% else %>
+        <%= link_to t('sign.up'), new_user_registration_path, class: "tw-btn rounded-lg bg-white text-emerald-700 hover:bg-emerald-50 no-link-underline" %>
+        <%= link_to t('sign.in'), new_user_session_path, class: "tw-btn rounded-lg bg-amber-300 text-slate-900 hover:bg-amber-200 no-link-underline" %>
+      <% end %>
+    </div>
   </div>
-</div>
+</nav>

@@ -1,47 +1,74 @@
 <%= render "menu" %>
 
-</br>
+<turbo-frame id="main">
+<section class="tw-card">
+  <h1 class="mb-1 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl"><%= t('hello') %><%= current_user.name %></h1>
+  <p class="mb-5 text-sm text-slate-600 md:text-base"><%= t('dashboard.description') %></p>
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-  </head>
-  <body>
-    <h6><%= t('hello') %><%= current_user.name %></h6>
-
-    <div class="row">
-      <div class="info-box">
-        <span class="info-box-icon bg-crimson"><i class="fa fa-heartbeat" aria-hidden="true"></i></span>
-        <span class="info-box-text"><%= t('imc') %></span>
-        <span class="info-box-content"><%= @imc %></span>
-      </div>
-
-      <div class="info-box">
-        <%= link_to diets_path do %>
-          <span class="info-box-icon bg-aqua"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
-          <span class="info-box-text"></span>
-          <span class="info-box-content"><%= t('diet.title') %></span>
-        <% end %>
-      </div>
-
-      <div class="info-box">
-        <span class="info-box-icon bg-green"><i class="fa fa-star" aria-hidden="true"></i></span>
-        <span class="info-box-text"><%= t('goal') %></span>
-        <span class="info-box-content">
-          <% if @goal %>
-            <i class="fa fa-trophy" aria-hidden="true"></i>
-          <% else %>
-            <i class="fa fa-clock-o" aria-hidden="true"></i>
-          <% end %>
+  <div class="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4">
+        <span class="inline-flex self-start">
+          <i class="fa fa-heartbeat text-7xl" style="color: #f43f5e;" aria-hidden="true"></i>
         </span>
-      </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t('imc') %></p>
+          <p class="mt-1 text-2xl font-bold text-slate-900"><%= @imc %></p>
+        </div>
+    </article>
+
+    <%= link_to diets_path, data: { turbo_frame: "_top" }, class: "rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4 hover:shadow-md hover:border-slate-300 transition-all" do %>
+        <span class="inline-flex self-start">
+          <i class="fa fa-cutlery text-7xl" style="color: #0ea5e9;" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t('diet.title') %></p>
+          <p class="mt-1 text-2xl font-bold text-slate-900"><%= @diets.count %></p>
+        </div>
+    <% end %>
+
+    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4">
+        <span class="inline-flex self-start">
+          <i class="fa fa-star text-7xl" style="color: #f59e0b;" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t('goal') %></p>
+          <p class="mt-1 text-lg font-semibold text-slate-900">
+            <% if @goal %>
+              <span class="inline-flex items-center gap-1">
+                <i class="fa fa-trophy text-7xl text-amber-500" aria-hidden="true"></i>
+                <%= t('dashboard.goal_achieved') %>
+              </span>
+            <% else %>
+              <span class="inline-flex items-center gap-1">
+                <i class="fa fa-clock-o text-7xl text-slate-500" aria-hidden="true"></i>
+                <%= t('dashboard.goal_in_progress') %>
+              </span>
+            <% end %>
+          </p>
+        </div>
+    </article>
+  </div>
+
+  <h2 class="mb-3 text-xl font-bold text-slate-900">
+    <%= t('progress') %>
+    <i class="fa fa-line-chart ml-2 text-emerald-600" aria-hidden="true"></i>
+  </h2>
+
+  <div class="grid gap-4 xl:grid-cols-2">
+    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-600">
+        <i class="fa fa-balance-scale" aria-hidden="true"></i>
+        <%= t('weight.title') %>
+      </h3>
+      <%= area_chart @weights, discrete: true, height: "280px", colors: ["#059669"], library: { plugins: { legend: { display: false } } } %>
     </div>
-
-    <h4><%= t('progress') %><i class="fa fa-line-chart" aria-hidden="true"></i></h4>
-    <h6><%= t('weight.title') %></h6>
-    <%= area_chart(@weights) %>
-
-    <h6><%= t('running.title') %></h6>
-    <%= area_chart(@runnings) %>
-  </body>
-</html>
+    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-600">
+          <i class="fa fa-road" aria-hidden="true"></i>
+        <%= t('running.title') %>
+      </h3>
+      <%= area_chart @runnings, discrete: true, height: "280px", colors: ["#f59e0b"], library: { plugins: { legend: { display: false } } } %>
+    </div>
+  </div>
+</section>
+</turbo-frame>

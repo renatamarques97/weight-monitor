@@ -1,8 +1,8 @@
 <%= form_with(model: weight, local: true) do |form| %>
   <% if weight.errors.any? %>
-    <div id="error_explanation" class="alert alert-danger">
-      <h2><%= pluralize(weight.errors.count, "error") %><%= t('error.saved') %> </h2>
-      <ul>
+    <div id="error_explanation" class="mb-4 rounded-xl border border-rose-200 bg-rose-100 p-4 text-rose-800">
+      <h2 class="font-semibold"><%= pluralize(weight.errors.count, t('error.single')) %> <%= t('error.saved') %></h2>
+      <ul class="mt-2 list-disc pl-5 text-sm">
         <% weight.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -10,23 +10,25 @@
     </div>
   <% end %>
 
-  <div class="div-form">
-    <div class="alert alert-danger">
+  <section class="tw-card">
+    <div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
       <%= t('weight.alert') %>
     </div>
 
-    <div class="field">
-      <%= form.label :kg %>
-      <%= form.number_field :kg, step: :any %>
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <%= form.label :kg, class: "tw-label" %>
+        <%= form.number_field :kg, step: :any, class: "tw-input" %>
+      </div>
+
+      <div>
+        <%= form.label :weight_date, class: "tw-label" %>
+        <%= form.date_field :weight_date, class: "tw-input" %>
+      </div>
     </div>
 
-    <div class="field">
-      <%= form.label :weight_date %>
-      <%= form.date_field :weight_date %>
+    <div class="mt-5">
+      <%= form.submit class: 'tw-btn-primary' %>
     </div>
-
-    <div class="actions">
-      <%= form.submit class: 'btn btn-success' %>
-    </div>
-  </div>
+  </section>
 <% end %>

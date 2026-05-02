@@ -13,7 +13,7 @@ class RunningsController < ApplicationController
     @running = current_user.runnings.build(running_params)
 
     if @running.save
-      flash[:notice] = "Running was successfully created."
+      flash[:notice] = t('running.created')
       redirect_to(root_path)
     else
       render :new

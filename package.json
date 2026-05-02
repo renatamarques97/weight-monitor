@@ -1,23 +1,6 @@
 {
   "name": "weight_monitor",
   "private": true,
-  "dependencies": {
-    "@hotwired/stimulus": "^3.2.2",
-    "@hotwired/turbo-rails": "^8.0.4",
-    "@rails/actioncable": "^6.0.0",
-    "@rails/activestorage": "^6.0.0",
-    "@rails/ujs": "^6.0.0",
-    "@rails/webpacker": "5.4.3",
-    "bootstrap": "4.3.1",
-    "chart.js": "^2.9.3",
-    "chartkick": "^3.2.0",
-    "cocoon-js": "^0.0.5",
-    "jquery": "^3.5.1",
-    "popper.js": "^1.16.1",
-    "turbolinks": "^5.2.0"
-  },
   "version": "0.1.0",
-  "devDependencies": {
-    "webpack-dev-server": "^3.11.0"
-  }
+  "dependencies": {}
 }

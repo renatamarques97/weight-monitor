@@ -1,32 +1,30 @@
 <%= render "dashboard/menu" %>
 
-</br>
-
-<div class="div-login-sign">
-  <h2><%= t('sign.in') %></h2>
+<section class="mx-auto max-w-xl rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+  <h1 class="mb-4 text-2xl font-bold tracking-tight text-slate-900"><%= t('sign.in') %></h1>
 
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <div class="field">
-      <%= f.label :email %><br />
-      <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+    <div class="mb-3">
+      <%= f.label :email, class: "tw-label" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "tw-input" %>
     </div>
 
-    <div class="field">
-      <%= f.label :password %><br />
-      <%= f.password_field :password, autocomplete: "current-password" %>
+    <div class="mb-3">
+      <%= f.label :password, class: "tw-label" %>
+      <%= f.password_field :password, autocomplete: "current-password", class: "tw-input" %>
     </div>
 
     <% if devise_mapping.rememberable? %>
-      <div class="field">
-        <%= f.check_box :remember_me %>
+      <div class="mb-4 flex items-center gap-2 text-sm text-slate-700">
+        <%= f.check_box :remember_me, class: "h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" %>
         <%= f.label :remember_me %>
       </div>
     <% end %>
 
-    <div class="actions">
-      <%= f.submit t('log.in'), class: 'btn btn-success' %>
+    <div class="mb-3">
+      <%= f.submit t('log.in'), class: 'tw-btn-primary w-full' %>
     </div>
 
     <%= render "devise/shared/links" %>
   <% end %>
-</div>
+</section>

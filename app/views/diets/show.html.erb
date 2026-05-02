@@ -1,46 +1,25 @@
 <%= render "dashboard/menu" %>
 
-</br>
+<section class="tw-card">
+  <h1 class="mb-4 text-2xl font-bold tracking-tight text-slate-900"><%= t('diet.singular') %></h1>
 
-<p id="notice"><%= notice %></p>
+  <div class="mb-5 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+    <div class="rounded-lg border border-slate-200 bg-white p-3"><strong><%= t('diet.start_date') %>:</strong> <%= @diet.start_date %></div>
+    <div class="rounded-lg border border-slate-200 bg-white p-3"><strong><%= t('diet.end_date') %>:</strong> <%= @diet.end_date %></div>
+    <div class="rounded-lg border border-slate-200 bg-white p-3"><strong><%= t('diet.initial_weight') %>:</strong> <%= @diet.initial_weight %></div>
+    <div class="rounded-lg border border-slate-200 bg-white p-3"><strong><%= t('diet.target_weight') %>:</strong> <%= @diet.target_weight %></div>
+    <div class="rounded-lg border border-slate-200 bg-white p-3"><strong><%= t('diet.height') %>:</strong> <%= @diet.height %></div>
+  </div>
 
-<div class="div-form">
-  <p>
-    <strong><%= t('diet.start_date') %></strong>
-    <%= @diet.start_date %>
-  </p>
-
-  <p>
-    <strong><%= t('diet.end_date') %></strong>
-    <%= @diet.end_date %>
-  </p>
-
-  <p>
-    <strong><%= t('diet.initial_weight') %></strong>
-    <%= @diet.initial_weight %>
-  </p>
-
-  <p>
-    <strong><%= t('diet.target_weight') %></strong>
-    <%= @diet.target_weight %>
-  </p>
-
-  <p>
-    <strong><%= t('diet.height') %></strong>
-    <%= @diet.height %>
-  </p>
-
-  <p>
-    <strong><%= t('meal.title') %></strong>
+  <h2 class="mb-2 text-lg font-semibold text-slate-900"><%= t('meal.title') %></h2>
+  <div class="mb-5 flex flex-col gap-2">
     <% @diet.meals.each do |meal| %>
-      <%= meal.meal_type + "," %>
-      <%= meal.description + "," %>
-      <%= meal.schedule.strftime("%H:%M") %> |
+      <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
+        <strong><%= meal.meal_type %></strong> - <%= meal.description %> - <%= meal.schedule.strftime("%H:%M") %>
+      </div>
     <% end %>
-  </p>
+  </div>
 
-  <button class="btn btn-primary">
-    <%= link_to t('edit'), edit_diet_path(@diet) %>
-  </button>
-</div>
+  <%= link_to t('edit'), edit_diet_path(@diet), class: "tw-btn-primary" %>
+</section>
 

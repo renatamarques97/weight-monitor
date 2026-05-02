@@ -1,12 +1,12 @@
 <%= form_with(model: diet, local: true) do |form| %>
   <% if diet.errors.any? %>
-    <div id="error_explanation" class="alert alert-danger">
-      <h2>
-        <%= pluralize(diet.errors.count, "error") %>
+    <div id="error_explanation" class="mb-4 rounded-xl border border-rose-200 bg-rose-100 p-4 text-rose-800">
+      <h2 class="font-semibold">
+        <%= pluralize(diet.errors.count, t('error.single')) %>
         <%= t('error.saved') %>
       </h2>
 
-      <ul>
+      <ul class="mt-2 list-disc pl-5 text-sm">
         <% diet.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -14,53 +14,59 @@
     </div>
   <% end %>
 
-  <div class="div-form">
-    <h3><%= t('diet.singular') %></h3>
-    <div class="field">
-      <%= form.label :start_date %>
-      <%= form.date_field :start_date %>
+  <section class="tw-card" data-controller="nested-form">
+    <h2 class="mb-4 text-xl font-bold text-slate-900"><%= t('diet.singular') %></h2>
+
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div class="xl:col-span-2">
+        <%= form.label :start_date, class: "tw-label" %>
+        <%= form.date_field :start_date, class: "tw-input" %>
+      </div>
+
+      <div class="xl:col-span-2">
+        <%= form.label :end_date, class: "tw-label" %>
+        <%= form.date_field :end_date, class: "tw-input" %>
+      </div>
+
+      <div>
+        <%= form.label :initial_weight, class: "tw-label" %>
+        <%= form.number_field :initial_weight, step: :any, class: "tw-input" %>
+      </div>
+
+      <div>
+        <%= form.label :target_weight, class: "tw-label" %>
+        <%= form.number_field :target_weight, step: :any, class: "tw-input" %>
+      </div>
+
+      <div>
+        <%= form.label :height, class: "tw-label" %>
+        <%= form.text_field :height, class: "tw-input" %>
+      </div>
     </div>
 
-    <div class="field">
-      <%= form.label :end_date %>
-      <%= form.date_field :end_date %>
+    <div class="my-5 h-px bg-slate-200"></div>
+
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <h3 class="text-lg font-semibold text-slate-900"><%= t('meal.title') %></h3>
+      <button type="button" class="tw-btn-primary" data-action="nested-form#add">
+        <i class="fa fa-plus mr-2" aria-hidden="true"></i><%= t('meal.add') %>
+      </button>
     </div>
 
-    <div class="field">
-      <%= form.label :initial_weight %>
-      <%= form.number_field :initial_weight, step: :any %>
+    <template data-nested-form-target="template">
+      <%= form.fields_for :meals, Meal.new, child_index: "NEW_RECORD" do |ff| %>
+        <%= render 'meal_fields', f: ff %>
+      <% end %>
+    </template>
+
+    <div data-nested-form-target="list">
+      <%= form.fields_for :meals do |ff| %>
+        <%= render 'meal_fields', f: ff %>
+      <% end %>
     </div>
 
-    <div class="field">
-      <%= form.label :target_weight %>
-      <%= form.number_field :target_weight, step: :any %>
+    <div class="mt-4">
+      <%= form.submit class: 'tw-btn-primary' %>
     </div>
-
-    <div class="field">
-      <%= form.label :height %>
-      <%= form.text_field :height %>
-    </div>
-
-    <button class="btn btn-primary">
-      <%= link_to_add_association t('meal.add'), form, :meals,
-        'data-association-insertion-node' => "#meals-diet ol",
-        'data-association-insertion-method' => "append",
-        :wrap_object => Proc.new { |m| m.build_diet; m } %>
-    </button>
-    <hr/>
-
-    <fieldset id="meals-diet">
-      <ol>
-        <h3><%= t('meal.title') %></h3>
-        <%= form.fields_for :meals do |ff| %>
-          <%= render 'meal_fields', :f => ff %>
-        <% end %>
-      </ol>
-    </fieldset>
-    <hr/>
-
-    <div class="actions">
-      <%= form.submit class: 'btn btn-success' %>
-    </div>
-  </div>
+  </section>
 <% end %>
