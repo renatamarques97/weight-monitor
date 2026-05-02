@@ -1,6 +1,12 @@
 //= link_tree ../images
 //= link_directory ../stylesheets .css
-//= link_tree ../builds
+//= link tailwind.css
+//= link font-awesome.css
+//= link fontawesome-webfont.eot
+//= link fontawesome-webfont.svg
+//= link fontawesome-webfont.ttf
+//= link fontawesome-webfont.woff
+//= link fontawesome-webfont.woff2
 //= link application.js
 //= link controllers/application.js
 //= link controllers/chat_controller.js
