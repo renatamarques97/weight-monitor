@@ -23,12 +23,10 @@ en:
   weight:
     title: 'Weights'
     update: 'Update Weight'
-    alert: 'Alert: update your weight just once a day.'
     created: 'Weight was successfully created.'
   running:
     title: 'Runnings'
     new: 'Create Running'
-    alert: 'Alert: create a running just once a day.'
     created: 'Running was successfully created.'
   meal:
     title: 'Meals'
