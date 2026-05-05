@@ -9,4 +9,5 @@ class User < ApplicationRecord
 
   validates_uniqueness_of :email
   validates :name, presence: true
+  validates :height, numericality: { greater_than: 0 }, allow_nil: true
 end

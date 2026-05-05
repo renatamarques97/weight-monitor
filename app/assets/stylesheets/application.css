@@ -8,3 +8,15 @@
 a.no-link-underline, a.no-link-underline:hover {
   text-decoration-line: none !important;
 }
+
+.tw-btn-primary {
+  cursor: pointer;
+}
+
+.tw-btn-soft {
+  cursor: pointer;
+}
+
+.tw-btn-danger {
+  cursor: pointer;
+}
