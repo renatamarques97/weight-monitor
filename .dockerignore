@@ -1,0 +1,47 @@
+# See https://docs.docker.com/engine/reference/builder/#dockerignore-file for more about ignoring files.
+
+# Ignore git directory.
+/.git/
+/.gitignore
+
+# Ignore bundler config.
+/.bundle
+
+# Ignore all environment files.
+.env*
+
+# Ignore all default key files.
+/config/master.key
+/config/credentials/*.key
+
+# Ignore mac and linux generated files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+*~
+*#
+
+# Ignore ruby files
+*.gem
+*.rbc
+
+# Ignore node files
+/node_modules
+
+# Ignore bundler cache
+/vendor/bundle
+
+# Ignore cache
+/tmp
+
+# Ignore local database files
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/db/*.sqlite3-*
+
+# Ignore storage folder
+/storage

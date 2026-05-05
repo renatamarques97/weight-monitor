@@ -50,7 +50,4 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
-
-  # Tests do not need CSS compilation; avoid dartsass build hooks requiring SCSS entrypoints.
-  config.dartsass.builds = {}
 end

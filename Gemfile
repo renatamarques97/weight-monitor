@@ -6,7 +6,6 @@ ruby '4.0.2'
 gem 'rails', '~> 8.0.0'
 gem 'pg'
 gem 'puma'
-gem 'dartsass-rails'
 gem 'jbuilder'
 gem 'bootsnap', require: false
 gem 'devise'
