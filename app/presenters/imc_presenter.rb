@@ -17,6 +17,6 @@ class ImcPresenter
   end
 
   def height
-    user.diets.last.try(:height)
+    user.height
   end
 end

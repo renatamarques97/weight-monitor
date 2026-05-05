@@ -83,7 +83,7 @@ class ChatResponseService
     lines << "Email: #{user.email}"
 
     if latest_diet.present?
-      lines << "Current diet: start=#{latest_diet.start_date}, end=#{latest_diet.end_date}, initial_weight=#{latest_diet.initial_weight}, target_weight=#{latest_diet.target_weight}, height=#{latest_diet.height || 'not provided'}"
+      lines << "Current diet: start=#{latest_diet.start_date}, end=#{latest_diet.end_date}, initial_weight=#{latest_diet.initial_weight}, target_weight=#{latest_diet.target_weight}, height=#{user.height || 'not provided'}"
     else
       lines << "Current diet: not provided"
     end
