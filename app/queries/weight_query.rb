@@ -6,6 +6,8 @@ class WeightQuery
     .order(weight_date: :desc, created_at: :desc)
     .take
 
+    return {} if most_recent_weight.blank?
+
     { most_recent_weight.weight_date => most_recent_weight.kg }
   end
 end

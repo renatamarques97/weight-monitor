@@ -60,6 +60,12 @@ en:
     describe_goals: 'Describe your goals to receive a more useful suggestion.'
     example: 'Ex: I want to lose 4kg in 2 months and run 3x per week'
     message: 'Message'
+    objective_label: 'Objective'
+    objectives:
+      weight_loss: 'Weight Loss'
+      hypertrophy: 'Hypertrophy'
+      running_performance: 'Running Performance'
+      general_health: 'General Health'
   dashboard:
     description: 'Track your indicators and daily evolution in one place.'
     goal_achieved: 'Achieved'

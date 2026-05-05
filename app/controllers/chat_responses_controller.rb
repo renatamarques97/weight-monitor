@@ -3,24 +3,24 @@
 class ChatResponsesController < ApplicationController
   include ActionController::Live
 
+  before_action :authenticate_user!
+
   def show
+    user_prompt = params[:prompt].to_s.strip
+    return head :unprocessable_entity if user_prompt.blank?
+
     response.headers['Content-type']  = 'text/event-stream'
     response.headers['Last-Modified'] = Time.now.httpdate
     sse                               = SSE.new(response.stream, event: "message")
-    client                            = OpenAI::Client.new(access_token: ENV["OPENAI_API_KEY"])
 
     begin
-      client.chat(
-        parameters: {
-          model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: params[:prompt] }],
-          stream: proc do |chunk|
-            content = chunk.dig("choices", 0, "delta", "content")
-            return if content.nil?
-            sse.write({ message: content })
-          end
-        }
-      )
+      ::ChatResponseService.new(
+        user: current_user,
+        prompt: user_prompt,
+        objective: params[:objective]
+      ).call do |content|
+        sse.write({ message: content })
+      end
     ensure
       sse.close
     end

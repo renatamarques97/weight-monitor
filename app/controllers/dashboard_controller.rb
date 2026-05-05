@@ -5,7 +5,7 @@ class DashboardController < ApplicationController
 
   def index
     @goal = ::GoalPresenter.new(current_user).achieved?
-    @diets = Diet.authorized_user(current_user)
+    @diets = ::Diet.authorized_user(current_user)
     @imc = ::ImcPresenter.new(current_user).call
     @weights = ::WeightQuery.weights(current_user)
     @runnings = ::RunningQuery.runnings(current_user)
