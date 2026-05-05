@@ -2,11 +2,10 @@
 
 class WeightQuery
   def self.weights(user)
-    user.weights
-      .order(weight_date: :asc, id: :desc)
-      .to_a
-      .group_by(&:weight_date)
-      .transform_values(&:first)
-      .each_with_object({}) { |(date, w), acc| acc[date] = w.kg }
+    most_recent_weight = user.weights
+    .order(weight_date: :desc, created_at: :desc)
+    .take
+
+    { most_recent_weight.weight_date => most_recent_weight.kg }
   end
 end
