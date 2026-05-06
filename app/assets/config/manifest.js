@@ -12,3 +12,4 @@
 //= link controllers/chat_controller.js
 //= link controllers/index.js
 //= link controllers/nested_form_controller.js
+//= link controllers/tabs_controller.js
