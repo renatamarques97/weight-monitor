@@ -42,6 +42,7 @@ en:
     updated: 'Meal was successfully updated.'
     destroyed: 'Meal was successfully destroyed.'
   hello: 'Hello, '
+  profile: 'Profile'
   actions: 'Actions'
   sure: 'Are you sure?'
   show: 'Show'

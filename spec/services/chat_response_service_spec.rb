@@ -42,13 +42,13 @@ RSpec.describe ChatResponseService do
     end
 
     it 'builds user context with diet, meals, weight history and running history' do
+      user.update(height: 1.70)
       diet = create(:diet,
         user: user,
         start_date: Date.new(2026, 1, 1),
         end_date: Date.new(2026, 3, 1),
         initial_weight: 80,
-        target_weight: 72,
-        height: 1.70
+        target_weight: 72
       )
       create(:meal, diet: diet, schedule: '2026-01-03 08:00:00', description: 'Eggs and toast', meal_type: 1)
       create(:weight, user: user, weight_date: Date.new(2026, 1, 2), kg: 79.2)

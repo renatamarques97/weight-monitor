@@ -14,7 +14,6 @@
           <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t('diet.end_date') %></th>
           <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t('diet.initial_weight') %></th>
           <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t('diet.target_weight') %></th>
-          <th class="px-4 py-3 text-left font-semibold text-slate-700"><%= t('diet.height') %></th>
           <th class="px-4 py-3 text-right font-semibold text-slate-700"><%= t('actions') %></th>
         </tr>
       </thead>
@@ -26,7 +25,6 @@
             <td class="px-4 py-3"><%= diet.end_date.strftime("%m/%d/%Y") %></td>
             <td class="px-4 py-3"><%= diet.initial_weight %></td>
             <td class="px-4 py-3"><%= diet.target_weight %></td>
-            <td class="px-4 py-3"><%= diet.height %></td>
             <td class="px-4 py-3 text-right">
               <%= link_to t('show'), diet, class: "tw-btn-soft py-1.5" %>
               <%= link_to edit_diet_path(diet), class: "inline-flex rounded-lg border border-slate-300 px-3 py-2 text-slate-600 hover:bg-slate-100" do %>
