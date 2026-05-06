@@ -2,12 +2,14 @@ require 'rails_helper'
 
 RSpec.describe ImcPresenter do
   describe "#call" do
-    let(:user) { create(:user) }
-    let(:diet) { create(:diet, height: 1.70, user_id: user.id) }
+    let(:user) { create(:user, height: 1.70) }
+    let(:diet) { create(:diet, user_id: user.id) }
     let(:weight) { create(:weight, kg: 80, user_id: user.id) }
     let(:imc) { 27.68 }
 
     context "when imc is not valid" do
+      let(:user) { create(:user, height: nil) }
+
       it "weight and height is nil" do
         expect(described_class.new(user).call).to eq(0)
       end

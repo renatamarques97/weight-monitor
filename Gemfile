@@ -44,7 +44,6 @@ end
 
 gem 'tzinfo-data', platforms: [:jruby]
 
-# Use Redis for Action Cable
 gem "redis", "~> 4.0"
 
 gem "tailwindcss-rails", "~> 4.4"

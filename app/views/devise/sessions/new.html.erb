@@ -3,7 +3,7 @@
 <section class="mx-auto max-w-xl rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-sm">
   <h1 class="mb-4 text-2xl font-bold tracking-tight text-slate-900"><%= t('sign.in') %></h1>
 
-  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: false }) do |f| %>
     <div class="mb-3">
       <%= f.label :email, class: "tw-label" %>
       <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "tw-input" %>

@@ -19,6 +19,9 @@
         <%= link_to chats_path, class: "tw-btn rounded-lg bg-amber-300 text-slate-900 hover:bg-amber-200 no-link-underline" do %>
           <i class="fa fa-magic mr-2" aria-hidden="true"></i><%= t('diet.suggestions') %>
         <% end %>
+        <%= link_to edit_user_registration_path, class: "tw-btn rounded-lg border border-slate-200 bg-transparent text-white hover:bg-white/15 no-underline no-link-underline" do %>
+          <i class="fa fa-user mr-2" aria-hidden="true"></i><%= t('profile') %>
+        <% end %>
         <%= link_to destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: "tw-btn rounded-lg border border-white/70 bg-transparent text-white hover:bg-white/15 no-underline no-link-underline" do %>
           <i class="fa fa-sign-out mr-2" aria-hidden="true"></i><%= t('sign.out') %>
         <% end %>
