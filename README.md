@@ -1,4 +1,5 @@
-[![Build Status](https://circleci.com/gh/renatamarques97/weight-monitor.svg?style=svg)](https://app.circleci.com/pipelines/github/renatamarques97/weight-monitor) [![Coverage Status](.github/badges/coverage.svg)](https://github.com/renatamarques97/weight-monitor)
+[![Build Status](https://circleci.com/gh/renatamarques97/weight-monitor.svg?style=svg)](https://app.circleci.com/)
+[![codecov](https://codecov.io/gh/renatamarques97/weight-monitor/branch/master/graph/badge.svg)](https://codecov.io/gh/renatamarques97/weight-monitor)
 
 # Fit Tracker
 This is a web solution for managing meals, weight, runnings, sleep and water consumption.

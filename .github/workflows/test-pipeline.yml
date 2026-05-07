@@ -1,4 +1,4 @@
-name: Test Pipeline
+name: Tests & Coverage
 
 on:
   push:
@@ -8,11 +8,11 @@ on:
 
 jobs:
   test:
+    name: Run Tests and Generate Coverage
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
-    
     services:
       postgres:
         image: postgres:15
@@ -44,6 +44,7 @@ jobs:
       REDIS_URL: redis://localhost:6379/0
 
     steps:
+      # Setup
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -52,12 +53,14 @@ jobs:
         with:
           bundler-cache: true
 
+      # Database and Assets
       - name: Setup database
         run: bin/rails db:setup
 
-      - name: Check front-end (Asset Precompilation)
+      - name: Precompile assets
         run: bundle exec rails assets:precompile
 
+      # Coverage Data
       - name: Download master coverage artifact
         uses: dawidd6/action-download-artifact@v3
         with:
@@ -67,9 +70,11 @@ jobs:
           path: coverage
         continue-on-error: true
 
-      - name: Run tests & coverage check
+      # Tests
+      - name: Run RSpec tests with coverage report
         run: bundle exec rspec
 
+      # Artifacts
       - name: Upload coverage results
         uses: actions/upload-artifact@v4
         if: always()
@@ -77,22 +82,12 @@ jobs:
           name: coverage
           path: coverage/
 
-      - name: Generate Coverage Badge
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: |
-          ruby -r json -r net/http -e '
-            last_run = JSON.parse(File.read("coverage/.last_run.json"))
-            coverage = last_run.dig("result", "line").round(2)
-            color = if coverage >= 90; "brightgreen"; elsif coverage >= 80; "yellow"; else; "red"; end
-            url = "https://img.shields.io/badge/coverage-#{coverage}%25-#{color}"
-            svg = Net::HTTP.get(URI(url))
-            Dir.mkdir(".github/badges") unless Dir.exist?(".github/badges")
-            File.write(".github/badges/coverage.svg", svg)
-          '
-
-      - name: Commit coverage badge
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        uses: stefanzweifel/git-auto-commit-action@v5
+      # Coverage Report
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        if: always()
         with:
-          commit_message: "chore: update coverage badge [skip ci]"
-          file_pattern: '.github/badges/coverage.svg'
+          files: ./coverage/.resultset.json
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
