@@ -1,48 +1,60 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["tab", "panel"]
+  static targets = ["tab", "panel", "periodLink"]
+  static values = { activeTab: String }
 
   connect() {
-    this.showTab(0)
+    // Determine which tab to show based on value from controller or default to 0
+    let index = this.tabTargets.findIndex(tab => tab.dataset.tabName === this.activeTabValue)
+    if (index === -1) index = 0
+    
+    this.showTab(index, false)
   }
 
   switch(event) {
     event.preventDefault()
-    // Find closest tab target in case a child icon is clicked
-    const tabClicked = event.currentTarget
-    const index = this.tabTargets.indexOf(tabClicked)
+    const tab = event.currentTarget
+    const index = this.tabTargets.indexOf(tab)
+    const tabName = tab.dataset.tabName
+
     if (index >= 0) {
-      this.showTab(index)
+      this.showTab(index, true)
+      this.updateUrl(tabName)
     }
   }
 
-  showTab(index) {
-    const activeClasses = ["border-emerald-600", "text-emerald-600"]
-    const inactiveClasses = ["border-transparent", "text-slate-500", "hover:text-slate-700", "hover:border-slate-300"]
+  showTab(index, updatePeriodLinks) {
+    const activeTabName = this.tabTargets[index].dataset.tabName
 
+    // 1. Update Panels
     this.panelTargets.forEach((panel, i) => {
-      if (i === index) {
-        panel.hidden = false
-        panel.classList.remove("hidden")
-        panel.style.display = "block"
-      } else {
-        panel.hidden = true
-        panel.classList.add("hidden")
-        panel.style.display = "none"
-      }
+      const active = i === index
+      panel.hidden = !active
+      panel.classList.toggle("hidden", !active)
+      panel.style.display = active ? "grid" : "none"
     })
 
+    // 2. Update Tabs
     this.tabTargets.forEach((tab, i) => {
-      if (i === index) {
-        tab.classList.add(...activeClasses)
-        tab.classList.remove(...inactiveClasses)
-        tab.setAttribute("aria-selected", "true")
-      } else {
-        tab.classList.add(...inactiveClasses)
-        tab.classList.remove(...activeClasses)
-        tab.setAttribute("aria-selected", "false")
-      }
+      const active = i === index
+      tab.dataset.active = active ? "true" : "false"
+      tab.setAttribute("aria-selected", active ? "true" : "false")
     })
+
+    // 3. Update Period Links (30, 60, 90 days)
+    if (updatePeriodLinks) {
+      this.periodLinkTargets.forEach(link => {
+        const url = new URL(link.href)
+        url.searchParams.set("active_tab", activeTabName)
+        link.href = url.toString()
+      })
+    }
+  }
+
+  updateUrl(tabName) {
+    const url = new URL(window.location)
+    url.searchParams.set("active_tab", tabName)
+    window.history.pushState({}, "", url)
   }
 }

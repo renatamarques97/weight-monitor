@@ -1,0 +1,76 @@
+<%= form_with(model: workout, url: workout.persisted? ? workout_path(workout) : workouts_path, local: true) do |form| %>
+  <% if workout.errors.any? %>
+    <div id="error_explanation" class="mb-4 rounded-xl border border-rose-200 bg-rose-100 p-4 text-rose-800">
+      <h2 class="font-semibold">
+        <%= pluralize(workout.errors.count, t('error.single')) %>
+        <%= t('error.saved') %>
+      </h2>
+
+      <ul class="mt-2 list-disc pl-5 text-sm">
+        <% workout.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section class="tw-card" data-controller="workout-form">
+    <h2 class="mb-3 text-xl font-semibold text-slate-900"><%= workout.persisted? ? t('workout.edit') : t('workout.form_title') %></h2>
+
+    <div class="grid gap-4 md:grid-cols-2">
+
+      <div class="md:col-span-2">
+        <%= form.label :workout_type, t('workout.type'), class: "tw-label" %>
+        <%= form.select :workout_type,
+              Workout.workout_types.keys.map { |w| [t("workout.types.#{w}"), w] },
+              {},
+              class: "tw-input",
+              disabled: workout.persisted?,
+              data: { workout_form_target: "typeSelect", action: "change->workout-form#toggleFields" } %>
+        <% if workout.persisted? %>
+          <%= form.hidden_field :workout_type %>
+        <% end %>
+      </div>
+
+
+      <div>
+        <%= form.label :duration, t('workout.duration'), class: "tw-label" %>
+        <%= form.number_field :duration, step: :any, class: "tw-input" %>
+      </div>
+
+      <div>
+        <%= form.label :workout_date, t('workout.date'), class: "tw-label" %>
+        <%= form.date_field :workout_date, class: "tw-input" %>
+      </div>
+
+
+      <div data-workout-form-target="distanceField">
+        <%= form.label :distance, t('workout.distance'), class: "tw-label" %>
+        <%= form.number_field :distance, step: :any, class: "tw-input" %>
+      </div>
+
+
+      <div>
+        <%= form.label :calories, t('workout.calories'), class: "tw-label" %>
+        <%= form.number_field :calories, step: 1, class: "tw-input" %>
+      </div>
+
+
+      <%= render "workouts/details/running", form: form %>
+      <%= render "workouts/details/cycling", form: form %>
+      <%= render "workouts/details/walking", form: form %>
+      <%= render "workouts/details/swimming", form: form %>
+      <%= render "workouts/details/weightlifting", form: form %>
+      <%= render "workouts/details/yoga", form: form %>
+      <%= render "workouts/details/soccer", form: form %>
+      <%= render "workouts/details/basketball", form: form %>
+      <%= render "workouts/details/tennis", form: form %>
+      <%= render "workouts/details/martial_arts", form: form %>
+    </div>
+
+    <div class="mt-5 flex gap-3">
+      <%= form.submit t('workout.save'), class: 'tw-btn-primary' %>
+      <%= link_to t('back'), :back, class: 'tw-btn-secondary' %>
+    </div>
+  </section>
+<% end %>

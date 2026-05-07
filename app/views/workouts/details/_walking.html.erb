@@ -1,0 +1,4 @@
+<div data-workout-form-target="walkingFields" style="display: none;">
+  <%= form.label "details[steps]", t('workout.details.steps'), class: "tw-label" %>
+  <%= form.number_field "details[steps]", step: 1, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:steps)) ? form.object.details.steps : nil %>
+</div>

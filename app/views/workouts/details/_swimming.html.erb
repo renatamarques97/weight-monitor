@@ -1,0 +1,13 @@
+<div data-workout-form-target="swimmingFields" class="md:col-span-2 grid gap-4 md:grid-cols-2" style="display: none;">
+  <div>
+    <%= form.label "details[style]", t('workout.details.style'), class: "tw-label" %>
+    <%= form.select "details[style]",
+          options_for_select(Details::Swimming::VALID_STYLES.map { |s| [s.titleize, s] }, (form.object.respond_to?(:details) && form.object.details.respond_to?(:style)) ? form.object.details.style : nil),
+          { include_blank: true },
+          class: "tw-input" %>
+  </div>
+  <div>
+    <%= form.label "details[laps]", t('workout.details.laps'), class: "tw-label" %>
+    <%= form.number_field "details[laps]", step: 1, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:laps)) ? form.object.details.laps : nil %>
+  </div>
+</div>
