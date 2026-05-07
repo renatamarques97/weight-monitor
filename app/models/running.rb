@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class Running < ApplicationRecord
-  belongs_to :user
+class Running < Workout
+  attribute :details, Details::Running.to_type
 
-  validates :duration, presence: true
-  validates :distance, presence: true
-  after_validation :average_pace, on: [ :create, :update ]
+  validates :distance, presence: true, numericality: { greater_than: 0 }
 
-  def average_pace
-    self.avg_pace = self.duration / self.distance
+  before_save :calculate_average_pace
+
+  def calculate_average_pace
+    self.details.avg_pace = ((self.duration / 60) / self.distance).round(2)
   end
 end
