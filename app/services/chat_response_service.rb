@@ -76,7 +76,18 @@ class ChatResponseService
     latest_diet = user.diets.order(end_date: :desc, id: :desc).first
     meals = latest_diet ? latest_diet.meals.order(:schedule).limit(20) : []
     weights = user.weights.order(weight_date: :desc, id: :desc).limit(30)
-    runnings = user.runnings.order(running_date: :desc, id: :desc).limit(30)
+
+    runnings = user.runnings.order(workout_date: :desc, id: :desc).limit(10)
+    walkings = user.walkings.order(workout_date: :desc, id: :desc).limit(10)
+    cyclings = user.cyclings.order(workout_date: :desc, id: :desc).limit(10)
+    swimmings = user.swimmings.order(workout_date: :desc, id: :desc).limit(10)
+    weightliftings = user.weightliftings.order(workout_date: :desc, id: :desc).limit(10)
+    yogas = user.yogas.order(workout_date: :desc, id: :desc).limit(10)
+    soccers = user.soccers.order(workout_date: :desc, id: :desc).limit(10)
+    basketballs = user.basketballs.order(workout_date: :desc, id: :desc).limit(10)
+    tennis = user.tennis.order(workout_date: :desc, id: :desc).limit(10)
+    martial_arts = user.martial_arts.order(workout_date: :desc, id: :desc).limit(10)
+    others = user.others.order(workout_date: :desc, id: :desc).limit(10)
 
     lines = []
     lines << "Name: #{user.name}"
@@ -106,13 +117,27 @@ class ChatResponseService
       lines << "Weight history: empty"
     end
 
-    if runnings.any?
-      lines << "Running history (most recent):"
-      runnings.each do |running|
-        lines << "- date=#{running.running_date}, distance=#{running.distance}, duration=#{running.duration}, avg_pace=#{running.avg_pace}"
+    [
+      { name: WorkoutType.t(:running), records: runnings, fields: ->(w) { "distance=#{w.distance}, duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
+      { name: WorkoutType.t(:walking), records: walkings, fields: ->(w) { "distance=#{w.distance}, duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
+      { name: WorkoutType.t(:cycling), records: cyclings, fields: ->(w) { "distance=#{w.distance}, duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
+      { name: WorkoutType.t(:swimming), records: swimmings, fields: ->(w) { "distance=#{w.distance}, duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
+      { name: WorkoutType.t(:weightlifting), records: weightliftings, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
+      { name: WorkoutType.t(:yoga), records: yogas, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
+      { name: WorkoutType.t(:soccer), records: soccers, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
+      { name: WorkoutType.t(:basketball), records: basketballs, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
+      { name: WorkoutType.t(:tennis), records: tennis, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
+      { name: WorkoutType.t(:martial_arts), records: martial_arts, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
+      { name: WorkoutType.t(:other), records: others, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } }
+    ].each do |type|
+      if type[:records].any?
+        lines << "#{type[:name]} history (most recent):"
+        type[:records].each do |workout|
+          lines << "- date=#{workout.workout_date}, #{type[:fields].call(workout)}"
+        end
+      else
+        lines << "#{type[:name]} history: empty"
       end
-    else
-      lines << "Running history: empty"
     end
 
     lines.join("\n")
