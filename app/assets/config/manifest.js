@@ -14,3 +14,4 @@
 //= link controllers/nested_form_controller.js
 //= link controllers/tabs_controller.js
 //= link controllers/workout_form_controller.js
+//= link controllers/theme_controller.js
