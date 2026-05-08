@@ -62,7 +62,7 @@ jobs:
 
       # Coverage Data
       - name: Download master coverage artifact
-        uses: dawidd6/action-download-artifact@v3
+        uses: dawidd6/action-download-artifact@v6
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
           branch: master
