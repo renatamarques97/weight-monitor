@@ -140,7 +140,11 @@
             library: {
               plugins: { legend: { display: false } },
               scales: {
-                x: { ticks: { maxTicksLimit: 10, maxRotation: 0 } }
+                x: { ticks: { maxTicksLimit: 10, maxRotation: 0 } },
+                y: {
+                  min: @weight_chart_bounds[:min],
+                  max: @weight_chart_bounds[:max]
+                }
               },
               elements: {
                 line: {

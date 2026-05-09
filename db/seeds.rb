@@ -16,15 +16,17 @@ SEED_DAYS = 90
 DIET_DURATION_DAYS = 30
 
 user_seeds = [
-  { email: "demo1@fittracker.dev", name: FFaker::Name.name },
-  { email: "demo2@fittracker.dev", name: FFaker::Name.name },
-  { email: "demo3@fittracker.dev", name: FFaker::Name.name },
+  { email: "demo1@fittracker.dev", objective: "weight_loss" },
+  { email: "demo2@fittracker.dev", objective: "running_performance" },
+  { email: "demo3@fittracker.dev", objective: "hypertrophy" },
+  { email: "demo4@fittracker.dev", objective: "general_health" },
+  { email: "demo5@fittracker.dev", objective: "weight_loss" }
 ]
 
 user_seeds.each do |user_attributes|
   user = User.find_or_initialize_by(email: user_attributes[:email])
   user.update!(
-    name: user_attributes[:name],
+    name: FFaker::Name.name,
     password: "password123",
     password_confirmation: "password123",
     height: rand(1.60..1.90).round(2)
@@ -34,11 +36,32 @@ user_seeds.each do |user_attributes|
 
   # 1. Weights (Last 90 days)
   initial_weight = rand(70.0..95.0)
+  
+  # Calculate target weight based on objective
+  target_delta = case user_attributes[:objective]
+                 when "weight_loss" then rand(6.0..12.0)
+                 when "hypertrophy" then -rand(2.0..5.0)
+                 when "running_performance" then rand(0.5..2.0)
+                 else rand(-1.0..1.5)
+                 end
+  target_weight = (initial_weight - target_delta).round(1)
+  
   (0..SEED_DAYS).each do |i|
+    # Simulate realistic gaps - people don't weigh themselves every day
+    next unless rand < 0.80 # ~20% chance of missing that day
+    
+    # Progress from initial_weight (day 0) to target_weight (day 90)
+    progress_ratio = 1.0 - (i.to_f / SEED_DAYS)
+    base_weight = initial_weight + ((target_weight - initial_weight) * progress_ratio)
+
+    # Add some randomness
+    random_variation = rand(-1.0..0.3) # -1kg to +0.3kg fluctuation
+    final_weight = (base_weight + random_variation).round(1)
+    
     FactoryBot.create(:weight,
       user: user,
       weight_date: i.days.ago.to_date,
-      kg: (initial_weight - (i * rand(0.05..0.15)) + rand(-0.2..0.2)).round(1)
+      kg: final_weight
     )
   end
 
@@ -48,7 +71,7 @@ user_seeds.each do |user_attributes|
     start_date: DIET_DURATION_DAYS.days.ago.to_date,
     end_date: DIET_DURATION_DAYS.days.from_now.to_date,
     initial_weight: initial_weight.round(1),
-    target_weight: (initial_weight - 5).round(1)
+    target_weight: target_weight
   )
 
   [
