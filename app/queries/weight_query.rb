@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 class WeightQuery
-  def self.weights(user)
-    most_recent_weight = user.weights
-    .order(weight_date: :desc, created_at: :desc)
-    .take
+  def self.weights(user, period_in_days = nil)
+    weights = user.weights
 
-    return {} if most_recent_weight.blank?
+    if period_in_days.present?
+      weights = weights.where(weight_date: period_in_days.days.ago.to_date..)
+    end
 
-    { most_recent_weight.weight_date => most_recent_weight.kg }
+    weights.order(weight_date: :asc, created_at: :asc)
+           .group_by(&:weight_date)
+           .transform_values { |weight| weight.last.kg }
   end
 end

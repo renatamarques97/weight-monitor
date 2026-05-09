@@ -1,0 +1,7 @@
+<%= render "dashboard/menu" %>
+
+<turbo-frame id="main">
+<h1 class="mb-4 text-2xl font-bold tracking-tight text-slate-900"><%= t('workout.edit') %></h1>
+
+<%= render 'form', workout: @workout %>
+</turbo-frame>

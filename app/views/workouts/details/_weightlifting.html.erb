@@ -1,0 +1,10 @@
+<div data-workout-form-target="weightliftingFields" class="md:col-span-2 grid gap-4 md:grid-cols-2" style="display: none;">
+  <div>
+    <%= form.label "details[exercises_count]", t('workout.details.exercises_count'), class: "tw-label" %>
+    <%= form.number_field "details[exercises_count]", step: 1, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:exercises_count)) ? form.object.details.exercises_count : nil %>
+  </div>
+  <div>
+    <%= form.label "details[volume]", t('workout.details.volume'), class: "tw-label" %>
+    <%= form.number_field "details[volume]", step: :any, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:volume)) ? form.object.details.volume : nil %>
+  </div>
+</div>

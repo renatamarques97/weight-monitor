@@ -1,0 +1,4 @@
+<div data-workout-form-target="runningFields" style="display: none;">
+  <%= form.label "details[avg_pace]", t('workout.details.avg_pace'), class: "tw-label" %>
+  <%= form.number_field "details[avg_pace]", step: :any, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:avg_pace)) ? form.object.details.avg_pace : nil %>
+</div>

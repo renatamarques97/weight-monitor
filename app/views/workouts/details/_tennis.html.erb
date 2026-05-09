@@ -1,0 +1,10 @@
+<div data-workout-form-target="tennisFields" class="md:col-span-2 grid gap-4 md:grid-cols-2" style="display: none;">
+  <div>
+    <%= form.label "details[sets_won]", t('workout.details.sets_won'), class: "tw-label" %>
+    <%= form.number_field "details[sets_won]", step: 1, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:sets_won)) ? form.object.details.sets_won : nil %>
+  </div>
+  <div>
+    <%= form.label "details[sets_lost]", t('workout.details.sets_lost'), class: "tw-label" %>
+    <%= form.number_field "details[sets_lost]", step: 1, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:sets_lost)) ? form.object.details.sets_lost : nil %>
+  </div>
+</div>

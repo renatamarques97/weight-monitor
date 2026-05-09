@@ -2,10 +2,14 @@
 
 <turbo-frame id="main">
 <section class="tw-card">
-  <h1 class="mb-1 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl"><%= t('hello') %><%= current_user.name %></h1>
-  <p class="mb-5 text-sm text-slate-600 md:text-base"><%= t('dashboard.description') %></p>
+  <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+    <div>
+      <h1 class="text-3xl font-bold tracking-tight text-slate-900"><%= t('hello') %><%= current_user.name %></h1>
+      <p class="text-slate-500"><%= t('dashboard.description') %></p>
+    </div>
+  </div>
 
-  <div class="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+  <div class="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-2">
     <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4">
         <span class="inline-flex self-start">
           <i class="fa fa-heartbeat text-7xl" style="color: #f43f5e;" aria-hidden="true"></i>
@@ -47,27 +51,205 @@
           </p>
         </div>
     </article>
+
+    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4">
+      <span class="inline-flex self-start">
+        <i class="fa fa-flash text-7xl" style="color: #f59e0b;" aria-hidden="true"></i>
+      </span>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t('workout.total') %></p>
+        <p class="mt-1 text-2xl font-bold text-slate-900"><%= current_user.workouts.count %></p>
+      </div>
+    </article>
   </div>
 
-  <h2 class="mb-3 text-xl font-bold text-slate-900">
-    <%= t('progress') %>
-    <i class="fa fa-line-chart ml-2 text-emerald-600" aria-hidden="true"></i>
-  </h2>
+  <div data-controller="tabs" data-tabs-active-tab-value="<%= @active_tab %>">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+      <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+        <i class="fa fa-line-chart text-emerald-600"></i>
+        <%= t('progress') %>
+      </h2>
 
-  <div class="grid gap-4 xl:grid-cols-2">
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-      <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-600">
-        <i class="fa fa-balance-scale" aria-hidden="true"></i>
-        <%= t('weight.title') %>
-      </h3>
-      <%= area_chart @weights, discrete: true, height: "280px", colors: ["#059669"], library: { plugins: { legend: { display: false } } } %>
+      <div class="flex bg-slate-100 p-1 rounded-xl">
+        <% [30, 60, 90].each do |period_in_days| %>
+          <%= link_to root_path(period_in_days: period_in_days, active_tab: @active_tab),
+                data: { tabs_target: "periodLink" },
+                class: "px-4 py-1.5 text-xs font-bold rounded-lg transition-all no-underline #{ @period_in_days == period_in_days ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700' }" do %>
+            <%= period_in_days %> <%= t('dashboard.days') %>
+          <% end %>
+        <% end %>
+      </div>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-      <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-600">
-          <i class="fa fa-road" aria-hidden="true"></i>
-        <%= t('running.title') %>
-      </h3>
-      <%= area_chart @runnings, discrete: true, height: "280px", colors: ["#f59e0b"], library: { plugins: { legend: { display: false } } } %>
+
+
+    <div class="mb-8 overflow-x-auto py-2">
+      <nav class="flex gap-3 p-1" aria-label="Tabs">
+
+        <% is_weight_active = @active_tab == 'weight' %>
+        <button
+          data-tabs-target="tab"
+          data-tab-name="weight"
+          data-action="click->tabs#switch"
+          data-active="<%= is_weight_active ? 'true' : 'false' %>"
+          style="--tab-color: #10b981;"
+          class="tab-btn">
+
+          <i class="fa fa-balance-scale"></i>
+
+          <span class="text-xs font-semibold uppercase tracking-tight">
+            <%= t('weight.title') %>
+          </span>
+        </button>
+
+        <% WorkoutType::MAPPING.each_key do |sport| %>
+          <% is_sport_active = @active_tab == sport.to_s %>
+          <button
+            data-tabs-target="tab"
+            data-tab-name="<%= sport %>"
+            data-action="click->tabs#switch"
+            data-active="<%= is_sport_active ? 'true' : 'false' %>"
+            style="--tab-color: <%= WorkoutType::COLORS[sport] %>;"
+            class="tab-btn">
+
+            <i
+              class="fa <%= WorkoutType::ICONS[sport] %>"
+              style="color: var(--tab-color)">
+            </i>
+
+            <span class="text-xs font-semibold uppercase tracking-tight">
+              <%= t("workout.types.#{sport}") %>
+            </span>
+          </button>
+        <% end %>
+
+      </nav>
+    </div>
+
+    <div>
+
+      <div data-tabs-target="panel" 
+           class="<%= is_weight_active ? 'grid' : 'hidden' %> grid gap-6 lg:grid-cols-3" 
+           style="<%= is_weight_active ? 'display: grid;' : 'display: none;' %>"
+           <%= 'hidden' unless is_weight_active %>>
+        <div class="lg:col-span-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6"><%= t('weight.chart_label') %></h3>
+          <%= area_chart @weights,
+            discrete: true,
+            height: "320px",
+            colors: ["#10b981"],
+            library: {
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { ticks: { maxTicksLimit: 10, maxRotation: 0 } },
+                y: {
+                  min: @weight_chart_bounds[:min],
+                  max: @weight_chart_bounds[:max]
+                }
+              },
+              elements: {
+                line: {
+                  tension: 0.4
+                }
+              }
+            }
+          %>
+        </div>
+      </div>
+
+
+      <% WorkoutType::MAPPING.each_key do |sport| %>
+        <% chart = @workout_charts[sport] %>
+        <% is_panel_active = @active_tab == sport.to_s %>
+        <div data-tabs-target="panel" 
+             class="<%= is_panel_active ? 'grid' : 'hidden' %> grid gap-6 lg:grid-cols-4" 
+             style="<%= is_panel_active ? 'display: grid;' : 'display: none;' %>"
+             <%= 'hidden' unless is_panel_active %>>
+
+          <div class="lg:col-span-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest"><%= t(chart[:translation_metric_key]) %></h3>
+              <span class="text-xs font-semibold px-2 py-1 rounded bg-slate-100 text-slate-500"><%= t('dashboard.last_days', days: @period_in_days) %></span>
+            </div>
+            
+            <% if chart[:data].empty? %>
+              <div class="flex items-center justify-center h-[320px] bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                <p class="text-slate-400"><%= t('workout.no_records', sport: t("workout.types.#{sport}")) %></p>
+              </div>
+            <% else %>
+              <%= area_chart chart[:data], 
+                discrete: true,
+                height: "320px",
+                colors: [chart[:color]],
+                library: {
+                  plugins: {
+                    legend: { display: false }
+                  },
+                  elements: {
+                    line: {
+                      tension: 0.4
+                    }
+                  },
+                  scales: {
+                    x: {
+                      grid: { display: false },
+                      ticks: {
+                        maxTicksLimit: 10,
+                        maxRotation: 0
+                      }
+                    }
+                  }
+                }
+              %>
+            <% end %>
+          </div>
+
+
+          <div class="lg:col-span-1 flex flex-col gap-4">
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex-1">
+              <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4"><%= t('dashboard.recent') %></h3>
+              <div class="space-y-4">
+                <% chart[:recent].each do |workout| %>
+                  <div class="group cursor-pointer">
+                    <div class="flex justify-between items-start mb-1">
+                      <p class="text-sm font-bold text-slate-900"><%= workout.workout_date.strftime("%b %d") %></p>
+                      <%= link_to edit_workout_path(workout), class: "opacity-0 group-hover:opacity-100 text-emerald-600 transition-opacity" do %>
+                        <i class="fa fa-pencil text-xs"></i>
+                      <% end %>
+                    </div>
+                    <div class="flex items-center text-xs text-slate-500 gap-2">
+                      <span><%= workout.duration %> min</span>
+                      <% if workout.distance.present? %>
+                        <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                        <span><%= workout.distance %> km</span>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+                <% if chart[:recent].empty? %>
+                  <p class="text-xs text-slate-400 italic"><%= t('dashboard.no_recent_activity') %></p>
+                <% end %>
+              </div>
+              
+              <div class="mt-6 pt-6 border-t border-slate-100">
+                <%= link_to workouts_path(type: sport), style: "text-decoration: none;", class: "text-xs font-bold hover:text-emerald-700 flex items-center justify-between" do %>
+                  <span><%= t('dashboard.view_all') %></span>
+                  <i class="fa fa-arrow-right"></i>
+                <% end %>
+              </div>
+            </div>
+
+            <%= link_to new_workout_path(workout_type: sport), style: "text-decoration: none; background-color: #{chart[:color]}", class: "rounded-2xl bg-slate-900 p-6 text-white hover:bg-slate-800 transition-colors group" do %>
+              <div class="flex items-center justify-between" style="color: black">
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-widest opacity-60 mb-1"><%= t('workout.new_short') %></p>
+                  <p class="text-lg font-bold"><%= t("workout.types.#{sport}") %></p>
+                </div>
+                <i class="fa fa-plus text-2xl group-hover:rotate-90 transition-transform"></i>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </section>
