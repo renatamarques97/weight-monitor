@@ -21,14 +21,10 @@ class WorkoutQuery
 
       grouped_metrics = grouped_metrics.transform_values { |value| value.round(2) }
 
-      daily_metrics = (start_date..Date.current).each_with_object({}) do |workout_date, metrics|
-        metrics[workout_date] = grouped_metrics[workout_date] || 0
-      end
-
       result[sport] = {
         translation_metric_key: translation_metric_key,
         color: WorkoutType::COLORS[sport],
-        data: daily_metrics,
+        data: grouped_metrics,
         recent: recent_sport_workouts
       }
     end
