@@ -50,3 +50,5 @@ gem 'tzinfo-data', platforms: [:jruby]
 gem "redis", "~> 4.0"
 
 gem "tailwindcss-rails", "~> 4.4"
+
+gem "store_model", "~> 4.5"

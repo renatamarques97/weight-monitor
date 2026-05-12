@@ -1,5 +1,8 @@
 require 'simplecov'
-SimpleCov.start 'rails'
+SimpleCov.start 'rails' do
+  minimum_coverage 80
+  maximum_coverage_drop 0.5
+end
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

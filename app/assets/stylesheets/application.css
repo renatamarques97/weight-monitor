@@ -9,14 +9,58 @@ a.no-link-underline, a.no-link-underline:hover {
   text-decoration-line: none !important;
 }
 
-.tw-btn-primary {
+.tw-btn-primary, .tw-btn-soft, .tw-btn-danger {
   cursor: pointer;
 }
 
-.tw-btn-soft {
-  cursor: pointer;
+.tab-btn {
+  position: relative;
+  z-index: 1;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.tw-btn-danger {
-  cursor: pointer;
+.tab-btn i {
+  color: var(--tab-color, #64748b);
+  transition: all 0.25s ease;
+}
+
+.tab-btn span {
+  color: #64748b;
+  transition: all 0.25s ease;
+}
+
+.tab-btn[data-active="true"] {
+  background: white !important;
+  transform: translateY(-4px);
+  border-color: var(--tab-color) !important;
+  box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 0 0 2px var(--tab-color);
+}
+
+.tab-btn[data-active="true"] i {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 3px var(--tab-color));
+}
+
+.tab-btn[data-active="true"] span, .tab-btn[data-active="false"]:hover span {
+  color: #334155;
+}
+
+.tab-btn[data-active="false"]:hover {
+  background: white;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+.tab-btn[data-active="false"]:hover i {
+  color: var(--tab-color);
+}
+
+.tab-btn:active {
+  transform: scale(0.92);
 }

@@ -1,0 +1,10 @@
+<div data-workout-form-target="soccerFields" class="md:col-span-2 grid gap-4 md:grid-cols-2" style="display: none;">
+  <div>
+    <%= form.label "details[goals]", t('workout.details.goals'), class: "tw-label" %>
+    <%= form.number_field "details[goals]", step: 1, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:goals)) ? form.object.details.goals : nil %>
+  </div>
+  <div>
+    <%= form.label "details[position]", t('workout.details.position'), class: "tw-label" %>
+    <%= form.text_field "details[position]", class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:position)) ? form.object.details.position : nil %>
+  </div>
+</div>

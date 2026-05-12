@@ -1,4 +1,26 @@
 #!/usr/bin/env ruby
+
+if %w[start server s].include?(ARGV.first)
+  ARGV.shift # Remove the command from ARGV (e.g., "start", "server", or "s")
+  
+  port = nil
+  ARGV.each_with_index do |arg, idx|
+    if arg == "-p" || arg == "--port"
+      port = ARGV[idx + 1]
+      break
+    elsif arg.start_with?("--port=")
+      port = arg.split("=")[1]
+      break
+    end
+  end
+
+  ENV["PORT"] = port if port
+
+  ARGV.clear
+
+  exec File.expand_path("dev", __dir__)
+end
+
 APP_PATH = File.expand_path("../config/application", __dir__)
 require_relative "../config/boot"
 require "rails/commands"
