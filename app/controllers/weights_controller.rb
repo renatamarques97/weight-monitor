@@ -3,6 +3,11 @@
 class WeightsController < ApplicationController
   before_action :authenticate_user!
 
+  # GET /weights
+  def index
+    @weights = current_user.weights.order(weight_date: :desc, created_at: :desc)
+  end
+
   # GET /weights/new
   def new
     @weight = Weight.new
