@@ -7,6 +7,8 @@ class DashboardController < ApplicationController
     @period_in_days = params[:period_in_days]&.to_i || 30
     @active_tab = params[:active_tab] || 'weight'
     @goal = ::GoalPresenter.new(current_user).achieved?
+    @recent_weight = ::RecentWeightPresenter.new(current_user).call
+    @recent_weights = current_user.weights.order(weight_date: :desc, created_at: :desc).limit(3)
     @diets = ::Diet.authorized_user(current_user)
     @imc = ::ImcPresenter.new(current_user).call
     @weights = ::WeightQuery.weights(current_user, @period_in_days)

@@ -20,7 +20,7 @@
         </div>
     </article>
 
-    <%= link_to diets_path, data: { turbo_frame: "_top" }, class: "rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4 hover:shadow-md hover:border-slate-300 transition-all no-link-underline" do %>
+    <%= link_to diets_path, data: { turbo_frame: "_top" }, class: "rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4 hover:shadow-md hover:border-slate-300 transition-all no-underline" do %>
         <span class="inline-flex self-start">
           <i class="fa fa-cutlery text-2xl" style="color: #0ea5e9;" aria-hidden="true"></i>
         </span>
@@ -52,13 +52,29 @@
         </div>
     </article>
 
-    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4">
+    <%= link_to workouts_path, data: { turbo_frame: "_top" }, class: "rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4 hover:shadow-md hover:border-slate-300 transition-all no-underline" do %>
       <span class="inline-flex self-start">
         <i class="fa fa-bolt text-2xl" style="color: #f59e0b;" aria-hidden="true"></i>
       </span>
       <div>
         <p class="text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t('workout.total') %></p>
         <p class="mt-1 text-2xl font-bold text-slate-900"><%= current_user.workouts.count %></p>
+      </div>
+    <% end %>
+
+    <article class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm flex items-start gap-4">
+      <span class="inline-flex self-start">
+        <i class="fa fa-balance-scale text-7xl" style="color: #10b981;" aria-hidden="true"></i>
+      </span>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500"><%= t('weight.title') %></p>
+        <p class="mt-1 text-2xl font-bold text-slate-900">
+          <% if @recent_weight.present? %>
+            <%= @recent_weight %> kg
+          <% else %>
+            --
+          <% end %>
+        </p>
       </div>
     </article>
   </div>
@@ -128,7 +144,7 @@
     <div>
 
       <div data-tabs-target="panel" 
-           class="<%= is_weight_active ? 'grid' : 'hidden' %> grid gap-6 lg:grid-cols-3" 
+           class="<%= is_weight_active ? 'grid' : 'hidden' %> grid gap-6 lg:grid-cols-4" 
            style="<%= is_weight_active ? 'display: grid;' : 'display: none;' %>"
            <%= 'hidden' unless is_weight_active %>>
         <div class="lg:col-span-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -153,6 +169,45 @@
               }
             }
           %>
+        </div>
+
+        <div class="lg:col-span-1 flex flex-col gap-4">
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex-1">
+            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4"><%= t('dashboard.recent') %></h3>
+            <div class="space-y-4">
+              <% @recent_weights.each do |weight| %>
+                <div>
+                  <div class="flex justify-between items-start mb-1">
+                    <p class="text-sm font-bold text-slate-900"><%= weight.weight_date.strftime("%b %d") %></p>
+                  </div>
+                  <div class="flex items-center text-xs text-slate-500 gap-2">
+                    <span><%= weight.kg %> kg</span>
+                  </div>
+                </div>
+              <% end %>
+
+              <% if @recent_weights.empty? %>
+                <p class="text-xs text-slate-400 italic"><%= t('dashboard.no_recent_activity') %></p>
+              <% end %>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-slate-100">
+              <%= link_to weights_path, style: "text-decoration: none;", class: "text-xs font-bold hover:text-emerald-700 flex items-center justify-between" do %>
+                <span><%= t('dashboard.view_all') %></span>
+                <i class="fa fa-arrow-right"></i>
+              <% end %>
+            </div>
+          </div>
+
+          <%= link_to new_weight_path, style: "text-decoration: none; background-color: #10b981", class: "rounded-2xl p-6 text-white hover:opacity-90 transition-colors group" do %>
+            <div class="flex items-center justify-between" style="color: black">
+              <div>
+                <p class="text-xs font-bold uppercase tracking-widest opacity-60 mb-1"><%= t('weight.title') %></p>
+                <p class="text-lg font-bold">New Weight</p>
+              </div>
+              <i class="fa fa-plus text-2xl group-hover:rotate-90 transition-transform"></i>
+            </div>
+          <% end %>
         </div>
       </div>
 

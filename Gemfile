@@ -37,6 +37,9 @@ group :development do
   gem 'listen', '~> 3.2'
   gem 'mutex_m'
   gem 'foreman'
+  gem 'rubocop'
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
 end
 
 group :test do
