@@ -1,6 +1,6 @@
 
 Rails.application.routes.draw do
-  resources :weights, only: [:new, :create]
+  resources :weights, only: [:index, :new, :create]
   resources :meals
   root to: 'dashboard#index'
   resources :workouts
