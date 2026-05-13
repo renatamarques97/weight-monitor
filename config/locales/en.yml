@@ -1,11 +1,16 @@
 en:
   title: "Fit Tracker"
+  about: "About"
+  theme: "Theme"
   sign:
     in: "Sign in"
     out: "Sign out"
     up: "Sign up"
   log:
     in: "Log in"
+  user:
+    menu: "User Menu"
+    unknown: "Unknown User"
   diet:
     title: "Diets"
     new: "New Diet"
