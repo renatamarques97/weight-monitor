@@ -15,7 +15,7 @@
   <% end %>
 
   <section class="tw-card" data-controller="nested-form">
-    <h2 class="mb-4 text-xl font-bold text-slate-900"><%= t('diet.singular') %></h2>
+    <h2 class="mb-4 text-xl font-bold fit-text-primary"><%= t('diet.singular') %></h2>
 
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <div class="xl:col-span-2">
@@ -39,10 +39,10 @@
       </div>
     </div>
 
-    <div class="my-5 h-px bg-slate-200"></div>
+    <div class="my-5 h-px fit-surface-border"></div>
 
     <div class="mb-3 flex items-center justify-between gap-3">
-      <h3 class="text-lg font-semibold text-slate-900"><%= t('meal.title') %></h3>
+      <h3 class="text-lg font-semibold fit-text-primary"><%= t('meal.title') %></h3>
       <button type="button" class="tw-btn-primary" data-action="nested-form#add">
         <i class="fa fa-plus mr-2" aria-hidden="true"></i><%= t('meal.add') %>
       </button>
