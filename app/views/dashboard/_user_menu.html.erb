@@ -1,7 +1,7 @@
 <div class="user-menu" data-controller="user-menu">
   <button
     type="button"
-    class="tw-btn rounded-lg border border-white/70 bg-transparent px-3 py-2 text-white hover:bg-white/15 dark:border-slate-600 dark:hover:bg-slate-700 no-underline no-link-underline flex items-center gap-2 transition-colors"
+    class="tw-btn fit-nav-link fit-nav-link-neutral rounded-lg border px-3 py-2 flex items-center gap-2"
     data-action="click->user-menu#toggleMenu"
     data-user-menu-target="trigger"
     aria-haspopup="true"
@@ -16,34 +16,34 @@
   </button>
 
   <div 
-    class="absolute right-0 top-full z-50 hidden mt-2 w-64 rounded-xl border shadow-xl bg-white/90 dark:bg-slate-800/85 border-slate-200 dark:border-slate-700"
+    class="absolute right-0 top-full z-50 hidden mt-2 w-64 rounded-xl border shadow-xl fit-surface-card fit-border-subtle"
     data-user-menu-target="dropdown"
   >
-    <div class="border-b border-slate-200 dark:border-slate-700 px-4 py-3">
-      <p class="font-semibold truncate text-slate-900 dark:text-slate-100">
+    <div class="border-b fit-border-subtle px-4 py-3">
+      <p class="font-semibold truncate fit-text-primary">
         <%= current_user.name || t('user.unknown') %>
       </p>
-      <p class="text-xs truncate text-slate-600 dark:text-slate-400">
+      <p class="text-xs truncate fit-text-secondary">
         <%= current_user.email || t('user.unknown') %>
       </p>
     </div>
 
     <div class="py-2">
-      <%= link_to edit_user_registration_path, class: "flex items-center gap-3 px-4 py-2 no-link-underline text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" do %>
-        <i class="fa fa-user w-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true"></i>
+      <%= link_to edit_user_registration_path, class: "user-menu-theme w-full flex items-center gap-3 px-4 py-2 fit-text-primary fit-hover-surface-muted transition-colors border-0 bg-transparent font-inherit" do %>
+        <i class="fa fa-user w-4 fit-text-accent" aria-hidden="true"></i>
         <span><%= t('profile') %></span>
       <% end %>
 
-      <button 
+    <button
         type="button"
-        class="user-menu-theme w-full flex items-center justify-between px-4 py-2 text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border-0 bg-transparent font-inherit text-left"
+        class="user-menu-theme w-full flex items-center justify-between px-4 py-2 fit-text-primary fit-hover-surface-muted transition-colors border-0 bg-transparent font-inherit text-left"
         data-action="click->user-menu#toggleTheme"
         data-user-menu-target="themeButton"
         aria-pressed="false"
         aria-label="<%= t('theme') %>"
       >
         <span class="flex items-center gap-3">
-          <i class="fa fa-adjust w-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true"></i>
+          <i class="fa fa-adjust w-4 fit-text-accent" aria-hidden="true"></i>
           <span><%= t('theme') %></span>
         </span>
 
@@ -60,25 +60,25 @@
         </span>
       </button>
 
-      <div class="my-2 border-t border-slate-200 dark:border-slate-700"></div>
+      <div class="my-2 border-t fit-border-subtle"></div>
 
       <div class="px-4 py-2 text-xs">
-        <p class="font-semibold mb-2 text-slate-900 dark:text-slate-100"><%= t('about') %></p>
+        <p class="font-semibold mb-2 fit-text-primary"><%= t('about') %></p>
         <div class="space-y-1">
-          <div class="flex justify-between text-slate-700 dark:text-slate-300">
+          <div class="flex justify-between fit-text-primary">
             <span>Version:</span>
             <span class="font-mono"><%= app_version %></span>
           </div>
-          <div class="flex justify-between text-slate-700 dark:text-slate-300">
+          <div class="flex justify-between fit-text-primary">
             <span>Build:</span>
             <span class="font-mono"><%= app_build_date %></span>
           </div>
         </div>
       </div>
 
-      <div class="my-2 border-t border-slate-200 dark:border-slate-700"></div>
+      <div class="my-2 border-t fit-border-subtle"></div>
 
-      <%= link_to destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: "flex items-center gap-3 px-4 py-2 no-link-underline text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors" do %>
+      <%= link_to destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: "user-menu-theme w-full flex items-center gap-3 px-4 py-2 fit-text-primary fit-hover-surface-muted transition-colors border-0 bg-transparent font-inherit fit-icon-btn-delete text-red-600 hover:bg-red-50 transition-colors" do %>
         <i class="fa fa-sign-out w-4" aria-hidden="true"></i>
         <span><%= t('sign.out') %></span>
       <% end %>
