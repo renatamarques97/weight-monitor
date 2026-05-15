@@ -26,6 +26,7 @@ en:
     updated: "Diet was successfully updated."
     destroyed: "Diet was successfully destroyed."
   weight:
+    new: "New Weight"
     title: "Weight"
     update: "Update Weight"
     created: "Weight was successfully created."

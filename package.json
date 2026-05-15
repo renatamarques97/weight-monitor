@@ -1,6 +1,5 @@
 {
   "name": "weight_monitor",
   "private": true,
-  "version": "1.0.0",
-  "dependencies": {}
+  "version": "1.0.0"
 }
