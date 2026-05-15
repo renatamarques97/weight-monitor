@@ -11,6 +11,7 @@ const resolveTheme = (theme) => (AVAILABLE_THEMES.includes(theme) ? theme : DEFA
 const applyTheme = (theme) => {
   const resolvedTheme = resolveTheme(theme)
   document.documentElement.dataset.theme = resolvedTheme
+  document.documentElement.classList.toggle("dark", resolvedTheme === "dark")
   localStorage.setItem(THEME_STORAGE_KEY, resolvedTheme)
 
   void document.documentElement.offsetHeight

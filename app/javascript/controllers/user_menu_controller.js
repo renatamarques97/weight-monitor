@@ -71,6 +71,7 @@ export default class extends Controller {
   applyTheme(theme) {
     const resolvedTheme = AVAILABLE_THEMES.includes(theme) ? theme : "light"
     document.documentElement.dataset.theme = resolvedTheme
+    document.documentElement.classList.toggle("dark", resolvedTheme === "dark")
     localStorage.setItem(THEME_STORAGE_KEY, resolvedTheme)
     
     // Trigger a repaint to ensure smooth transitions
