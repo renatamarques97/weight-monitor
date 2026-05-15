@@ -1,14 +1,14 @@
 <%= render "dashboard/menu" %>
 
 <section class="tw-card" data-controller="chat">
-  <h1 class="mb-2 text-2xl font-bold tracking-tight text-slate-900"><%= t('diet.suggestions') %></h1>
-  <p class="mb-4 text-sm text-slate-600"><%= t('chat.describe_goals') %></p>
+  <h1 class="mb-2 text-2xl font-bold tracking-tight fit-text-primary"><%= t('diet.suggestions') %></h1>
+  <p class="mb-4 text-sm fit-text-secondary"><%= t('chat.describe_goals') %></p>
 
-  <section class="max-h-[55vh] min-h-[300px] overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-4" data-chat-target="conversation">
+  <section class="max-h-[55vh] min-h-[300px] overflow-y-auto rounded-xl border fit-border-subtle fit-surface-muted p-4" data-chat-target="conversation">
     <% @chat_messages.each do |message| %>
       <% label = message.role == "assistant" ? "Diet suggester" : "You" %>
-      <strong class="mt-3 inline-block text-[11px] font-semibold uppercase tracking-wide text-slate-500"><%= label %>:</strong>
-      <pre class="mt-1 whitespace-pre-wrap rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800"><%= message.content %></pre>
+      <strong class="mt-3 inline-block text-[11px] font-semibold uppercase tracking-wide fit-text-secondary"><%= label %>:</strong>
+      <pre class="mt-1 whitespace-pre-wrap rounded-lg border fit-border-subtle fit-surface-card px-3 py-2 text-sm fit-text-primary"><%= message.content %></pre>
     <% end %>
   </section>
 
