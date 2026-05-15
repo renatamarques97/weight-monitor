@@ -1,7 +1,7 @@
 <%= render "dashboard/menu" %>
 
-<section class="mx-auto max-w-xl rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-sm">
-  <h1 class="mb-4 text-2xl font-bold tracking-tight text-slate-900">Change your password</h1>
+<section class="mx-auto max-w-xl rounded-2xl border fit-border-subtle fit-surface-card p-6 shadow-sm">
+  <h1 class="mb-4 text-2xl font-bold tracking-tight fit-text-primary">Change your password</h1>
 
   <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, data: { turbo: false } }) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
@@ -10,7 +10,7 @@
     <div class="mb-3">
       <%= f.label :password, "New password", class: "tw-label" %>
       <% if @minimum_password_length %>
-        <small class="mb-1 block text-xs text-slate-500">(<%= @minimum_password_length %> characters minimum)</small>
+        <small class="mb-1 block text-xs fit-text-secondary">(<%= @minimum_password_length %> characters minimum)</small>
       <% end %>
       <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "tw-input" %>
     </div>
