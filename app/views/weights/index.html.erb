@@ -3,25 +3,22 @@
 <turbo-frame id="main">
   <section class="tw-card">
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold tracking-tight text-slate-900"><%= t('weight.title') %></h1>
-      <%= link_to new_weight_path, class: "inline-flex items-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white no-underline hover:bg-emerald-700 transition-colors" do %>
-        <i class="fa fa-plus mr-2" aria-hidden="true"></i>
-        New Weight
-      <% end %>
+      <h1 class="text-2xl font-bold tracking-tight fit-text-primary"><%= t('weight.title') %></h1>
+      <%= link_to t('weight.new') , new_weight_path, class: "tw-btn-primary" %>
     </div>
 
-    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+    <div class="rounded-2xl border fit-border-subtle fit-surface-card shadow-sm overflow-hidden">
       <% if @weights.any? %>
-        <ul class="divide-y divide-slate-100">
+        <ul class="fit-divide-subtle">
           <% @weights.each do |weight| %>
             <li class="px-4 py-3 flex items-center justify-between">
-              <span class="text-sm font-semibold text-slate-900"><%= weight.weight_date.strftime("%b %d, %Y") %></span>
-              <span class="text-sm text-slate-600"><%= weight.kg %> kg</span>
+              <span class="text-sm font-semibold fit-text-primary"><%= weight.weight_date.strftime("%b %d, %Y") %></span>
+              <span class="text-sm fit-text-secondary"><%= weight.kg %> kg</span>
             </li>
           <% end %>
         </ul>
       <% else %>
-        <p class="p-4 text-sm text-slate-500"><%= t('dashboard.no_recent_activity') %></p>
+        <p class="p-4 text-sm fit-text-secondary"><%= t('dashboard.no_recent_activity') %></p>
       <% end %>
     </div>
   </section>
