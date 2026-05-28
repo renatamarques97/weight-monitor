@@ -82,6 +82,7 @@ jobs:
         with:
           name: coverage
           path: coverage/
+          include-hidden-files: true
 
       # Coverage Report
       - name: Upload coverage to Codecov
