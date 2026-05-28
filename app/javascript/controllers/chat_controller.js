@@ -2,7 +2,11 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["prompt", "conversation", "objective"]
-  static values = { isLoading: Boolean }
+  static values = {
+    isLoading: Boolean,
+    userLabel: { type: String, default: "You" },
+    assistantLabel: { type: String, default: "Diet suggester" }
+  }
 
   connect() {
     this.isLoadingValue = false
@@ -108,7 +112,7 @@ export default class extends Controller {
     wrapper.classList.add("message-bubble")
     wrapper.innerHTML = `
       <strong class="chat-message-label">
-        ${role === "assistant" ? "Diet suggester" : "You"}:
+        ${role === "assistant" ? this.assistantLabelValue : this.userLabelValue}:
       </strong>
       <pre class="chat-message-content">${text}</pre>
     `
