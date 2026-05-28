@@ -7,6 +7,11 @@ export default class extends Controller {
   connect() {
     this.isLoadingValue = false
     this.currentOldestPage = parseInt(this.conversationTarget.dataset.chatCurrentPage, 10) || 1
+    if (this.hasPromptTarget) {
+      this.resizePrompt()
+      this.resizeHandler = () => this.resizePrompt()
+      window.addEventListener("resize", this.resizeHandler)
+    }
     requestAnimationFrame(() => {
       this.#scrollToBottom()
       this.#ensureScrollableHistory()
@@ -15,6 +20,9 @@ export default class extends Controller {
 
   disconnect() {
     this.eventSource?.close()
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler)
+    }
   }
 
   onScroll() {
@@ -24,12 +32,41 @@ export default class extends Controller {
     }
   }
 
+  resizePrompt() {
+    if (!this.hasPromptTarget) return
+    this.promptTarget.style.height = "auto"
+    const scrollHeight = this.promptTarget.scrollHeight
+    const maxHeight = 150
+    if (scrollHeight > maxHeight) {
+      this.promptTarget.style.height = `${maxHeight}px`
+      this.promptTarget.style.overflowY = "auto"
+    } else {
+      this.promptTarget.style.height = `${scrollHeight}px`
+      this.promptTarget.style.overflowY = "hidden"
+    }
+  }
+
+  submitOnEnter(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault()
+      const form = this.promptTarget.form
+      if (form) {
+        if (typeof form.requestSubmit === "function") {
+          form.requestSubmit()
+        } else {
+          form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }))
+        }
+      }
+    }
+  }
+
   async generateResponse(event) {
     event.preventDefault()
     const text = this.promptTarget.value.trim()
     if (!text) return
 
     this.promptTarget.value = ""
+    this.resizePrompt()
     this.isLoadingValue = true
 
     this.#appendBubble("user", text)
