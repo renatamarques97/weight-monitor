@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ChatResponseService do
-  let(:user) { create(:user, name: 'Renata Test', email: 'renata@example.com') }
+  let(:user) { create(:user) }
   let(:client) { instance_double(OpenAI::Client) }
   let(:prompt) { 'Build a weekly plan for me' }
 
@@ -39,6 +39,20 @@ RSpec.describe ChatResponseService do
       system_prompt = captured_messages.first[:content]
       expect(system_prompt).to include('assistant specialized in running performance')
       expect(system_prompt).to include('USER DATA')
+    end
+
+    it 'uses hypertrophy-specific instructions when objective is hypertrophy' do
+      captured_messages = nil
+      allow(client).to receive(:chat) do |args|
+        captured_messages = args.dig(:parameters, :messages)
+        stream = args.dig(:parameters, :stream)
+        stream.call({ "choices" => [{ "delta" => { "content" => 'ok' } }] })
+      end
+
+      described_class.new(user: user, prompt: prompt, objective: 'hypertrophy', client: client).call
+
+      system_prompt = captured_messages.first[:content]
+      expect(system_prompt).to include('assistant specialized in muscle hypertrophy')
     end
 
     it 'uses default instructions when objective is unknown' do

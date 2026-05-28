@@ -64,7 +64,7 @@ FactoryBot.define do
 
     factory :other, class: 'Other' do
       workout_type { :other }
-      details { { notes: "Custom training session" } }
+      details { { notes: FFaker::Lorem.sentence } }
     end
   end
 end
