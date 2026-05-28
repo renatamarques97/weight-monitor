@@ -29,14 +29,14 @@ export default class extends Controller {
 
     #createLabel(text) {
         const label = document.createElement('strong');
-        label.className = 'mt-3 inline-block text-[11px] font-semibold uppercase tracking-wide text-slate-500'
+        label.className = 'fit-chat-label'
         label.textContent = `${text}:`;
         this.conversationTarget.appendChild(label);
     }
 
     #createMessage(text = '') {
         const preElement = document.createElement('pre');
-        preElement.className = 'mt-1 whitespace-pre-wrap rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800'
+        preElement.className = 'fit-chat-bubble'
         preElement.textContent = text;
         this.conversationTarget.appendChild(preElement);
         return preElement

@@ -15,6 +15,32 @@ const applyTheme = (theme) => {
   localStorage.setItem(THEME_STORAGE_KEY, resolvedTheme)
 
   void document.documentElement.offsetHeight
+
+  applyChartTheme(resolvedTheme)
+}
+
+const applyChartTheme = (theme) => {
+  if (typeof Chart === "undefined") return
+
+  const isDark = theme === "dark"
+  const textColor   = isDark ? "#9ca3af" : "#64748b"
+  const gridColor   = isDark ? "rgba(148,163,184,0.08)" : "rgba(0,0,0,0.06)"
+  const borderColor = isDark ? "rgba(148,163,184,0.15)" : "rgba(0,0,0,0.08)"
+
+  Chart.defaults.color = textColor
+
+  const scales = Chart.defaults.scales
+  if (scales) {
+    const applyScale = (scaleType) => {
+      if (scales[scaleType]) {
+        scales[scaleType].grid  = { ...(scales[scaleType].grid  || {}), color: gridColor, borderColor }
+        scales[scaleType].ticks = { ...(scales[scaleType].ticks || {}), color: textColor }
+      }
+    }
+    applyScale("linear")
+    applyScale("category")
+    applyScale("time")
+  }
 }
 
 const syncThemeToggle = () => {

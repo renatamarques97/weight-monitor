@@ -7,8 +7,8 @@
   <section class="max-h-[55vh] min-h-[300px] overflow-y-auto rounded-xl border fit-border-subtle fit-surface-muted p-4" data-chat-target="conversation">
     <% @chat_messages.each do |message| %>
       <% label = message.role == "assistant" ? "Diet suggester" : "You" %>
-      <strong class="mt-3 inline-block text-[11px] font-semibold uppercase tracking-wide fit-text-secondary"><%= label %>:</strong>
-      <pre class="mt-1 whitespace-pre-wrap rounded-lg border fit-border-subtle fit-surface-card px-3 py-2 text-sm fit-text-primary"><%= message.content %></pre>
+      <strong class="fit-chat-label"><%= label %>:</strong>
+      <pre class="fit-chat-bubble"><%= message.content %></pre>
     <% end %>
   </section>
 
@@ -25,13 +25,18 @@
             {},
             { class: "tw-input", data: { chat_target: "objective" } } %>
     </div>
-    <div class="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
-      <div>
-        <%= form.label :message, t('chat.message'), class: "tw-label" %>
-        <%= form.text_area :message, id: "prompt", rows: 3, class: "tw-input", placeholder: t('chat.example'), data: { chat_target: "prompt" } %>
-      </div>
-      <div>
-        <%= form.submit t('send'), class: "tw-btn-primary w-full md:w-auto" %>
+    <div>
+      <%= form.label :message, t('chat.message'), class: "tw-label" %>
+      <div class="relative mt-1 flex items-end rounded-lg border fit-border-subtle fit-surface-card p-1 shadow-sm transition-all focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-200">
+        <%= form.text_area :message, id: "prompt", rows: 1,
+              class: "grow resize-none border-0 bg-transparent py-2 pl-2 pr-2 text-sm outline-none focus:ring-0 overflow-y-hidden leading-5 fit-text-primary",
+              placeholder: t('chat.example'),
+              data: { chat_target: "prompt" } %>
+        <div class="flex-none p-1">
+          <button type="submit" style="cursor: pointer;" class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-white hover:bg-emerald-700 hover:scale-105 active:scale-95 transition-all duration-200" aria-label="<%= t('send') %>">
+            <i class="fa fa-arrow-up" style="rotate: 90deg;" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </div>
   <% end %>

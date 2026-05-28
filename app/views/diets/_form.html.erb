@@ -1,12 +1,12 @@
 <%= form_with(model: diet, local: true) do |form| %>
   <% if diet.errors.any? %>
-    <div id="error_explanation" class="mb-4 rounded-xl border border-rose-200 bg-rose-100 p-4 text-rose-800">
-      <h2 class="font-semibold">
+    <div id="error_explanation" class="fit-form-error">
+      <h2>
         <%= pluralize(diet.errors.count, t('error.single')) %>
         <%= t('error.saved') %>
       </h2>
 
-      <ul class="mt-2 list-disc pl-5 text-sm">
+      <ul>
         <% diet.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -60,8 +60,9 @@
       <% end %>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-5 flex gap-3">
       <%= form.submit class: 'tw-btn-primary' %>
+      <%= link_to t('back'), diets_path, class: 'tw-btn-secondary' %>
     </div>
   </section>
 <% end %>

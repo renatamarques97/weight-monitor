@@ -7,7 +7,7 @@
 
     <div class="fit-nav-actions flex flex-wrap items-center gap-2">
       <% if current_user.present? %>
-        <%= link_to chats_path, class: "tw-btn rounded-lg bg-amber-300 fit-text-primary hover:bg-amber-200" do %>
+        <%= link_to chats_path, class: "tw-btn rounded-lg fit-nav-link-accent-warm" do %>
           <i class="fa fa-magic mr-2" aria-hidden="true"></i><%= t('diet.suggestions') %>
         <% end %>
         <div class="relative">

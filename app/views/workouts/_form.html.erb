@@ -1,12 +1,12 @@
 <%= form_with(model: workout, url: workout.persisted? ? workout_path(workout) : workouts_path, local: true) do |form| %>
   <% if workout.errors.any? %>
-    <div id="error_explanation" class="mb-4 rounded-xl border border-rose-200 bg-rose-100 p-4 text-rose-800">
-      <h2 class="font-semibold">
+  <div id="error_explanation" class="fit-form-error">
+      <h2>
         <%= pluralize(workout.errors.count, t('error.single')) %>
         <%= t('error.saved') %>
       </h2>
 
-      <ul class="mt-2 list-disc pl-5 text-sm">
+      <ul>
         <% workout.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -70,7 +70,7 @@
 
     <div class="mt-5 flex gap-3">
       <%= form.submit t('workout.save'), class: 'tw-btn-primary' %>
-      <%= link_to t('back'), :back, class: 'tw-btn-secondary' %>
+      <%= link_to t('back'), workouts_path, class: 'tw-btn-secondary' %>
     </div>
   </section>
 <% end %>

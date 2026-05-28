@@ -11,15 +11,17 @@
 
 <div class="mb-6 overflow-x-auto no-scrollbar">
   <div class="flex gap-2 p-1">
-    <%= link_to workouts_path, 
+    <%= link_to workouts_path,
           class: "px-4 py-2 rounded-xl border text-sm font-semibold transition-all #{params[:type].blank? ? 'fit-filter-active' : 'fit-surface-card fit-text-secondary fit-border-subtle fit-hover-border-strong'}" do %>
-      All
+      <%= t('workout.all') %>
     <% end %>
-    
+
     <% WorkoutType::MAPPING.each_key do |sport| %>
-      <%= link_to workouts_path(type: sport), 
-            class: "px-4 py-2 rounded-xl border text-sm font-semibold transition-all flex items-center gap-2 #{params[:type] == sport.to_s ? 'fit-filter-active' : 'fit-surface-card fit-text-secondary fit-border-subtle fit-hover-border-strong'}" do %>
-        <i class="fa <%= WorkoutType::ICONS[sport] %>" style="color: <%= params[:type] == sport.to_s ? 'white' : WorkoutType::COLORS[sport] %>"></i>
+      <% is_active = params[:type] == sport.to_s %>
+      <%= link_to workouts_path(type: sport),
+            class: "px-4 py-2 rounded-xl border text-sm font-semibold transition-all flex items-center gap-2 #{is_active ? 'fit-filter-active' : 'fit-surface-card fit-text-secondary fit-border-subtle fit-hover-border-strong'}" do %>
+        <i class="fa <%= WorkoutType::ICONS[sport] %>"
+           style="color: <%= is_active ? 'inherit' : WorkoutType::COLORS[sport] %>;"></i>
         <%= t("workout.types.#{sport}") %>
       <% end %>
     <% end %>
@@ -31,34 +33,34 @@
     <table class="min-w-full text-sm">
       <thead class="fit-surface-muted">
         <tr>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-semibold fit-text-secondary uppercase tracking-wider"><%= t('workout.type') %></th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-semibold fit-text-secondary uppercase tracking-wider"><%= t('workout.date') %></th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-semibold fit-text-secondary uppercase tracking-wider"><%= t('workout.duration') %></th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-semibold fit-text-secondary uppercase tracking-wider"><%= t('workout.distance') %></th>
-          <th scope="col" class="px-6 py-3 text-right text-xs font-semibold fit-text-secondary uppercase tracking-wider"><%= t('actions') %></th>
+          <th scope="col" class="fit-th"><%= t('workout.type') %></th>
+          <th scope="col" class="fit-th"><%= t('workout.date') %></th>
+          <th scope="col" class="fit-th"><%= t('workout.duration') %></th>
+          <th scope="col" class="fit-th"><%= t('workout.distance') %></th>
+          <th scope="col" class="fit-th fit-th--right"><%= t('actions') %></th>
         </tr>
       </thead>
       <tbody class="fit-surface-card fit-divide-subtle">
         <% @workouts.each do |workout| %>
           <tr class="fit-hover-surface-muted transition-colors">
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="fit-td fit-td--primary">
               <div class="flex items-center gap-3">
-                <span class="inline-flex items-center justify-center h-8 w-8 rounded-lg" style="color: <%= WorkoutType::COLORS[workout.workout_type.to_sym] %>">
+                <span class="fit-workout-icon-cell" style="color: <%= WorkoutType::COLORS[workout.workout_type.to_sym] %>;">
                   <i class="fa <%= WorkoutType::ICONS[workout.workout_type.to_sym] %>"></i>
                 </span>
-                <span class="text-sm font-medium fit-text-primary"><%= t("workout.types.#{workout.workout_type}") %></span>
+                <span><%= t("workout.types.#{workout.workout_type}") %></span>
               </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm fit-text-secondary">
+            <td class="fit-td">
               <%= workout.workout_date.strftime("%b %d, %Y") %>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm fit-text-secondary">
+            <td class="fit-td">
               <%= workout.duration %> min
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm fit-text-secondary">
+            <td class="fit-td">
               <%= workout.distance.present? ? "#{workout.distance} km" : "-" %>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <td class="fit-td fit-td--right">
               <div class="flex justify-end gap-2">
                 <%= link_to edit_workout_path(workout), data: { turbo_frame: "main" }, class: "fit-icon-btn fit-icon-btn-edit", title: t('edit'), aria: { label: t('edit') } do %>
                   <i class="fa fa-pencil" aria-hidden="true"></i>
