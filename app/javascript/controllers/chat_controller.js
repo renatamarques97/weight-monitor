@@ -1,67 +1,122 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="chat"
 export default class extends Controller {
-    static targets = ["prompt", "conversation", "objective"]
+  static targets = ["prompt", "conversation", "objective"]
+  static values = { isLoading: Boolean }
 
-    disconnect() {
-        if (this.eventSource) {
-            this.eventSource.close()
-        }
+  connect() {
+    this.isLoadingValue = false
+    this.currentOldestPage = parseInt(this.conversationTarget.dataset.chatCurrentPage, 10) || 1
+    requestAnimationFrame(() => {
+      this.#scrollToBottom()
+      this.#ensureScrollableHistory()
+    })
+  }
+
+  disconnect() {
+    this.eventSource?.close()
+  }
+
+  onScroll() {
+    const { scrollTop } = this.conversationTarget
+    if (scrollTop < 100 && !this.isLoadingValue && this.currentOldestPage > 1) {
+      this.#loadOlderMessages()
     }
+  }
 
-    generateResponse(event) {
-        event.preventDefault()
+  async generateResponse(event) {
+    event.preventDefault()
+    const text = this.promptTarget.value.trim()
+    if (!text) return
 
-        if (!this.promptTarget.value.trim()) {
-            return
-        }
+    this.promptTarget.value = ""
+    this.isLoadingValue = true
 
-        this.#createLabel('You')
-        this.#createMessage(this.promptTarget.value)
-        this.#createLabel('Diet suggester')
-        this.currentPre = this.#createMessage()
+    this.#appendBubble("user", text)
+    const bubble = this.#appendBubble("assistant", "")
 
-        this.#setupEventSource()
+    const params = new URLSearchParams({ prompt: text })
+    if (this.hasObjectiveTarget) params.append("objective", this.objectiveTarget.value)
 
-        this.promptTarget.value = ""
+    const eventSource = new EventSource(`/chat_responses?${params}`)
+
+    eventSource.addEventListener("message", (e) => {
+      const { message } = JSON.parse(e.data)
+      bubble.querySelector("pre").textContent += message
+      this.#scrollToBottom()
+    })
+
+    eventSource.addEventListener("error", () => {
+      eventSource.close()
+      this.isLoadingValue = false
+      this.#replaceLastBubbles()
+    })
+  }
+
+  async #replaceLastBubbles() {
+    const response = await fetch("/chats.json")
+    const data = await response.json()
+    if (!data.messages_html) return
+
+    const bubbles = this.conversationTarget.querySelectorAll(".message-bubble")
+    bubbles[bubbles.length - 1]?.remove()
+    bubbles[bubbles.length - 2]?.remove()
+
+    this.conversationTarget.insertAdjacentHTML("beforeend", data.messages_html)
+    this.#scrollToBottom()
+  }
+
+  #appendBubble(role, text) {
+    const wrapper = document.createElement("div")
+    wrapper.classList.add("message-bubble")
+    wrapper.innerHTML = `
+      <strong class="chat-message-label">
+        ${role === "assistant" ? "Diet suggester" : "You"}:
+      </strong>
+      <pre class="chat-message-content">${text}</pre>
+    `
+    this.conversationTarget.appendChild(wrapper)
+    this.#scrollToBottom()
+    return wrapper
+  }
+
+  async #loadOlderMessages() {
+    const pageToLoad = this.currentOldestPage - 1
+    if (pageToLoad < 1) return
+
+    this.isLoadingValue = true
+    try {
+      const response = await fetch(`/chats.json?page=${pageToLoad}`)
+      const data = await response.json()
+      if (!data.messages_html?.trim()) {
+        this.currentOldestPage = 1
+        return
+      }
+
+      const { scrollHeight, scrollTop } = this.conversationTarget
+      this.conversationTarget.insertAdjacentHTML("afterbegin", data.messages_html)
+      this.currentOldestPage = Math.max(data.pagination?.page ?? pageToLoad, 1)
+      this.conversationTarget.scrollTop = scrollTop + (this.conversationTarget.scrollHeight - scrollHeight)
+    } catch (error) {
+      console.error("Error loading older messages:", error)
+    } finally {
+      this.isLoadingValue = false
     }
+  }
 
-    #createLabel(text) {
-        const label = document.createElement('strong');
-        label.className = 'mt-3 inline-block text-[11px] font-semibold uppercase tracking-wide text-slate-500'
-        label.textContent = `${text}:`;
-        this.conversationTarget.appendChild(label);
+  async #ensureScrollableHistory() {
+    while (!this.#isScrollable() && this.currentOldestPage > 1 && !this.isLoadingValue) {
+      await this.#loadOlderMessages()
     }
+    this.#scrollToBottom()
+  }
 
-    #createMessage(text = '') {
-        const preElement = document.createElement('pre');
-        preElement.className = 'mt-1 whitespace-pre-wrap rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800'
-        preElement.textContent = text;
-        this.conversationTarget.appendChild(preElement);
-        return preElement
-    }
+  #isScrollable() {
+    const el = this.conversationTarget
+    return el.scrollHeight > el.clientHeight
+  }
 
-    #setupEventSource() {
-        const prompt = encodeURIComponent(this.promptTarget.value)
-        const objective = this.hasObjectiveTarget ? encodeURIComponent(this.objectiveTarget.value) : ""
-        this.eventSource = new EventSource(`/chat_responses?prompt=${prompt}&objective=${objective}`)
-        this.eventSource.addEventListener("message", this.#handleMessage.bind(this))
-        this.eventSource.addEventListener("error", this.#handleError.bind(this))
-    }
-
-    #handleMessage(event) {
-        const parsedData = JSON.parse(event.data);
-        this.currentPre.textContent += parsedData.message;
-
-        this.conversationTarget.scrollTop = this.conversationTarget.scrollHeight;
-    }
-
-    #handleError(event) {
-        if (event.eventPhase === EventSource.CLOSED) {
-            this.eventSource.close()
-        } else {
-            this.currentPre.textContent += "\n\nHouve um problema ao gerar a resposta. Tente novamente."
-        }
-    }
+  #scrollToBottom() {
+    this.conversationTarget.scrollTop = this.conversationTarget.scrollHeight
+  }
 }

@@ -114,6 +114,8 @@ en:
     example: "Ex: I want to lose 4kg in 2 months and run 3x per week"
     message: "Message"
     objective_label: "Objective"
+    assistant_label: "Diet suggester"
+    user_label: "You"
     objectives:
       weight_loss: "Weight Loss"
       hypertrophy: "Hypertrophy"
