@@ -56,7 +56,7 @@ RSpec.describe ChatMessage, type: :model do
       msg2 = create(:assistant_chat_message, user: user, created_at: 2.minutes.ago)
       msg3 = create(:user_chat_message, user: user, created_at: 1.minute.ago)
 
-      expect(ChatMessage.ordered.to_a).to eq([msg1, msg2, msg3])
+      expect(ChatMessage.where(id: [msg1.id, msg2.id, msg3.id]).ordered.to_a).to eq([msg1, msg2, msg3])
     end
 
     it "uses id as a tiebreaker when created_at values are equal" do
@@ -64,8 +64,8 @@ RSpec.describe ChatMessage, type: :model do
       msg_a = create(:user_chat_message, user: user, created_at: now)
       msg_b = create(:assistant_chat_message, user: user, created_at: now)
 
-      ordered = ChatMessage.ordered.to_a
-      expect(ordered.index(msg_a)).to be < ordered.index(msg_b)
+      ordered = ChatMessage.where(id: [msg_a.id, msg_b.id]).ordered.to_a
+      expect(ordered).to eq([msg_a, msg_b])
     end
   end
 end
