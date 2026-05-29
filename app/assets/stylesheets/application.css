@@ -5,9 +5,7 @@
  *= require font-awesome
  */
 
-/* ===== Utilities ===== */
-
-/* ===== Theme Tokens (Light / Dark) ===== */
+/* Theme Tokens (Light / Dark) */
 :root,
 :root[data-theme="light"] {
   --font-display: 'Outfit', sans-serif;
@@ -229,7 +227,7 @@ button {
   cursor: pointer;
 }
 
-/* ===== Generic Theme-Aware Components ===== */
+/* Generic Theme-Aware Components */
 body,
 .app-theme-shell {
   font-family: var(--font-body) !important;
@@ -329,7 +327,7 @@ h6,
   background-color: var(--nav-accent-hover-bg);
 }
 
-/* ===== Semantic utility classes ===== */
+/* Semantic utility classes */
 .fit-text-primary {
   color: var(--text-primary);
 }
@@ -432,7 +430,7 @@ h6,
   color: color-mix(in srgb, var(--btn-delete-text) 85%, var(--btn-delete-text) 15%);
 }
 
-/* ===== Stat Cards (Dashboard summary) ===== */
+/* Stat Cards (Dashboard summary) */
 .fit-stat-card {
   border-radius: 0.75rem;
   border: 1px solid var(--surface-card-border);
@@ -495,7 +493,7 @@ h6,
   color: var(--text-primary);
 }
 
-/* ===== Quick-add colored buttons (dashboard panels) ===== */
+/* Quick-add colored buttons (dashboard panels) */
 .fit-quick-add {
   display: block;
   text-decoration: none;
@@ -565,7 +563,7 @@ h6,
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
-/* ===== Section utility ===== */
+/* Section utility */
 .fit-section-title {
   font-size: 0.75rem;
   font-weight: 700;
@@ -654,7 +652,7 @@ h6,
   color: var(--icon-color, var(--menu-icon));
 }
 
-/* ===== Chat messages ===== */
+/* Chat messages */
 .chat-bubble-wrapper {
   display: flex;
   flex-direction: column;
@@ -714,7 +712,7 @@ h6,
   margin: 0;
 }
 
-/* ===== Form error box ===== */
+/* Form error box */
 .fit-form-error {
   margin-bottom: 1rem;
   border-radius: 0.75rem;
@@ -869,7 +867,7 @@ input[type="time"] {
   }
 }
 
-/* ===== Navigation hooks ===== */
+/* Navigation hooks */
 .fit-nav-shell {
   border: 1px solid var(--nav-shell-border);
   background-image: var(--nav-shell-bg);
@@ -933,7 +931,7 @@ input[type="time"] {
   background-color: color-mix(in srgb, var(--action-accent-bg) 85%, transparent);
 }
 
-/* ===== Theme switch UI ===== */
+/* Theme switch UI */
 .theme-switch-wrap {
   display: flex;
   align-items: center;
@@ -958,7 +956,7 @@ input[type="time"] {
   font-weight: 600;
 }
 
-/* ===== User menu ===== */
+/* User menu */
 .user-menu {
   position: relative;
 }
@@ -967,7 +965,7 @@ input[type="time"] {
   display: none;
 }
 
-/* ===== Theme toggle switch ===== */
+/* Theme toggle switch */
 .theme-toggle {
   display: inline-flex;
   align-items: center;
