@@ -12,7 +12,8 @@
 <div class="mb-6 overflow-x-auto no-scrollbar">
   <div class="flex gap-2 p-1">
     <%= link_to workouts_path,
-          class: "px-4 py-2 rounded-xl border text-sm font-semibold transition-all #{params[:type].blank? ? 'fit-filter-active' : 'fit-surface-card fit-text-secondary fit-border-subtle fit-hover-border-strong'}" do %>
+          class: "px-4 py-2 rounded-xl border text-sm font-semibold transition-all flex items-center gap-2 #{params[:type].blank? ? 'fit-filter-active' : 'fit-surface-card fit-text-secondary fit-border-subtle fit-hover-border-strong'}" do %>
+      <i class='fa fa-list'></i>
       <%= t('workout.all') %>
     <% end %>
 
