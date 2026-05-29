@@ -1,4 +1,4 @@
-<div class="mb-3 rounded-xl border border-slate-200 bg-slate-50 p-4" data-nested-form-wrapper>
+<div class="mb-3 rounded-xl border fit-border-subtle fit-surface-muted p-4" data-nested-form-wrapper>
   <%= f.hidden_field :id if f.object.persisted? %>
   <%= f.hidden_field :_destroy, value: "0" %>
 
@@ -18,8 +18,8 @@
       <%= f.select :meal_type, Meal.meal_type.options, {}, class: "tw-input" %>
     </div>
 
-    <div>
-      <button type="button" class="tw-btn-danger w-full md:w-auto" data-action="nested-form#remove">
+    <div class="flex items-end">
+      <button type="button" class="fit-icon-btn fit-icon-btn-delete" data-action="nested-form#remove" title="Remove meal" aria-label="Remove meal">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </button>
     </div>

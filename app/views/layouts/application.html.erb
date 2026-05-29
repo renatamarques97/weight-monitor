@@ -5,22 +5,34 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <script>
+      (function() {
+        var availableThemes = ["light", "dark"];
+        var savedTheme = localStorage.getItem("fit_tracker_theme");
+        var resolvedTheme = availableThemes.includes(savedTheme) ? savedTheme : "light";
+        document.documentElement.dataset.theme = resolvedTheme;
+        console.log("[Theme Init] Set to:", resolvedTheme);
+      })();
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "font-awesome", "data-turbo-track": "reload" %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-amber-50 text-slate-800">
+  <body class="app-theme-shell min-h-screen">
     <main class="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-10">
       <% if notice.present? %>
-        <div class="mb-4 rounded-xl border border-emerald-200 bg-emerald-100 px-4 py-3 text-sm font-medium text-emerald-800" role="status"><%= notice %></div>
+        <div class="fit-flash fit-flash-notice" role="status"><%= notice %></div>
       <% end %>
       <% if alert.present? %>
-        <div class="mb-4 rounded-xl border border-rose-200 bg-rose-100 px-4 py-3 text-sm font-medium text-rose-800" role="alert"><%= alert %></div>
+        <div class="fit-flash fit-flash-alert" role="alert"><%= alert %></div>
       <% end %>
 
       <%= yield %>

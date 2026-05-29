@@ -14,13 +14,22 @@ export default class extends Controller {
   remove(event) {
     event.preventDefault()
 
-    const wrapper = event.target.closest("[data-nested-form-wrapper]")
+    const wrapper = event.currentTarget.closest("[data-nested-form-wrapper]")
     if (!wrapper) return
 
     const destroyField = wrapper.querySelector("input[name*='[_destroy]']")
-    if (destroyField) {
+    const idField = wrapper.querySelector("input[name*='[id]']")
+    const persistedRecord = idField && idField.value
+
+    if (destroyField && persistedRecord) {
       destroyField.value = "1"
-      wrapper.classList.add("d-none")
+
+      wrapper.querySelectorAll("input, select, textarea, button").forEach((element) => {
+        if (element === destroyField || element === idField) return
+        element.disabled = true
+      })
+
+      wrapper.hidden = true
       return
     }
 

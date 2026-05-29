@@ -16,7 +16,7 @@ Bundler.require(*Rails.groups)
 
 module WeightMonitor
   class Application < Rails::Application
-    config.load_defaults 6.0
+    config.load_defaults 8.0
     config.active_support.to_time_preserves_timezone = :zone
 
     config.autoload_lib(ignore: %w[assets tasks])

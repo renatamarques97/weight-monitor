@@ -28,17 +28,17 @@ module WorkoutType
   }.freeze
 
   ICONS = {
-    running: 'fa-road',
-    walking: 'fa-street-view',
-    cycling: 'fa-bicycle',
-    swimming: 'fa-tint',
-    weightlifting: 'fa-anchor',
-    yoga: 'fa-leaf',
-    soccer: 'fa-futbol-o',
-    basketball: 'fa-dribbble',
-    tennis: 'fa-circle-o',
-    martial_arts: 'fa-hand-rock-o',
-    other: 'fa-heartbeat'
+    running: 'fa fa-person-running',
+    walking: 'fa fa-person-walking',
+    cycling: 'fa fa-person-biking',
+    swimming: 'fa fa-person-swimming',
+    weightlifting: 'fa-solid fa-dumbbell',
+    yoga: 'fa fa-leaf',
+    soccer: 'fa fa-futbol',
+    basketball: 'fa fa-basketball',
+    tennis: 'fa fa-table-tennis-paddle-ball',
+    martial_arts: 'fa fa-hand-fist',
+    other: 'fa fa-heartbeat'
   }.freeze
 
   COLORS = {

@@ -1,12 +1,12 @@
 <%= form_with(model: diet, local: true) do |form| %>
   <% if diet.errors.any? %>
-    <div id="error_explanation" class="mb-4 rounded-xl border border-rose-200 bg-rose-100 p-4 text-rose-800">
-      <h2 class="font-semibold">
+    <div id="error_explanation" class="fit-form-error">
+      <h2>
         <%= pluralize(diet.errors.count, t('error.single')) %>
         <%= t('error.saved') %>
       </h2>
 
-      <ul class="mt-2 list-disc pl-5 text-sm">
+      <ul>
         <% diet.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -15,7 +15,7 @@
   <% end %>
 
   <section class="tw-card" data-controller="nested-form">
-    <h2 class="mb-4 text-xl font-bold text-slate-900"><%= t('diet.singular') %></h2>
+    <h2 class="mb-4 text-xl font-bold fit-text-primary"><%= t('diet.singular') %></h2>
 
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <div class="xl:col-span-2">
@@ -39,10 +39,10 @@
       </div>
     </div>
 
-    <div class="my-5 h-px bg-slate-200"></div>
+    <div class="my-5 h-px fit-surface-border"></div>
 
     <div class="mb-3 flex items-center justify-between gap-3">
-      <h3 class="text-lg font-semibold text-slate-900"><%= t('meal.title') %></h3>
+      <h3 class="text-lg font-semibold fit-text-primary"><%= t('meal.title') %></h3>
       <button type="button" class="tw-btn-primary" data-action="nested-form#add">
         <i class="fa fa-plus mr-2" aria-hidden="true"></i><%= t('meal.add') %>
       </button>
@@ -60,8 +60,9 @@
       <% end %>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-5 flex gap-3">
       <%= form.submit class: 'tw-btn-primary' %>
+      <%= link_to t('back'), diets_path, class: 'tw-btn-secondary' %>
     </div>
   </section>
 <% end %>

@@ -104,19 +104,52 @@ user_seeds.each do |user_attributes|
     end
   end
 
-  # 4. Chat Messages
-  [
-    { role: "user", content: "How is my progress?" },
-    { role: "assistant", content: "Your weight is trending down and your consistency is great!" },
-    { role: "user", content: "What should I do to improve?" },
-    { role: "assistant", content: "You should eat less and exercise more." },
-    { role: "user", content: "What is my BMI?" },
-    { role: "assistant", content: "Your BMI is 23.4" }
-  ].each do |chat_message_attributes|
-    FactoryBot.create(:chat_message,
+  # 4. Chat Messages (50 messages per user)
+  messages = [
+    { user: "How is my progress?", assistant: "Your weight is trending down and your consistency is great!" },
+    { user: "What should I do to improve?", assistant: "You should eat less and exercise more." },
+    { user: "What is my BMI?", assistant: "Your BMI is 23.4." },
+    { user: "How much water should I drink?", assistant: "You should aim for 2.5 to 3 liters of water per day." },
+    { user: "Is it okay to eat carbs at night?", assistant: "Yes, carbs at night are fine as long as you stay within your daily calorie goal." },
+    { user: "How do I calculate my calorie deficit?", assistant: "Find your TDEE (Total Daily Energy Expenditure) and subtract 300-500 calories." },
+    { user: "What are the best sources of protein?", assistant: "Chicken breast, turkey, eggs, Greek yogurt, fish, and tofu." },
+    { user: "How many days a week should I work out?", assistant: "Aim for 3 to 5 days per week, combining cardio and strength training." },
+    { user: "What is a good post-workout meal?", assistant: "A mix of fast-digesting protein and carbohydrates, like a whey shake with a banana." },
+    { user: "How do I reduce muscle soreness?", assistant: "Ensure proper hydration, get adequate sleep, stretch, and consume enough protein." },
+    { user: "Should I do cardio before or after weights?", assistant: "It's best to do cardio after weights to keep your energy high for strength training." },
+    { user: "How does sleep affect my weight loss?", assistant: "Lack of sleep increases hunger hormones (ghrelin) and decreases satiety (leptin)." },
+    { user: "What is the difference between active and passive recovery?", assistant: "Active recovery involves low-intensity movement like walking or yoga; passive is complete rest." },
+    { user: "How can I increase my running stamina?", assistant: "Incorporate interval training, tempo runs, and gradually increase your weekly mileage by 10%." },
+    { user: "Can I build muscle while losing fat?", assistant: "Yes, this is called body recomposition. It requires a small calorie deficit and high protein intake." },
+    { user: "What are healthy snacks for weight loss?", assistant: "Apple slices with peanut butter, a handful of almonds, or baby carrots with hummus." },
+    { user: "How long does it take to see muscle growth?", assistant: "With consistent training and nutrition, noticeable changes typically appear in 6-8 weeks." },
+    { user: "What is the benefit of weightlifting?", assistant: "It increases bone density, boosts metabolism, builds strength, and improves posture." },
+    { user: "How do I stay motivated to exercise?", assistant: "Set realistic goals, track your progress, find a workout partner, and choose activities you enjoy." },
+    { user: "Is green tea good for fat burn?", assistant: "Green tea contains antioxidants that can slightly boost metabolism, but it won't replace a calorie deficit." },
+    { user: "How do I track my food intake accurately?", assistant: "Use a food scale to weigh portions and log everything in a calorie-tracking app." },
+    { user: "What are signs of overtraining?", assistant: "Persistent fatigue, decreased performance, irritability, disturbed sleep, and chronic muscle soreness." },
+    { user: "Why is my weight fluctuating day to day?", assistant: "Water retention, sodium intake, digestion, glycogen storage, and stress can cause daily fluctuations." },
+    { user: "How do I prevent injuries during lifting?", assistant: "Warm up properly, focus on correct form rather than heavy weight, and listen to your body." },
+    { user: "What is the role of fiber in a diet?", assistant: "Fiber aids digestion, helps control blood sugar, and keeps you feeling full longer." }
+  ]
+
+  hours_ago = 100
+  messages.each_with_index do |pair, index|
+    hours_ago -= rand(1.0..2.0)
+    created_at = hours_ago.hours.ago
+
+    # Create the user question
+    FactoryBot.create(:user_chat_message,
       user: user,
-      role: chat_message_attributes[:role],
-      content: chat_message_attributes[:content]
+      content: pair[:user],
+      created_at: created_at
+    )
+
+    # Create the assistant response
+    FactoryBot.create(:assistant_chat_message,
+      user: user,
+      content: pair[:assistant],
+      created_at: created_at + 5.seconds
     )
   end
 end

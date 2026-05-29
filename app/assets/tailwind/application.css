@@ -6,6 +6,10 @@
   --color-brand-100: #d1fae5;
   --color-brand-500: #10b981;
   --color-brand-700: #047857;
+
+  /* Typography */
+  --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-display: "Outfit", sans-serif;
 }
 
 @layer base {
@@ -15,11 +19,12 @@
 
   body {
     @apply bg-slate-50 text-slate-800 antialiased;
+    font-family: var(--font-sans);
   }
 
-  h1 { @apply text-2xl font-bold text-slate-800; }
-  h2 { @apply text-xl  font-bold text-slate-800; }
-  h3 { @apply text-lg  font-semibold text-slate-700; }
+  h1 { @apply text-2xl font-bold text-slate-800; font-family: var(--font-display); }
+  h2 { @apply text-xl  font-bold text-slate-800; font-family: var(--font-display); }
+  h3 { @apply text-lg  font-semibold text-slate-700; font-family: var(--font-display); }
 
   a {
     @apply text-emerald-700 underline-offset-2 hover:underline;
@@ -84,12 +89,19 @@
     @apply scale-110;
   }
 
-  .chat-message-label {
-    @apply mt-3 inline-block text-[11px] font-semibold uppercase tracking-wide text-slate-500;
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .chat-message-content {
-    @apply mt-1 whitespace-pre-wrap rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800;
+  .animate-fade-in-up {
+    animation: fadeInUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
 }
 

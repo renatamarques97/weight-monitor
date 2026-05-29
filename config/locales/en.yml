@@ -1,11 +1,16 @@
 en:
   title: "Fit Tracker"
+  about: "About"
+  theme: "Theme"
   sign:
     in: "Sign in"
     out: "Sign out"
     up: "Sign up"
   log:
     in: "Log in"
+  user:
+    menu: "User Menu"
+    unknown: "Unknown User"
   diet:
     title: "Diets"
     new: "New Diet"
@@ -21,6 +26,7 @@ en:
     updated: "Diet was successfully updated."
     destroyed: "Diet was successfully destroyed."
   weight:
+    new: "New Weight"
     title: "Weight"
     update: "Update Weight"
     created: "Weight was successfully created."
@@ -46,8 +52,8 @@ en:
     save: "Save"
     no_records: "No %{sport} records yet."
     total: "Total Workouts"
-    new_short: "New"
     all: "All"
+    new_short: "New"
     chart_duration: "Total Duration (minutes)"
     chart_distance: "Total Distance (km)"
     chart_pace: "Avg Pace (min/km)"

@@ -1,0 +1,87 @@
+<div class="user-menu" data-controller="user-menu">
+  <button
+    type="button"
+    class="tw-btn fit-nav-link fit-nav-link-neutral rounded-lg border px-3 py-2 flex items-center gap-2"
+    data-action="click->user-menu#toggleMenu"
+    data-user-menu-target="trigger"
+    aria-haspopup="true"
+    aria-expanded="false"
+    title="<%= t('user.menu') %>"
+  >
+    <span class="bg-gradient-to-br from-emerald-400 to-teal-500 inline-flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white">
+      <%= current_user.name&.first&.upcase || "U" %>
+    </span>
+
+    <i class="fa fa-chevron-down text-xs transition-transform duration-200" data-user-menu-target="chevron" aria-hidden="true"></i>
+  </button>
+
+  <div 
+    class="absolute right-0 top-full z-50 hidden mt-2 w-64 rounded-xl border shadow-xl fit-surface-card fit-border-subtle"
+    data-user-menu-target="dropdown"
+  >
+    <div class="border-b fit-border-subtle px-4 py-3">
+      <p class="font-semibold truncate fit-text-primary">
+        <%= current_user.name || t('user.unknown') %>
+      </p>
+      <p class="text-xs truncate fit-text-secondary">
+        <%= current_user.email || t('user.unknown') %>
+      </p>
+    </div>
+
+    <div class="py-2">
+      <%= link_to edit_user_registration_path, class: "user-menu-theme w-full flex items-center gap-3 px-4 py-2 fit-text-primary fit-hover-surface-muted transition-colors border-0 bg-transparent font-inherit" do %>
+        <i class="fa fa-user w-4 fit-text-accent" aria-hidden="true"></i>
+        <span><%= t('profile') %></span>
+      <% end %>
+
+    <button
+        type="button"
+        class="user-menu-theme w-full flex items-center justify-between px-4 py-2 fit-text-primary fit-hover-surface-muted transition-colors border-0 bg-transparent font-inherit text-left"
+        data-action="click->user-menu#toggleTheme"
+        data-user-menu-target="themeButton"
+        aria-pressed="false"
+        aria-label="<%= t('theme') %>"
+      >
+        <span class="flex items-center gap-3">
+          <i class="fa fa-adjust w-4 fit-text-accent" aria-hidden="true"></i>
+          <span><%= t('theme') %></span>
+        </span>
+
+        <span class="theme-toggle" aria-hidden="true">
+          <span class="theme-toggle-icon theme-toggle-icon-sun">
+            <i class="fa fa-sun" aria-hidden="true"></i>
+          </span>
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-thumb"></span>
+          </span>
+          <span class="theme-toggle-icon theme-toggle-icon-moon">
+            <i class="fa fa-moon" aria-hidden="true"></i>
+          </span>
+        </span>
+      </button>
+
+      <div class="my-2 border-t fit-border-subtle"></div>
+
+      <div class="px-4 py-2 text-xs">
+        <p class="font-semibold mb-2 fit-text-primary"><%= t('about') %></p>
+        <div class="space-y-1">
+          <div class="flex justify-between fit-text-primary">
+            <span>Version:</span>
+            <span class="font-mono"><%= app_version %></span>
+          </div>
+          <div class="flex justify-between fit-text-primary">
+            <span>Build:</span>
+            <span class="font-mono"><%= app_build_date %></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="my-2 border-t fit-border-subtle"></div>
+
+      <%= link_to destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: "user-menu-theme w-full flex items-center gap-3 px-4 py-2 fit-text-primary fit-hover-surface-muted transition-colors border-0 bg-transparent font-inherit fit-icon-btn-delete text-red-600 hover:bg-red-50 transition-colors" do %>
+        <i class="fa fa-sign-out w-4" aria-hidden="true"></i>
+        <span><%= t('sign.out') %></span>
+      <% end %>
+    </div>
+  </div>
+</div>
