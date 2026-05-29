@@ -16,6 +16,7 @@ export default class extends Controller {
       this.resizeHandler = () => this.resizePrompt()
       window.addEventListener("resize", this.resizeHandler)
     }
+    this.#updateLastMessageId()
     requestAnimationFrame(() => {
       this.#scrollToBottom()
       this.#ensureScrollableHistory()
@@ -95,26 +96,39 @@ export default class extends Controller {
   }
 
   async #replaceLastBubbles() {
-    const response = await fetch("/chats.json")
+    const response = await fetch(`/chats.json?after_id=${this.lastMessageId}`)
     const data = await response.json()
     if (!data.messages_html) return
 
-    const bubbles = this.conversationTarget.querySelectorAll(".message-bubble")
-    bubbles[bubbles.length - 1]?.remove()
-    bubbles[bubbles.length - 2]?.remove()
+    const dynamicBubbles = this.conversationTarget.querySelectorAll(".dynamic-bubble")
+    dynamicBubbles.forEach(bubble => bubble.remove())
 
     this.conversationTarget.insertAdjacentHTML("beforeend", data.messages_html)
+    this.#updateLastMessageId()
     this.#scrollToBottom()
+  }
+
+  #updateLastMessageId() {
+    const staticMessages = this.conversationTarget.querySelectorAll("[chat-message-id]")
+
+    this.lastMessageId = 0
+
+    if (staticMessages.length > 0) {
+      const lastMessage = staticMessages[staticMessages.length - 1]
+      this.lastMessageId = parseInt(lastMessage.getAttribute("chat-message-id"), 10)
+    }
   }
 
   #appendBubble(role, text) {
     const wrapper = document.createElement("div")
-    wrapper.classList.add("message-bubble")
+    wrapper.className = `message-bubble dynamic-bubble chat-bubble-wrapper ${role} animate-fade-in-up`
     wrapper.innerHTML = `
-      <strong class="chat-message-label">
-        ${role === "assistant" ? this.assistantLabelValue : this.userLabelValue}:
-      </strong>
-      <pre class="chat-message-content">${text}</pre>
+      <span class="chat-bubble-label">
+        ${role === 'user' ? this.userLabelValue : this.assistantLabelValue}
+      </span>
+      <div class="chat-bubble ${role}">
+        <pre class="chat-pre">${text}</pre>
+      </div>
     `
     this.conversationTarget.appendChild(wrapper)
     this.#scrollToBottom()

@@ -1,12 +1,12 @@
 <%= render "dashboard/menu" %>
 
 <section class="tw-card" data-controller="chat" data-chat-user-label-value="<%= t('chat.user_label') %>" data-chat-assistant-label-value="<%= t('chat.assistant_label') %>">
-  <h1 class="mb-2 text-2xl font-bold tracking-tight text-slate-900"><%= t('diet.suggestions') %></h1>
-  <p class="mb-4 text-sm text-slate-600"><%= t('chat.describe_goals') %></p>
+  <h1 class="mb-2 text-2xl font-bold tracking-tight fit-text-primary"><%= t('diet.suggestions') %></h1>
+  <p class="mb-4 text-sm fit-text-secondary"><%= t('chat.describe_goals') %></p>
 
-  <section class="max-h-[55vh] min-h-[300px] overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-4" data-chat-target="conversation" data-action="scroll->chat#onScroll" data-chat-current-page="<%= @page %>">
+  <section class="max-h-[55vh] min-h-[300px] overflow-y-auto rounded-xl border fit-border-subtle fit-surface-muted p-4 shadow-inner" data-chat-target="conversation" data-action="scroll->chat#onScroll" data-chat-current-page="<%= @page %>">
     <% if @serialized_chat_messages.empty? %>
-      <p class="text-xs text-slate-400 italic">No messages yet.</p>
+      <p class="text-xs fit-text-secondary italic opacity-70">No messages yet.</p>
     <% end %>
     <% @serialized_chat_messages.each do |message| %>
       <%= render partial: "chats/message", locals: { message: message } %>
