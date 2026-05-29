@@ -15,6 +15,8 @@ RSpec.describe "/dashboard", type: :request do
 
     before do
       sign_in user
+      create(:weight, user: user, kg: 70.5, weight_date: 2.days.ago)
+      create(:weight, user: user, kg: 72.3, weight_date: 1.day.ago)
     end
 
     describe "GET /index" do

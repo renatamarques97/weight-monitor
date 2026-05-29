@@ -1,6 +1,6 @@
 require 'simplecov'
 SimpleCov.start 'rails' do
-  minimum_coverage 80
+  minimum_coverage 95
   maximum_coverage_drop 0.5
 end
 
