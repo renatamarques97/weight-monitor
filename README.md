@@ -49,6 +49,49 @@ bundle exec rspec
 bundle exec rails server
 ```
 
+### Run with Docker
+
+Prerequisites:
+
+- Docker Desktop (or Docker Engine + Docker Compose)
+
+Start the app (build images if needed):
+
+```shell
+docker compose up --build
+```
+
+Run in detached mode:
+
+```shell
+docker compose up -d --build
+```
+
+Open the app:
+
+- http://localhost:3000
+
+Useful commands:
+
+```shell
+# View logs
+docker compose logs -f
+
+# Stop containers
+docker compose down
+
+# Stop and remove volumes (resets database)
+docker compose down -v
+
+# Recreate only the web service after Dockerfile/ Gem changes
+docker compose up --build web
+```
+
+Notes:
+
+- The development stack starts PostgreSQL, Redis and Rails.
+- The database is prepared automatically on container start.
+
 ## Documentation
 
 You will need an account to use the platform,
