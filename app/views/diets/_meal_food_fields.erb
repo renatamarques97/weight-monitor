@@ -1,0 +1,56 @@
+<div class="mb-3 rounded-lg border fit-border-subtle fit-surface-muted p-3" data-nested-form-wrapper>
+  <%= f.hidden_field :id if f.object.persisted? %>
+  <%= f.hidden_field :_destroy, value: "0" %>
+
+  <div class="grid gap-3 md:grid-cols-[2fr_1fr_1fr_auto] md:items-end">
+    <div class="relative">
+      <%= f.label :food_name, t('meal.food_name'), class: 'tw-label' %>
+      <%= f.text_field :food_name,
+                       class: 'tw-input fatsecret-autocomplete',
+                       placeholder: t('meal.search_food_placeholder'),
+                       autocomplete: 'off' %>
+      <%= f.hidden_field :fatsecret_food_id %>
+    </div>
+
+    <div>
+      <%= f.label :metric_serving_amount, t('meal.metric_serving_amount'), class: 'tw-label' %>
+      <%= f.number_field :metric_serving_amount,
+                         step: :any,
+                         class: 'tw-input fatsecret-serving-amount',
+                         placeholder: '100' %>
+    </div>
+
+    <div>
+      <%= f.label :metric_serving_unit, t('meal.metric_serving_unit'), class: 'tw-label' %>
+      <%= f.text_field :metric_serving_unit, class: 'tw-input', readonly: true %>
+    </div>
+
+    <div class="flex items-end">
+      <button type="button" class="fit-icon-btn fit-icon-btn-delete" data-action="nested-form#remove" title="<%= t('meal.remove_food') %>" aria-label="<%= t('meal.remove_food') %>">
+        <i class="fa fa-trash" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-3 grid gap-3 md:grid-cols-4">
+    <div>
+      <%= f.label :calories, t('meal.calories'), class: 'tw-label' %>
+      <%= f.number_field :calories, step: :any, class: 'tw-input', readonly: true %>
+    </div>
+
+    <div>
+      <%= f.label :protein, t('meal.protein'), class: 'tw-label' %>
+      <%= f.number_field :protein, step: :any, class: 'tw-input', readonly: true %>
+    </div>
+
+    <div>
+      <%= f.label :carbs, t('meal.carbs'), class: 'tw-label' %>
+      <%= f.number_field :carbs, step: :any, class: 'tw-input', readonly: true %>
+    </div>
+
+    <div>
+      <%= f.label :fat, t('meal.fat'), class: 'tw-label' %>
+      <%= f.number_field :fat, step: :any, class: 'tw-input', readonly: true %>
+    </div>
+  </div>
+</div>
