@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_01_103000) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_01_110100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,6 +35,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_01_103000) do
     t.index ["user_id"], name: "index_diets_on_user_id"
   end
 
+  create_table "meal_diaries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "diary_date", null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_meal_diaries_on_user_id"
+  end
+
   create_table "meal_foods", force: :cascade do |t|
     t.bigint "meal_id", null: false
     t.string "food_name", null: false
@@ -54,7 +63,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_01_103000) do
     t.time "schedule", null: false
     t.text "description", null: false
     t.integer "meal_type", null: false
-    t.bigint "diet_id", null: false
+    t.bigint "diet_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "calories"
@@ -64,7 +73,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_01_103000) do
     t.string "food_name"
     t.string "fatsecret_food_id"
     t.string "metric_serving_unit"
+    t.bigint "meal_diary_id"
     t.index ["diet_id"], name: "index_meals_on_diet_id"
+    t.index ["meal_diary_id"], name: "index_meals_on_meal_diary_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -106,8 +117,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_01_103000) do
 
   add_foreign_key "chat_messages", "users"
   add_foreign_key "diets", "users"
+  add_foreign_key "meal_diaries", "users"
   add_foreign_key "meal_foods", "meals"
   add_foreign_key "meals", "diets"
+  add_foreign_key "meals", "meal_diaries"
   add_foreign_key "weights", "users"
   add_foreign_key "workouts", "users"
 end
