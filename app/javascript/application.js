@@ -100,3 +100,143 @@ if (document.readyState === "loading") {
 } else {
   bootTheme()
 }
+
+const fsTimers = new WeakMap()
+
+const fsFieldName = (input, field) => {
+  if (!input.name) return null
+  return input.name.replace("[food_name]", `[${field}]`)
+}
+
+const fsFindField = (input, field) => {
+  const name = fsFieldName(input, field)
+  if (!name) return null
+  return document.querySelector(`[name="${name}"]`)
+}
+
+const fsRemoveSuggestions = (input) => {
+  const container = input.parentElement
+  if (!container) return
+  const existing = container.querySelector(".autocomplete-suggestions")
+  if (existing) existing.remove()
+}
+
+const fsShowMessage = (input, message, isError = false) => {
+  fsRemoveSuggestions(input)
+  const container = input.parentElement
+  if (!container) return
+
+  const ul = document.createElement("ul")
+  ul.className = "autocomplete-suggestions"
+
+  const li = document.createElement("li")
+  li.textContent = message
+  if (isError) li.className = "autocomplete-error-message"
+
+  ul.appendChild(li)
+  container.appendChild(ul)
+}
+
+const fsFillMacros = (input, data) => {
+  const serving = data?.food?.servings?.serving
+  if (!serving) return
+
+  const firstServing = Array.isArray(serving) ? serving[0] : serving
+  const values = {
+    calories: firstServing.calories,
+    protein: firstServing.protein,
+    carbs: firstServing.carbohydrate,
+    fat: firstServing.fat,
+    metric_serving_unit: firstServing.metric_serving_unit
+  }
+
+  Object.entries(values).forEach(([field, value]) => {
+    const el = fsFindField(input, field)
+    if (el) el.value = value || ""
+  })
+}
+
+const fsSelectFood = (input, food) => {
+  input.value = food.food_name || ""
+
+  const idField = fsFindField(input, "fatsecret_food_id")
+  if (idField) idField.value = food.food_id || ""
+
+  fsRemoveSuggestions(input)
+
+  if (!food.food_id) return
+  fetch(`/fatsecret_foods/${food.food_id}`)
+    .then((r) => r.json())
+    .then((payload) => fsFillMacros(input, payload))
+    .catch(() => fsShowMessage(input, "Falha ao carregar macros do alimento.", true))
+}
+
+const fsShowSuggestions = (input, foods) => {
+  fsRemoveSuggestions(input)
+  const container = input.parentElement
+  if (!container) return
+
+  const ul = document.createElement("ul")
+  ul.className = "autocomplete-suggestions"
+
+  foods.forEach((food) => {
+    const li = document.createElement("li")
+    li.textContent = food.food_name || "(sem nome)"
+    li.tabIndex = 0
+    li.addEventListener("click", () => fsSelectFood(input, food))
+    li.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault()
+        fsSelectFood(input, food)
+      }
+    })
+    ul.appendChild(li)
+  })
+
+  container.appendChild(ul)
+}
+
+const fsSearchFoods = (input) => {
+  const query = input.value.trim()
+  if (query.length < 3) {
+    fsRemoveSuggestions(input)
+    return
+  }
+
+  fetch(`/fatsecret_foods?q=${encodeURIComponent(query)}`)
+    .then(async (r) => {
+      if (!r.ok) {
+        const payload = await r.json().catch(() => ({}))
+        throw new Error(payload.error || "Nao foi possivel buscar alimentos agora.")
+      }
+      return r.json()
+    })
+    .then((foods) => {
+      if (!Array.isArray(foods) || foods.length === 0) {
+        fsShowMessage(input, "Nenhum alimento encontrado.")
+        return
+      }
+      fsShowSuggestions(input, foods)
+    })
+    .catch((error) => fsShowMessage(input, error.message, true))
+}
+
+document.addEventListener("input", (event) => {
+  const input = event.target.closest(".fatsecret-autocomplete")
+  if (!input) return
+
+  const previous = fsTimers.get(input)
+  if (previous) clearTimeout(previous)
+
+  const timer = setTimeout(() => fsSearchFoods(input), 300)
+  fsTimers.set(input, timer)
+})
+
+document.addEventListener("click", (event) => {
+  const clickedSuggestion = event.target.closest(".autocomplete-suggestions")
+  if (clickedSuggestion) return
+
+  document.querySelectorAll(".fatsecret-autocomplete").forEach((input) => {
+    fsRemoveSuggestions(input)
+  })
+})
