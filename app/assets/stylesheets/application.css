@@ -47,6 +47,9 @@
   --action-danger-text: #be123c;
   --action-accent-bg: #f59e0b;
   --action-accent-text: #1f2937;
+  --action-food-bg: #bfdbfe;
+  --action-food-hover-bg: #93c5fd;
+  --action-food-text: #1e3a8a;
 
   --feedback-success-bg: #d1fae5;
   --feedback-success-border: #a7f3d0;
@@ -155,6 +158,9 @@
   --action-danger-text: #fda4af;
   --action-accent-bg: #2563eb;
   --action-accent-text: #f8fafc;
+  --action-food-bg: #60a5fa;
+  --action-food-hover-bg: #3b82f6;
+  --action-food-text: #eaf2ff;
 
   --feedback-success-bg: rgba(16, 185, 129, 0.2);
   --feedback-success-border: rgba(52, 211, 153, 0.65);
@@ -327,9 +333,31 @@ h6,
 .tw-btn-primary,
 .tw-btn-soft,
 .tw-btn-secondary,
+.tw-btn-food,
 .tw-btn-danger {
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Nested add-food button */
+.tw-btn-food {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  background: var(--action-food-bg);
+  color: var(--action-food-text);
+}
+
+.tw-btn-food:hover {
+  background: var(--action-food-hover-bg);
+  color: var(--action-food-text);
+  text-decoration: none;
 }
 
 /* Secondary button */
