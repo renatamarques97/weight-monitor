@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_31_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_01_103000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,6 +35,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_31_120000) do
     t.index ["user_id"], name: "index_diets_on_user_id"
   end
 
+  create_table "meal_foods", force: :cascade do |t|
+    t.bigint "meal_id", null: false
+    t.string "food_name", null: false
+    t.string "fatsecret_food_id"
+    t.float "calories"
+    t.float "protein"
+    t.float "carbs"
+    t.float "fat"
+    t.string "metric_serving_unit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.float "metric_serving_amount"
+    t.index ["meal_id"], name: "index_meal_foods_on_meal_id"
+  end
+
   create_table "meals", force: :cascade do |t|
     t.time "schedule", null: false
     t.text "description", null: false
@@ -57,8 +72,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_31_120000) do
     t.string "name", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at", precision: nil
-    t.datetime "remember_created_at", precision: nil
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "target_pace"
@@ -91,6 +106,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_31_120000) do
 
   add_foreign_key "chat_messages", "users"
   add_foreign_key "diets", "users"
+  add_foreign_key "meal_foods", "meals"
   add_foreign_key "meals", "diets"
   add_foreign_key "weights", "users"
   add_foreign_key "workouts", "users"
