@@ -20,12 +20,14 @@ services:
   web:
     build: .
     user: "root"
-    command: bash -c "bundle check || bundle install && rm -f tmp/pids/server.pid && bin/rails db:prepare && bin/rails server -b 0.0.0.0"
+    command: bash -c "bundle check || bundle install && rm -f tmp/pids/server.pid && bin/rails db:prepare && bin/rails s -b 0.0.0.0"
     volumes:
       - .:/rails
       - bundle:/usr/local/bundle
     ports:
       - "3000:3000"
+    tty: true
+    stdin_open: true
     depends_on:
       - db
       - redis
