@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_06_020045) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_31_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_06_020045) do
     t.bigint "diet_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "calories"
+    t.float "protein"
+    t.float "carbs"
+    t.float "fat"
+    t.string "food_name"
+    t.string "fatsecret_food_id"
+    t.string "metric_serving_unit"
     t.index ["diet_id"], name: "index_meals_on_diet_id"
   end
 
@@ -50,8 +57,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_06_020045) do
     t.string "name", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "target_pace"
