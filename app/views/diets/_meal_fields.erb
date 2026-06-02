@@ -35,13 +35,13 @@
 
     <template data-nested-form-target="template">
       <%= f.fields_for :meal_foods, MealFood.new, child_index: 'NEW_FOOD_RECORD' do |food_fields| %>
-        <%= render 'meal_food_fields', f: food_fields %>
+        <%= render 'diets/meal_food_fields', f: food_fields %>
       <% end %>
     </template>
 
     <div data-nested-form-target="list">
       <%= f.fields_for :meal_foods do |food_fields| %>
-        <%= render 'meal_food_fields', f: food_fields %>
+        <%= render 'diets/meal_food_fields', f: food_fields %>
       <% end %>
     </div>
   </div>

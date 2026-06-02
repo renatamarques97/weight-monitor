@@ -9,74 +9,88 @@
     </div>
   </div>
 
-  <div class="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-2">
-    <article class="fit-stat-card">
-      <span class="fit-stat-icon fit-stat-icon--health">
-        <i class="fa fa-heartbeat" aria-hidden="true"></i>
-      </span>
-      <div>
-        <p class="fit-stat-label"><%= t('imc') %></p>
-        <p class="fit-stat-value"><%= @imc %></p>
-      </div>
-    </article>
+  <div class="mb-6 grid gap-4 lg:grid-cols-2">
+    <div class="grid gap-3">
+      <%= link_to meal_diaries_path, data: { turbo_frame: "_top" }, class: "fit-stat-card fit-stat-card-link" do %>
+        <span class="fit-stat-icon fit-stat-icon--diet">
+          <i class="fa fa-book" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="fit-stat-label"><%= t('meal_diary.title') %></p>
+          <p class="fit-stat-value"><%= current_user.meal_diaries.count %></p>
+        </div>
+      <% end %>
 
-    <%= link_to diets_path, data: { turbo_frame: "_top" }, class: "fit-stat-card fit-stat-card-link" do %>
-      <span class="fit-stat-icon fit-stat-icon--diet">
-        <i class="fa fa-cutlery" aria-hidden="true"></i>
-      </span>
-      <div>
-        <p class="fit-stat-label"><%= t('diet.title') %></p>
-        <p class="fit-stat-value"><%= @diets.count %></p>
-      </div>
-    <% end %>
+      <%= link_to workouts_path, data: { turbo_frame: "_top" }, class: "fit-stat-card fit-stat-card-link" do %>
+        <span class="fit-stat-icon fit-stat-icon--workout">
+          <i class="fa fa-bolt" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="fit-stat-label"><%= t('workout.total') %></p>
+          <p class="fit-stat-value"><%= current_user.workouts.count %></p>
+        </div>
+      <% end %>
 
-    <article class="fit-stat-card">
-      <span class="fit-stat-icon fit-stat-icon--goal">
-        <i class="fa fa-star" aria-hidden="true"></i>
-      </span>
-      <div>
-        <p class="fit-stat-label"><%= t('goal') %></p>
-        <p class="mt-1 text-lg font-semibold fit-text-primary">
-          <% if @goal %>
-            <span class="inline-flex items-center gap-1">
-              <i class="fa fa-trophy text-2xl fit-stat-icon--goal" aria-hidden="true"></i>
-              <%= t('dashboard.goal_achieved') %>
-            </span>
-          <% else %>
-            <span class="inline-flex items-center gap-1">
-              <i class="far fa-clock text-2xl fit-text-secondary" aria-hidden="true"></i>
-              <%= t('dashboard.goal_in_progress') %>
-            </span>
-          <% end %>
-        </p>
-      </div>
-    </article>
+      <%= link_to diets_path, data: { turbo_frame: "_top" }, class: "fit-stat-card fit-stat-card-link" do %>
+        <span class="fit-stat-icon fit-stat-icon--diet">
+          <i class="fa fa-cutlery" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="fit-stat-label"><%= t('diet.title') %></p>
+          <p class="fit-stat-value"><%= @diets.count %></p>
+        </div>
+      <% end %>
+    </div>
 
-    <%= link_to workouts_path, data: { turbo_frame: "_top" }, class: "fit-stat-card fit-stat-card-link" do %>
-      <span class="fit-stat-icon fit-stat-icon--workout">
-        <i class="fa fa-bolt" aria-hidden="true"></i>
-      </span>
-      <div>
-        <p class="fit-stat-label"><%= t('workout.total') %></p>
-        <p class="fit-stat-value"><%= current_user.workouts.count %></p>
-      </div>
-    <% end %>
+    <div class="grid gap-3">
+      <article class="fit-stat-card">
+        <span class="fit-stat-icon fit-stat-icon--health">
+          <i class="fa fa-heartbeat" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="fit-stat-label"><%= t('imc') %></p>
+          <p class="fit-stat-value"><%= @imc %></p>
+        </div>
+      </article>
 
-    <article class="fit-stat-card">
-      <span class="fit-stat-icon fit-stat-icon--weight">
-        <i class="fa fa-balance-scale" aria-hidden="true"></i>
-      </span>
-      <div>
-        <p class="fit-stat-label"><%= t('weight.title') %></p>
-        <p class="fit-stat-value">
-          <% if @recent_weight.present? %>
-            <%= @recent_weight %> kg
-          <% else %>
-            --
-          <% end %>
-        </p>
-      </div>
-    </article>
+      <article class="fit-stat-card">
+        <span class="fit-stat-icon fit-stat-icon--goal">
+          <i class="fa fa-star" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="fit-stat-label"><%= t('goal') %></p>
+          <p class="mt-1 text-lg font-semibold fit-text-primary">
+            <% if @goal %>
+              <span class="inline-flex items-center gap-1">
+                <i class="fa fa-trophy text-2xl fit-stat-icon--goal" aria-hidden="true"></i>
+                <%= t('dashboard.goal_achieved') %>
+              </span>
+            <% else %>
+              <span class="inline-flex items-center gap-1">
+                <i class="far fa-clock text-2xl fit-text-secondary" aria-hidden="true"></i>
+                <%= t('dashboard.goal_in_progress') %>
+              </span>
+            <% end %>
+          </p>
+        </div>
+      </article>
+
+      <article class="fit-stat-card">
+        <span class="fit-stat-icon fit-stat-icon--weight">
+          <i class="fa fa-balance-scale" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="fit-stat-label"><%= t('weight.title') %></p>
+          <p class="fit-stat-value">
+            <% if @recent_weight.present? %>
+              <%= @recent_weight %> kg
+            <% else %>
+              --
+            <% end %>
+          </p>
+        </div>
+      </article>
+    </div>
   </div>
 
   <div data-controller="tabs" data-tabs-active-tab-value="<%= @active_tab %>">

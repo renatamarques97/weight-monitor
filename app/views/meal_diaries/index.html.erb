@@ -1,0 +1,40 @@
+<%= render 'dashboard/menu' %>
+
+<section class="tw-card">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-2xl font-bold tracking-tight fit-text-primary"><%= t('meal_diary.title') %></h1>
+    <%= link_to t('meal_diary.new'), new_meal_diary_path, class: 'tw-btn-primary' %>
+  </div>
+
+  <div class="overflow-x-auto rounded-xl border fit-border-subtle">
+    <table class="min-w-full text-sm">
+      <thead class="fit-surface-muted">
+        <tr>
+          <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('meal_diary.diary_date') %></th>
+          <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('meal.title') %></th>
+          <th class="px-4 py-3 text-right font-semibold fit-text-primary"><%= t('actions') %></th>
+        </tr>
+      </thead>
+
+      <tbody class="fit-surface-card fit-divide-subtle">
+        <% @meal_diaries.each do |meal_diary| %>
+          <tr class="fit-hover-surface-muted">
+            <td class="px-4 py-3"><%= meal_diary.diary_date.strftime('%m/%d/%Y') %></td>
+            <td class="px-4 py-3"><%= meal_diary.meals.count %></td>
+            <td class="px-4 py-3 text-right">
+              <%= link_to meal_diary_path(meal_diary), class: 'fit-icon-btn fit-icon-btn-show', title: t('show'), aria: { label: t('show') } do %>
+                <i class="fa fa-eye" aria-hidden="true"></i>
+              <% end %>
+              <%= link_to edit_meal_diary_path(meal_diary), class: 'fit-icon-btn fit-icon-btn-edit', title: t('edit'), aria: { label: t('edit') } do %>
+                <i class="fa fa-pencil text-lg"></i>
+              <% end %>
+              <%= link_to meal_diary_path(meal_diary), data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: 'fit-icon-btn fit-icon-btn-delete', title: t('remove'), aria: { label: t('remove') } do %>
+                <i class="fa fa-trash" aria-hidden="true"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

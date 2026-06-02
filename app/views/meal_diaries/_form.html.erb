@@ -1,0 +1,68 @@
+<%= form_with(model: meal_diary, local: true, data: { turbo_frame: '_top' }) do |form| %>
+  <% if meal_diary.errors.any? %>
+    <div id="error_explanation" class="fit-form-error">
+      <h2>
+        <%= pluralize(meal_diary.errors.count, t('error.single')) %>
+        <%= t('error.saved') %>
+      </h2>
+
+      <ul>
+        <% meal_diary.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section class="tw-card" data-controller="nested-form">
+    <h2 class="mb-4 text-xl font-bold fit-text-primary"><%= t('meal_diary.singular') %></h2>
+
+    <div class="mb-5 rounded-xl border fit-border-subtle fit-surface-muted p-4">
+      <div class="flex items-start gap-3">
+        <i class="fa fa-book-open mt-1 fit-text-primary" aria-hidden="true"></i>
+        <div class="text-sm fit-text-primary">
+          <p class="font-semibold"><%= t('meal_diary.banner.title') %></p>
+          <p class="mt-1 fit-text-secondary"><%= t('meal_diary.banner.description') %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <%= form.label :diary_date, class: 'tw-label' %>
+        <%= form.date_field :diary_date, class: 'tw-input' %>
+      </div>
+
+      <div>
+        <%= form.label :notes, class: 'tw-label' %>
+        <%= form.text_field :notes, class: 'tw-input' %>
+      </div>
+    </div>
+
+    <div class="my-5 h-px fit-surface-border"></div>
+
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <h3 class="text-lg font-semibold fit-text-primary"><%= t('meal.title') %></h3>
+      <button type="button" class="tw-btn-primary" data-action="nested-form#add">
+        <i class="fa fa-plus mr-2" aria-hidden="true"></i><%= t('meal.add') %>
+      </button>
+    </div>
+
+    <template data-nested-form-target="template">
+      <%= form.fields_for :meals, Meal.new, child_index: 'NEW_RECORD' do |ff| %>
+        <%= render 'diets/meal_fields', f: ff %>
+      <% end %>
+    </template>
+
+    <div data-nested-form-target="list">
+      <%= form.fields_for :meals do |ff| %>
+        <%= render 'diets/meal_fields', f: ff %>
+      <% end %>
+    </div>
+
+    <div class="mt-5 flex gap-3">
+      <%= form.submit class: 'tw-btn-primary' %>
+      <%= link_to t('back'), meal_diaries_path, class: 'tw-btn-secondary' %>
+    </div>
+  </section>
+<% end %>
