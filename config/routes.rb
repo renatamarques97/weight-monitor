@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root to: 'dashboard#index'
   resources :workouts
   resources :diets
+  resources :meal_diaries
   resources :fatsecret_foods, only: [:index, :show]
   devise_for :users
   resources :chats, only: [:index]
