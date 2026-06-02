@@ -67,7 +67,20 @@ class DietsController < ApplicationController
       :initial_weight,
       :target_weight,
       :user_id,
-      meals_attributes: %i[id schedule description meal_type _destroy]
+      meals_attributes: %i[
+        id
+        schedule
+        description
+        meal_type
+        food_name
+        fatsecret_food_id
+        calories
+        protein
+        carbs
+        fat
+        metric_serving_unit
+        _destroy
+      ]
     )
   end
 end
