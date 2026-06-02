@@ -142,7 +142,9 @@ const fsFillMacros = (input, data) => {
   if (!serving) return
 
   const firstServing = Array.isArray(serving) ? serving[0] : serving
+  const servingAmount = parseFloat(firstServing.metric_serving_amount || "0")
   const values = {
+    metric_serving_amount: firstServing.metric_serving_amount,
     calories: firstServing.calories,
     protein: firstServing.protein,
     carbs: firstServing.carbohydrate,
@@ -154,6 +156,66 @@ const fsFillMacros = (input, data) => {
     const el = fsFindField(input, field)
     if (el) el.value = value || ""
   })
+
+  if (servingAmount > 0) {
+    input.dataset.fsPerUnitCalories = (parseFloat(firstServing.calories || "0") / servingAmount).toString()
+    input.dataset.fsPerUnitProtein = (parseFloat(firstServing.protein || "0") / servingAmount).toString()
+    input.dataset.fsPerUnitCarbs = (parseFloat(firstServing.carbohydrate || "0") / servingAmount).toString()
+    input.dataset.fsPerUnitFat = (parseFloat(firstServing.fat || "0") / servingAmount).toString()
+  }
+}
+
+const fsRound = (value) => {
+  if (Number.isNaN(value)) return ""
+  return Math.round(value * 100) / 100
+}
+
+const fsEnsurePerUnitFromCurrent = (foodInput) => {
+  const amountField = fsFindField(foodInput, "metric_serving_amount")
+  const amount = parseFloat(amountField?.value || "0")
+  if (!(amount > 0)) return false
+
+  const calories = parseFloat(fsFindField(foodInput, "calories")?.value || "0")
+  const protein = parseFloat(fsFindField(foodInput, "protein")?.value || "0")
+  const carbs = parseFloat(fsFindField(foodInput, "carbs")?.value || "0")
+  const fat = parseFloat(fsFindField(foodInput, "fat")?.value || "0")
+
+  foodInput.dataset.fsPerUnitCalories = (calories / amount).toString()
+  foodInput.dataset.fsPerUnitProtein = (protein / amount).toString()
+  foodInput.dataset.fsPerUnitCarbs = (carbs / amount).toString()
+  foodInput.dataset.fsPerUnitFat = (fat / amount).toString()
+
+  return true
+}
+
+const fsRecalculateMacros = (amountInput) => {
+  const amountName = amountInput.name
+  if (!amountName) return
+
+  const foodName = amountName.replace("[metric_serving_amount]", "[food_name]")
+  const foodInput = document.querySelector(`[name="${foodName}"]`)
+  if (!foodInput) return
+
+  const amount = parseFloat(amountInput.value || "0")
+  if (!(amount > 0)) return
+
+  const hasDataset = foodInput.dataset.fsPerUnitCalories && foodInput.dataset.fsPerUnitProtein
+  if (!hasDataset && !fsEnsurePerUnitFromCurrent(foodInput)) return
+
+  const perCalories = parseFloat(foodInput.dataset.fsPerUnitCalories || "0")
+  const perProtein = parseFloat(foodInput.dataset.fsPerUnitProtein || "0")
+  const perCarbs = parseFloat(foodInput.dataset.fsPerUnitCarbs || "0")
+  const perFat = parseFloat(foodInput.dataset.fsPerUnitFat || "0")
+
+  const caloriesField = fsFindField(foodInput, "calories")
+  const proteinField = fsFindField(foodInput, "protein")
+  const carbsField = fsFindField(foodInput, "carbs")
+  const fatField = fsFindField(foodInput, "fat")
+
+  if (caloriesField) caloriesField.value = fsRound(perCalories * amount)
+  if (proteinField) proteinField.value = fsRound(perProtein * amount)
+  if (carbsField) carbsField.value = fsRound(perCarbs * amount)
+  if (fatField) fatField.value = fsRound(perFat * amount)
 }
 
 const fsSelectFood = (input, food) => {
@@ -230,6 +292,13 @@ document.addEventListener("input", (event) => {
 
   const timer = setTimeout(() => fsSearchFoods(input), 300)
   fsTimers.set(input, timer)
+})
+
+document.addEventListener("input", (event) => {
+  const amountInput = event.target.closest(".fatsecret-serving-amount")
+  if (!amountInput) return
+
+  fsRecalculateMacros(amountInput)
 })
 
 document.addEventListener("click", (event) => {
