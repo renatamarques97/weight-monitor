@@ -227,6 +227,42 @@ button {
   cursor: pointer;
 }
 
+/* FatSecret autocomplete dropdown */
+.autocomplete-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  background: var(--surface-card);
+  border: 1px solid var(--surface-card-border);
+  border-radius: 0.5rem;
+  box-shadow: var(--elevation-overlay);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.autocomplete-suggestions li {
+  padding: 8px 12px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.autocomplete-suggestions li:hover,
+.autocomplete-suggestions li:focus {
+  background: var(--action-soft-bg);
+  color: var(--action-soft-text);
+  outline: none;
+}
+
+.autocomplete-error-message {
+  color: var(--feedback-danger-text) !important;
+  cursor: default !important;
+}
+
 /* Generic Theme-Aware Components */
 body,
 .app-theme-shell {
