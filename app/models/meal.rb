@@ -2,10 +2,13 @@
 
 class Meal < ApplicationRecord
   belongs_to :diet
+  has_many :meal_foods, dependent: :destroy
 
   validates :schedule, presence: true
   validates :description, presence: true
   validates :meal_type, presence: true
+
+  accepts_nested_attributes_for :meal_foods, reject_if: :all_blank, allow_destroy: true
 
   extend Enumerize
 
