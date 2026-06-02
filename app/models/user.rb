@@ -4,6 +4,7 @@ class User < ApplicationRecord
 
   has_many :weights, dependent: :destroy
   has_many :diets, dependent: :destroy
+  has_many :meal_diaries, dependent: :destroy
   has_many :workouts, dependent: :destroy
   has_many :chat_messages, dependent: :destroy
 
