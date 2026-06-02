@@ -2,27 +2,7 @@
   <%= f.hidden_field :id if f.object.persisted? %>
   <%= f.hidden_field :_destroy, value: "0" %>
 
-  <div class="grid gap-3 md:grid-cols-[1fr_2fr_1fr_2fr_1fr_auto] md:items-end">
-        <div class="relative">
-          <%= f.label :food_name, t('meal.food_name'), class: 'tw-label' %>
-          <%= f.text_field :food_name,
-                           class: 'tw-input fatsecret-autocomplete',
-                           placeholder: t('meal.search_food_placeholder'),
-                           autocomplete: 'off' %>
-          <%= f.hidden_field :fatsecret_food_id %>
-        </div>
-        <div>
-          <%= f.label :calories, t('meal.calories'), class: 'tw-label' %>
-          <%= f.number_field :calories, step: :any, class: 'tw-input', readonly: true %>
-          <%= f.label :protein, t('meal.protein'), class: 'tw-label mt-1' %>
-          <%= f.number_field :protein, step: :any, class: 'tw-input', readonly: true %>
-          <%= f.label :carbs, t('meal.carbs'), class: 'tw-label mt-1' %>
-          <%= f.number_field :carbs, step: :any, class: 'tw-input', readonly: true %>
-          <%= f.label :fat, t('meal.fat'), class: 'tw-label mt-1' %>
-          <%= f.number_field :fat, step: :any, class: 'tw-input', readonly: true %>
-          <%= f.label :metric_serving_unit, t('meal.metric_serving_unit'), class: 'tw-label mt-1' %>
-          <%= f.text_field :metric_serving_unit, class: 'tw-input', readonly: true %>
-        </div>
+  <div class="grid gap-3 md:grid-cols-[1fr_2fr_1fr_auto] md:items-end">
     <div>
       <%= f.label :schedule, class: "tw-label" %>
       <%= f.time_field :schedule, class: "tw-input" %>
@@ -42,6 +22,27 @@
       <button type="button" class="fit-icon-btn fit-icon-btn-delete" data-action="nested-form#remove" title="<%= t('meal.remove') %>" aria-label="<%= t('meal.remove') %>">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </button>
+    </div>
+  </div>
+
+  <div class="mt-4 rounded-lg border fit-border-subtle fit-surface-muted p-3" data-controller="nested-form" data-nested-form-token-value="NEW_FOOD_RECORD">
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <p class="text-sm font-semibold fit-text-primary"><%= t('meal.foods_title') %></p>
+      <button type="button" class="tw-btn-food" data-action="nested-form#add">
+        <i class="fa fa-plus mr-2" aria-hidden="true"></i><%= t('meal.add_food') %>
+      </button>
+    </div>
+
+    <template data-nested-form-target="template">
+      <%= f.fields_for :meal_foods, MealFood.new, child_index: 'NEW_FOOD_RECORD' do |food_fields| %>
+        <%= render 'meal_food_fields', f: food_fields %>
+      <% end %>
+    </template>
+
+    <div data-nested-form-target="list">
+      <%= f.fields_for :meal_foods do |food_fields| %>
+        <%= render 'meal_food_fields', f: food_fields %>
+      <% end %>
     </div>
   </div>
 </div>
