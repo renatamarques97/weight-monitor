@@ -2,13 +2,13 @@
 
 FactoryBot.define do
   factory :meal_food do
-    food_name { 'Banana' }
-    metric_serving_amount { 100 }
-    metric_serving_unit { 'g' }
-    calories { 89 }
-    protein { 1.1 }
-    carbs { 22.8 }
-    fat { 0.3 }
+    food_name { FFaker::Food.meat }
+    metric_serving_amount { rand(50..300) }
+    metric_serving_unit { "g" }
+    calories { rand(8..100) }
+    protein { rand(1.0..10.0).round(1) }
+    carbs { rand(20.0..50.0).round(1) }
+    fat { rand(0.0..5.0).round(1) }
     association :meal
   end
 end
