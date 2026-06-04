@@ -2,6 +2,19 @@
 
 <section class="tw-card" data-controller="chat" data-chat-user-label-value="<%= t('chat.user_label') %>" data-chat-assistant-label-value="<%= t('chat.assistant_label') %>">
   <h1 class="mb-2 text-2xl font-bold tracking-tight fit-text-primary"><%= t('diet.suggestions') %></h1>
+
+  <div class="mb-5 rounded-xl border fit-border-subtle fit-surface-muted p-4">
+    <div class="flex items-start gap-3">
+      <i class="fa fa-comments mt-1 fit-text-primary" aria-hidden="true"></i>
+      <div class="text-sm fit-text-primary">
+        <p class="font-semibold"><%= t('chat.banner.title') %></p>
+        <p class="mt-1 fit-text-secondary">
+          <%= t('chat.banner.description') %>
+        </p>
+      </div>
+    </div>
+  </div>
+
   <p class="mb-4 text-sm fit-text-secondary"><%= t('chat.describe_goals') %></p>
 
   <section class="max-h-[55vh] min-h-[300px] overflow-y-auto rounded-xl border fit-border-subtle fit-surface-muted p-4 shadow-inner" data-chat-target="conversation" data-action="scroll->chat#onScroll" data-chat-current-page="<%= @page %>">
