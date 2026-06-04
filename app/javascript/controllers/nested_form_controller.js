@@ -3,11 +3,15 @@ import { Controller } from "@hotwired/stimulus"
 // Adds and removes nested form rows without depending on jQuery/cocoon.
 export default class extends Controller {
   static targets = ["template", "list"]
+  static values = {
+    token: { type: String, default: "NEW_RECORD" }
+  }
 
   add(event) {
     event.preventDefault()
 
-    const content = this.templateTarget.innerHTML.replace(/NEW_RECORD/g, Date.now().toString())
+    const tokenRegex = new RegExp(this.tokenValue, "g")
+    const content = this.templateTarget.innerHTML.replace(tokenRegex, Date.now().toString())
     this.listTarget.insertAdjacentHTML("beforeend", content)
   }
 

@@ -3,8 +3,10 @@
 if ENV["RESET_SEED"].present?
   puts "Cleaning database..."
   ChatMessage.delete_all
+  MealFood.delete_all
   Meal.delete_all
   Diet.delete_all
+  MealDiary.delete_all
   Weight.delete_all
   Workout.delete_all
   User.delete_all
@@ -67,25 +69,13 @@ user_seeds.each do |user_attributes|
 
   # 2. Diet & Meals
   diet = FactoryBot.create(:diet,
+    :with_meals,
     user: user,
-    start_date: DIET_DURATION_DAYS.days.ago.to_date,
-    end_date: DIET_DURATION_DAYS.days.from_now.to_date,
-    initial_weight: initial_weight.round(1),
+    start_date: (DIET_DURATION_DAYS / 2).days.ago.to_date,
+    end_date: (DIET_DURATION_DAYS / 2).days.from_now.to_date,
+    initial_weight: initial_weight,
     target_weight: target_weight
   )
-
-  [
-    { at: "07:30", type: 0, description: "Greek yogurt with berries and granola" },
-    { at: "13:00", type: 2, description: "Grilled chicken, rice and mixed salad" },
-    { at: "19:30", type: 4, description: "Salmon, sweet potato and broccoli" }
-  ].each do |meal_attributes|
-    FactoryBot.create(:meal,
-      diet: diet,
-      schedule: Time.zone.parse(meal_attributes[:at]),
-      meal_type: meal_attributes[:type],
-      description: meal_attributes[:description]
-    )
-  end
 
   # 3. Workouts (90 of each type, starting from today)
   WorkoutType::MAPPING.each_key do |sport|
@@ -152,6 +142,16 @@ user_seeds.each do |user_attributes|
       created_at: created_at + 5.seconds
     )
   end
+
+  # 6. Meal Diaries (30 entries, one per day starting from 30 days ago)
+  (0..29).each do |index|
+    FactoryBot.create(:meal_diary,
+      :with_meals,
+      user: user,
+      diary_date: index.days.ago.to_date,
+      notes: "Today I had a #{['great', 'decent', 'okay', 'not so good'].sample} day with my diet. Ate #{['clean', 'a bit too much', 'some junk food'].sample}."
+    )
+  end
 end
 
 puts "\nSeed completed successfully!"
@@ -161,3 +161,4 @@ puts " - Workouts: #{Workout.count}"
 puts " - Weights: #{Weight.count}"
 puts " - Diets: #{Diet.count}"
 puts " - Meals: #{Meal.count}"
+puts " - Meal Diaries: #{MealDiary.count}"

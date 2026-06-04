@@ -19,9 +19,30 @@
     </div>
 
     <div class="flex items-end">
-      <button type="button" class="fit-icon-btn fit-icon-btn-delete" data-action="nested-form#remove" title="Remove meal" aria-label="Remove meal">
+      <button type="button" class="fit-icon-btn fit-icon-btn-delete" data-action="nested-form#remove" title="<%= t('meal.remove') %>" aria-label="<%= t('meal.remove') %>">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </button>
+    </div>
+  </div>
+
+  <div class="mt-4 rounded-lg border fit-border-subtle fit-surface-muted p-3" data-controller="nested-form" data-nested-form-token-value="NEW_FOOD_RECORD">
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <p class="text-sm font-semibold fit-text-primary"><%= t('meal.foods_title') %></p>
+      <button type="button" class="tw-btn-food" data-action="nested-form#add">
+        <i class="fa fa-plus mr-2" aria-hidden="true"></i><%= t('meal.add_food') %>
+      </button>
+    </div>
+
+    <template data-nested-form-target="template">
+      <%= f.fields_for :meal_foods, MealFood.new, child_index: 'NEW_FOOD_RECORD' do |food_fields| %>
+        <%= render 'diets/meal_food_fields', f: food_fields %>
+      <% end %>
+    </template>
+
+    <div data-nested-form-target="list">
+      <%= f.fields_for :meal_foods do |food_fields| %>
+        <%= render 'diets/meal_food_fields', f: food_fields %>
+      <% end %>
     </div>
   </div>
 </div>

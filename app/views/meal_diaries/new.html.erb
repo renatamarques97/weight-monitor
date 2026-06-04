@@ -1,0 +1,7 @@
+<%= render 'dashboard/menu' %>
+
+<turbo-frame id="main">
+  <h1 class="mb-4 text-2xl font-bold tracking-tight fit-text-primary"><%= t('meal_diary.new') %></h1>
+
+  <%= render 'form', meal_diary: @meal_diary %>
+</turbo-frame>

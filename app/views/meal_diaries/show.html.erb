@@ -1,0 +1,26 @@
+<%= render 'dashboard/menu' %>
+
+<section class="tw-card">
+  <h1 class="mb-4 text-2xl font-bold tracking-tight fit-text-primary"><%= t('meal_diary.singular') %></h1>
+
+  <div class="mb-5 rounded-lg border fit-border-subtle fit-surface-card p-3">
+    <strong><%= t('meal_diary.diary_date') %>:</strong> <%= @meal_diary.diary_date %>
+  </div>
+
+  <% if @meal_diary.notes.present? %>
+    <div class="mb-5 rounded-lg border fit-border-subtle fit-surface-card p-3">
+      <strong><%= t('meal_diary.notes') %>:</strong> <%= @meal_diary.notes %>
+    </div>
+  <% end %>
+
+  <h2 class="mb-2 text-lg font-semibold fit-text-primary"><%= t('meal.title') %></h2>
+  <div class="mb-5 flex flex-col gap-2">
+    <% @meal_diary.meals.each do |meal| %>
+      <div class="rounded-lg border fit-border-subtle fit-surface-muted p-3">
+        <strong><%= meal.meal_type %></strong> - <%= meal.description %> - <%= meal.schedule.strftime('%H:%M') %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= link_to t('edit'), edit_meal_diary_path(@meal_diary), class: 'tw-btn-primary' %>
+</section>

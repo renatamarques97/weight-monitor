@@ -17,6 +17,18 @@
   <section class="tw-card" data-controller="nested-form">
     <h2 class="mb-4 text-xl font-bold fit-text-primary"><%= t('diet.singular') %></h2>
 
+    <div class="mb-5 rounded-xl border fit-border-subtle fit-surface-muted p-4">
+      <div class="flex items-start gap-3">
+        <i class="fa fa-circle-info mt-1 fit-text-primary" aria-hidden="true"></i>
+        <div class="text-sm fit-text-primary">
+          <p class="font-semibold"><%= t('diet.plan_banner.title') %></p>
+          <p class="mt-1 fit-text-secondary">
+            <%= t('diet.plan_banner.description') %>
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <div class="xl:col-span-2">
         <%= form.label :start_date, class: "tw-label" %>

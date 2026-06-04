@@ -13,7 +13,8 @@ class DietsController < ApplicationController
   # GET /diets/new
   def new
     @diet = Diet.new
-    @diet.meals.build
+    meal = @diet.meals.build
+    meal.meal_foods.build
   end
 
   # POST /diets
@@ -67,7 +68,34 @@ class DietsController < ApplicationController
       :initial_weight,
       :target_weight,
       :user_id,
-      meals_attributes: %i[id schedule description meal_type _destroy]
+      meals_attributes: [
+        :id,
+        :schedule,
+        :description,
+        :meal_type,
+        :food_name,
+        :fatsecret_food_id,
+        :calories,
+        :protein,
+        :carbs,
+        :fat,
+        :metric_serving_unit,
+        :_destroy,
+        {
+          meal_foods_attributes: %i[
+            id
+            food_name
+            fatsecret_food_id
+            metric_serving_amount
+            calories
+            protein
+            carbs
+            fat
+            metric_serving_unit
+            _destroy
+          ]
+        }
+      ]
     )
   end
 end
