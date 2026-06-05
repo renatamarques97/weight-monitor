@@ -1147,6 +1147,28 @@ input[type="time"] {
   transform: translateY(0) scale(0.985) !important;
 }
 
+/* Meal form contextual highlight */
+.fit-meal-card,
+.fit-meal-food-card {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.fit-meal-card:hover,
+.fit-meal-card:focus-within,
+.fit-meal-food-card:hover,
+.fit-meal-food-card:focus-within {
+  border-color: color-mix(in srgb, var(--stat-icon-weight) 72%, var(--surface-card-border) 28%);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--stat-icon-weight) 25%, transparent);
+  background-color: color-mix(in srgb, var(--surface-muted) 85%, var(--stat-icon-weight) 15%);
+}
+
+:root[data-theme="dark"] .fit-meal-card:hover,
+:root[data-theme="dark"] .fit-meal-card:focus-within,
+:root[data-theme="dark"] .fit-meal-food-card:hover,
+:root[data-theme="dark"] .fit-meal-food-card:focus-within {
+  background-color: color-mix(in srgb, var(--surface-muted) 88%, var(--stat-icon-weight) 12%);
+}
+
 .tab-btn {
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease !important;
 }
