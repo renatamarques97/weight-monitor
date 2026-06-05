@@ -1,0 +1,32 @@
+<%= render "dashboard/menu" %>
+
+<div class="flex min-h-[60vh] flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="tw-card max-w-lg w-full rounded-2xl border fit-border-subtle p-8 md:p-12 text-center shadow-xl backdrop-blur-md relative overflow-hidden animate-fade-in-up">
+    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-rose-500 via-amber-500 to-teal-500"></div>
+    <div class="mb-6 flex items-center justify-center">
+      <div class="w-24 h-24 rounded-full bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 flex items-center justify-center text-rose-500 dark:text-rose-400 relative">
+        <i class="fa fa-exclamation-triangle text-4xl" aria-hidden="true"></i>
+        <span class="absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-10 animate-ping"></span>
+      </div>
+    </div>
+    
+    <h1 class="text-6xl font-extrabold tracking-tight fit-text-primary mb-3">404</h1>
+    <h2 class="text-2xl font-bold fit-text-primary mb-4"><%= t('errors.not_found.title') %></h2>
+    
+    <p class="fit-text-secondary text-sm md:text-base mb-8 leading-relaxed">
+      <%= t('errors.not_found.description') %>
+    </p>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+      <%= link_to root_path, class: "tw-btn-primary px-6 py-3 rounded-xl font-bold inline-flex items-center justify-center gap-2 transition-all hover:scale-105 hover:shadow-lg w-full sm:w-auto" do %>
+        <i class="fa fa-home"></i>
+        <span><%= t('errors.not_found.home_button') %></span>
+      <% end %>
+      
+      <button onclick="history.back();" class="tw-btn-secondary px-6 py-3 rounded-xl font-bold inline-flex items-center justify-center gap-2 transition-all hover:scale-105 hover:shadow-lg w-full sm:w-auto">
+        <i class="fa fa-arrow-left"></i>
+        <span><%= t('back') %></span>
+      </button>
+    </div>
+  </div>
+</div>
