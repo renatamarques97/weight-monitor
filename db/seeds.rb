@@ -88,8 +88,8 @@ user_seeds.each do |user_attributes|
   end
 
   # 2. Diet & Meals
-  diet_initial = UnitConverter.convert_weight_between(initial_weight, MeasurementUnits::WEIGHTS::KG, user.weight_unit)
-  diet_target = UnitConverter.convert_weight_between(target_weight, MeasurementUnits::WEIGHTS::KG, user.weight_unit)
+  diet_initial = UnitConverter.convert_weight_between(initial_weight_kg, MeasurementUnits::WEIGHTS::KG, user.weight_unit)
+  diet_target = UnitConverter.convert_weight_between(target_weight_kg, MeasurementUnits::WEIGHTS::KG, user.weight_unit)
 
   diet = FactoryBot.create(:diet,
     :with_meals,
