@@ -18,26 +18,36 @@ SEED_DAYS = 90
 DIET_DURATION_DAYS = 30
 
 user_seeds = [
-  { email: "demo1@fittracker.dev", objective: "weight_loss" },
-  { email: "demo2@fittracker.dev", objective: "running_performance" },
-  { email: "demo3@fittracker.dev", objective: "hypertrophy" },
-  { email: "demo4@fittracker.dev", objective: "general_health" },
-  { email: "demo5@fittracker.dev", objective: "weight_loss" }
+  { email: "demo1@fittracker.dev", objective: "weight_loss", weight_unit: MeasurementUnits::WEIGHTS::KG, distance_unit: MeasurementUnits::DISTANCES::KM, height_unit: MeasurementUnits::HEIGHTS::M },
+  { email: "demo2@fittracker.dev", objective: "running_performance", weight_unit: MeasurementUnits::WEIGHTS::LBS, distance_unit: MeasurementUnits::DISTANCES::MI, height_unit: MeasurementUnits::HEIGHTS::FT },
+  { email: "demo3@fittracker.dev", objective: "hypertrophy", weight_unit: MeasurementUnits::WEIGHTS::KG, distance_unit: MeasurementUnits::DISTANCES::KM, height_unit: MeasurementUnits::HEIGHTS::CM },
+  { email: "demo4@fittracker.dev", objective: "general_health", weight_unit: MeasurementUnits::WEIGHTS::LBS, distance_unit: MeasurementUnits::DISTANCES::MI, height_unit: MeasurementUnits::HEIGHTS::CM },
+  { email: "demo5@fittracker.dev", objective: "weight_loss", weight_unit: MeasurementUnits::WEIGHTS::KG, distance_unit: MeasurementUnits::DISTANCES::MI, height_unit: MeasurementUnits::HEIGHTS::FT }
 ]
 
 user_seeds.each do |user_attributes|
   user = User.find_or_initialize_by(email: user_attributes[:email])
+  
+  height_val = case user_attributes[:height_unit]
+               when MeasurementUnits::HEIGHTS::FT then rand(5.0..6.5).round(2)
+               when MeasurementUnits::HEIGHTS::CM then rand(150..195)
+               else rand(1.50..1.95).round(2)
+               end
+
   user.update!(
     name: FFaker::Name.name,
     password: "password123",
     password_confirmation: "password123",
-    height: rand(1.60..1.90).round(2)
+    weight_unit: user_attributes[:weight_unit],
+    distance_unit: user_attributes[:distance_unit],
+    height_unit: user_attributes[:height_unit],
+    height: height_val
   )
 
-  puts "  -> User: #{user.email}"
+  puts "-> User: #{user.email} (Height: #{height_val} #{user.height_unit}, Prefs: #{user.weight_unit}, #{user.distance_unit})"
 
   # 1. Weights (Last 90 days)
-  initial_weight = rand(70.0..95.0)
+  initial_weight_kg = rand(70.0..95.0)
   
   # Calculate target weight based on objective
   target_delta = case user_attributes[:objective]
@@ -46,7 +56,7 @@ user_seeds.each do |user_attributes|
                  when "running_performance" then rand(0.5..2.0)
                  else rand(-1.0..1.5)
                  end
-  target_weight = (initial_weight - target_delta).round(1)
+  target_weight_kg = (initial_weight_kg - target_delta).round(1)
   
   (0..SEED_DAYS).each do |i|
     # Simulate realistic gaps - people don't weigh themselves every day
@@ -54,27 +64,41 @@ user_seeds.each do |user_attributes|
     
     # Progress from initial_weight (day 0) to target_weight (day 90)
     progress_ratio = 1.0 - (i.to_f / SEED_DAYS)
-    base_weight = initial_weight + ((target_weight - initial_weight) * progress_ratio)
+    base_weight_kg = initial_weight_kg + ((target_weight_kg - initial_weight_kg) * progress_ratio)
 
     # Add some randomness
     random_variation = rand(-1.0..0.3) # -1kg to +0.3kg fluctuation
-    final_weight = (base_weight + random_variation).round(1)
+    final_weight_kg = (base_weight_kg + random_variation).round(1)
+
+    # 10% chance of recording weight in alternative unit
+    record_unit = if rand < 0.10
+                    (user.weight_unit == MeasurementUnits::WEIGHTS::KG ? MeasurementUnits::WEIGHTS::LBS : MeasurementUnits::WEIGHTS::KG)
+                  else
+                    user.weight_unit
+                  end
+    
+    final_weight = UnitConverter.convert_weight_between(final_weight_kg, MeasurementUnits::WEIGHTS::KG, record_unit)
     
     FactoryBot.create(:weight,
       user: user,
       weight_date: i.days.ago.to_date,
-      kg: final_weight
+      value: final_weight,
+      weight_unit: record_unit
     )
   end
 
   # 2. Diet & Meals
+  diet_initial = UnitConverter.convert_weight_between(initial_weight, MeasurementUnits::WEIGHTS::KG, user.weight_unit)
+  diet_target = UnitConverter.convert_weight_between(target_weight, MeasurementUnits::WEIGHTS::KG, user.weight_unit)
+
   diet = FactoryBot.create(:diet,
     :with_meals,
     user: user,
     start_date: (DIET_DURATION_DAYS / 2).days.ago.to_date,
     end_date: (DIET_DURATION_DAYS / 2).days.from_now.to_date,
-    initial_weight: initial_weight,
-    target_weight: target_weight
+    initial_weight: diet_initial,
+    target_weight: diet_target,
+    weight_unit: user.weight_unit
   )
 
   # 3. Workouts (90 of each type, starting from today)
@@ -90,7 +114,25 @@ user_seeds.each do |user_attributes|
       end
 
       next unless rand < frequency
-      FactoryBot.create(sport, user: user, workout_date: i.days.ago.to_date)
+
+      record_dist_unit = if rand < 0.10
+                           (user.distance_unit == MeasurementUnits::DISTANCES::KM ? MeasurementUnits::DISTANCES::MI : MeasurementUnits::DISTANCES::KM)
+                         else
+                           user.distance_unit
+                         end
+
+      record_weight_unit = if rand < 0.10
+                             (user.weight_unit == MeasurementUnits::WEIGHTS::KG ? MeasurementUnits::WEIGHTS::LBS : MeasurementUnits::WEIGHTS::KG)
+                           else
+                             user.weight_unit
+                           end
+
+      FactoryBot.create(sport,
+        user: user,
+        workout_date: i.days.ago.to_date,
+        distance_unit: record_dist_unit,
+        weight_unit: record_weight_unit
+      )
     end
   end
 
