@@ -12,10 +12,10 @@ RSpec.describe RecentWeightPresenter do
 
     context 'when user has weights' do
       it 'returns the most recent weight by weight_date' do
-        create(:weight, user: user, kg: 79.5, weight_date: Date.current - 3.days)
-        create(:weight, user: user, kg: 78.2, weight_date: Date.current)
+        create(:weight, user: user, value: 79.5, weight_date: Date.current - 3.days)
+        create(:weight, user: user, value: 78.2, weight_date: Date.current)
 
-        expect(described_class.new(user).call).to eq(78.2)
+        expect(described_class.new(user).call.value).to eq(78.2)
       end
     end
   end
