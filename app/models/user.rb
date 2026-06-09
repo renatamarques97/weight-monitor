@@ -12,6 +12,10 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :height, numericality: { greater_than: 0 }, allow_nil: true
 
+  enum :weight_unit, { kg: WEIGHTS::KG, lbs: WEIGHTS::LBS }, prefix: true, validate: true
+  enum :distance_unit, { km: DISTANCES::KM, mi: DISTANCES::MI }, prefix: true, validate: true
+  enum :height_unit, { m: HEIGHTS::M, ft: HEIGHTS::FT, cm: HEIGHTS::CM }, prefix: true, validate: true
+
   WorkoutType::MAPPING.keys.each do |workout_type|
     define_method workout_type.to_s do
       workouts.send(workout_type)

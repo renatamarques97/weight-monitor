@@ -7,7 +7,14 @@ class Running < Workout
 
   before_save :calculate_average_pace
 
+  private
+
   def calculate_average_pace
-    self.details.avg_pace = ((self.duration / 60) / self.distance).round(2)
+    return unless duration.present? && distance.present?
+
+    duration_in_seconds = UnitConverter.convert_time_between(duration, TIMES::MINUTES, TIMES::SECONDS)
+    pace_in_seconds = (duration_in_seconds / distance).round
+    pace_minutes, pace_seconds = pace_in_seconds.divmod(60)
+    self.details.avg_pace = format("%d'%02d\"", pace_minutes, pace_seconds)
   end
 end

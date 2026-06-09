@@ -15,6 +15,25 @@ RSpec.describe User, type: :model do
     it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity }
   end
 
+  describe "unit preferences" do
+    let(:user) { build(:user, height: 1.75, height_unit: HEIGHTS::FT) }
+
+    it "stores height directly with its own unit" do
+      expect(user.height).to eq(1.75)
+      expect(user.height_unit).to eq(HEIGHTS::FT)
+    end
+
+    it "validates accepted unit values" do
+      user.weight_unit = 'stones'
+      expect(user).not_to be_valid
+      expect(user.errors[:weight_unit]).to be_present
+
+      user.weight_unit = WEIGHTS::KG
+      user.height_unit = HEIGHTS::CM
+      expect(user).to be_valid
+    end
+  end
+
   describe "workout helpers" do
     let(:user) { create(:user) }
 
