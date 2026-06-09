@@ -61,38 +61,15 @@ class DietsController < ApplicationController
   end
 
   def diet_params
-    params.require(:diet)
-    .permit(
-      :start_date,
-      :end_date,
-      :initial_weight,
-      :target_weight,
-      :user_id,
+    params.require(:diet).permit(
+      :start_date, :end_date, :initial_weight, :target_weight, :weight_unit, :user_id,
       meals_attributes: [
-        :id,
-        :schedule,
-        :description,
-        :meal_type,
-        :food_name,
-        :fatsecret_food_id,
-        :calories,
-        :protein,
-        :carbs,
-        :fat,
-        :metric_serving_unit,
-        :_destroy,
+        :id, :schedule, :description, :meal_type, :food_name, :fatsecret_food_id,
+        :calories, :protein, :carbs, :fat, :metric_serving_unit, :_destroy,
         {
           meal_foods_attributes: %i[
-            id
-            food_name
-            fatsecret_food_id
-            metric_serving_amount
-            calories
-            protein
-            carbs
-            fat
-            metric_serving_unit
-            _destroy
+            id food_name fatsecret_food_id metric_serving_amount
+            calories protein carbs fat metric_serving_unit _destroy
           ]
         }
       ]

@@ -11,7 +11,7 @@ class DashboardController < ApplicationController
     @recent_weights = current_user.weights.order(weight_date: :desc, created_at: :desc).limit(3)
     @diets = ::Diet.authorized_user(current_user)
     @imc = ::ImcPresenter.new(current_user).call
-    @weights = ::WeightQuery.weights(current_user, @period_in_days)
+    @weights = ::WeightQuery.weights_for_chart(current_user, @period_in_days)
     @weight_chart_bounds = build_weight_chart_bounds(@weights)
     @workout_charts = ::WorkoutQuery.chart_data(current_user, @period_in_days)
   end
@@ -26,7 +26,6 @@ class DashboardController < ApplicationController
     max_weight = values.max
 
     step = 2
-
 
     {
       min: (min_weight / step).floor * step,

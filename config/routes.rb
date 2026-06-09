@@ -9,4 +9,5 @@ Rails.application.routes.draw do
   devise_for :users
   resources :chats, only: [:index]
   resource :chat_responses, only: [:show]
+  get 'unit_conversions/convert', to: 'unit_conversions#convert'
 end
