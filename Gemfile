@@ -19,6 +19,7 @@ gem 'stimulus-rails'
 gem 'propshaft'
 gem 'turbo-rails'
 gem 'importmap-rails'
+gem 'ruby-units'
 
 group :development, :test do
   gem 'byebug'

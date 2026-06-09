@@ -92,9 +92,13 @@ class ChatResponseService
     lines = []
     lines << "Name: #{user.name}"
     lines << "Email: #{user.email}"
+    lines << "Weight Unit Preference: #{user.weight_unit}"
+    lines << "Distance Unit Preference: #{user.distance_unit}"
+    lines << "Height Unit Preference: #{user.height_unit}"
+    lines << "Instruction to Assistant: The user's weight, diet, and workout history below is provided with the exact unit each record was saved in. You MUST perform conversions where necessary and ALWAYS formulate your recommendations, goals, stats, and text using the user's preferred units (#{user.weight_unit}, #{user.distance_unit}, #{user.height_unit})."
 
     if latest_diet.present?
-      lines << "Current diet: start=#{latest_diet.start_date}, end=#{latest_diet.end_date}, initial_weight=#{latest_diet.initial_weight}, target_weight=#{latest_diet.target_weight}, height=#{user.height || 'not provided'}"
+      lines << "Current diet: start=#{latest_diet.start_date}, end=#{latest_diet.end_date}, initial_weight=#{latest_diet.initial_weight} #{latest_diet.weight_unit}, target_weight=#{latest_diet.target_weight} #{latest_diet.weight_unit}, height=#{user.height || 'not provided'} #{user.height_unit}"
     else
       lines << "Current diet: not provided"
     end
@@ -111,24 +115,24 @@ class ChatResponseService
     if weights.any?
       lines << "Weight history (most recent):"
       weights.each do |weight|
-        lines << "- date=#{weight.weight_date}, kg=#{weight.kg}"
+        lines << "- date=#{weight.weight_date}, value=#{weight.value} #{weight.weight_unit}"
       end
     else
       lines << "Weight history: empty"
     end
 
     [
-      { name: WorkoutType.t(:running), records: runnings, fields: ->(w) { "distance=#{w.distance}, duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
-      { name: WorkoutType.t(:walking), records: walkings, fields: ->(w) { "distance=#{w.distance}, duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
-      { name: WorkoutType.t(:cycling), records: cyclings, fields: ->(w) { "distance=#{w.distance}, duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
-      { name: WorkoutType.t(:swimming), records: swimmings, fields: ->(w) { "distance=#{w.distance}, duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
-      { name: WorkoutType.t(:weightlifting), records: weightliftings, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
-      { name: WorkoutType.t(:yoga), records: yogas, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
-      { name: WorkoutType.t(:soccer), records: soccers, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
-      { name: WorkoutType.t(:basketball), records: basketballs, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
-      { name: WorkoutType.t(:tennis), records: tennis, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
-      { name: WorkoutType.t(:martial_arts), records: martial_arts, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } },
-      { name: WorkoutType.t(:other), records: others, fields: ->(w) { "duration=#{w.duration}, calories=#{w.calories}, details=#{w.details}" } }
+      { name: WorkoutType.t(:running), records: runnings, fields: ->(workout) { "distance=#{workout.distance} #{workout.distance_unit}, duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}" } },
+      { name: WorkoutType.t(:walking), records: walkings, fields: ->(workout) { "distance=#{workout.distance} #{workout.distance_unit}, duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}" } },
+      { name: WorkoutType.t(:cycling), records: cyclings, fields: ->(workout) { "distance=#{workout.distance} #{workout.distance_unit}, duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}" } },
+      { name: WorkoutType.t(:swimming), records: swimmings, fields: ->(workout) { "distance=#{workout.distance} #{workout.distance_unit}, duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}" } },
+      { name: WorkoutType.t(:weightlifting), records: weightliftings, fields: ->(workout) { "duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}, weight_unit=#{workout.weight_unit}" } },
+      { name: WorkoutType.t(:yoga), records: yogas, fields: ->(workout) { "duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}" } },
+      { name: WorkoutType.t(:soccer), records: soccers, fields: ->(workout) { "duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}" } },
+      { name: WorkoutType.t(:basketball), records: basketballs, fields: ->(workout) { "duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}" } },
+      { name: WorkoutType.t(:tennis), records: tennis, fields: ->(workout) { "duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}" } },
+      { name: WorkoutType.t(:martial_arts), records: martial_arts, fields: ->(workout) { "duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}" } },
+      { name: WorkoutType.t(:other), records: others, fields: ->(workout) { "duration=#{workout.duration}, calories=#{workout.calories}, details=#{workout.details}" } }
     ].each do |type|
       if type[:records].any?
         lines << "#{type[:name]} history (most recent):"

@@ -4,7 +4,7 @@ class RecentWeightPresenter
   end
 
   def call
-    recent_weight&.kg
+    recent_weight
   end
 
   private

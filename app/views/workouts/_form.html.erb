@@ -22,7 +22,7 @@
       <div class="md:col-span-2">
         <%= form.label :workout_type, t('workout.type'), class: "tw-label" %>
         <%= form.select :workout_type,
-              Workout.workout_types.keys.map { |w| [t("workout.types.#{w}"), w] },
+              Workout.workout_types.keys.map { |type| [t("workout.types.#{type}"), type] },
               {},
               class: "tw-input",
               disabled: workout.persisted?,
@@ -45,8 +45,10 @@
 
 
       <div data-workout-form-target="distanceField">
-        <%= form.label :distance, t('workout.distance'), class: "tw-label" %>
-        <%= form.number_field :distance, step: :any, class: "tw-input" %>
+        <% distance_unit_val = workout.persisted? ? workout.distance_unit : current_user.distance_unit %>
+        <%= form.label :distance, t('workout.distance', unit: '').gsub(/\s*\(.*?\)/, ''), class: "tw-label" %>
+        <%= form.number_field :distance, step: :any, class: "tw-input", placeholder: distance_placeholder(distance_unit_val) %>
+        <%= form.hidden_field :distance_unit, value: distance_unit_val %>
       </div>
 
 

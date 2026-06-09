@@ -37,7 +37,7 @@
           <th scope="col" class="fit-th"><%= t('workout.type') %></th>
           <th scope="col" class="fit-th"><%= t('workout.date') %></th>
           <th scope="col" class="fit-th"><%= t('workout.duration') %></th>
-          <th scope="col" class="fit-th"><%= t('workout.distance') %></th>
+          <th scope="col" class="fit-th"><%= t('workout.distance', unit: '') %></th>
           <th scope="col" class="fit-th fit-th--right"><%= t('actions') %></th>
         </tr>
       </thead>
@@ -59,7 +59,7 @@
               <%= workout.duration %> min
             </td>
             <td class="fit-td">
-              <%= workout.distance.present? ? "#{workout.distance} km" : "-" %>
+              <%= workout.distance.present? ? "#{workout.distance} #{workout.distance_unit}" : "-" %>
             </td>
             <td class="fit-td fit-td--right">
               <div class="flex justify-end gap-2">

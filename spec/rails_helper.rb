@@ -4,6 +4,12 @@ require File.expand_path('../config/environment', __dir__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 
+WEIGHTS   ||= MeasurementUnits::WEIGHTS
+DISTANCES ||= MeasurementUnits::DISTANCES
+HEIGHTS   ||= MeasurementUnits::HEIGHTS
+TIMES     ||= MeasurementUnits::TIMES
+TYPES     ||= MeasurementUnits::TYPES
+
 puts "required simplecov"
 
 Shoulda::Matchers.configure do |config|

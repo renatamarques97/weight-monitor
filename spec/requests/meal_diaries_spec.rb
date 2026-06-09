@@ -132,18 +132,31 @@ RSpec.describe '/meal_diaries', type: :request do
     describe 'PATCH /update' do
       let(:new_attributes) { { notes: 'Updated notes', diary_date: Date.current } }
 
-      it 'updates the requested meal diary' do
-        meal_diary = create(:meal_diary, user: user)
-        patch meal_diary_url(meal_diary), params: { meal_diary: new_attributes }
-        meal_diary.reload
-        expect(meal_diary.notes).to eq('Updated notes')
+      context 'with valid parameters' do
+        it 'updates the requested meal diary' do
+          meal_diary = create(:meal_diary, user: user)
+          patch meal_diary_url(meal_diary), params: { meal_diary: new_attributes }
+          meal_diary.reload
+          expect(meal_diary.notes).to eq('Updated notes')
+        end
+
+        it 'redirects to meal diaries index' do
+          meal_diary = create(:meal_diary, user: user)
+          patch meal_diary_url(meal_diary), params: { meal_diary: new_attributes }
+          expect(response).to redirect_to(meal_diaries_path)
+        end
       end
 
-      it 'redirects to meal diaries index' do
-        meal_diary = create(:meal_diary, user: user)
-        patch meal_diary_url(meal_diary), params: { meal_diary: new_attributes }
-        expect(response).to redirect_to(meal_diaries_path)
+      context 'with invalid parameters' do
+        it "renders a successful response (i.e. to display the 'edit' template with errors)" do
+          meal_diary = create(:meal_diary, user: user)
+          patch meal_diary_url(meal_diary), params: { meal_diary: invalid_attributes }
+          expect(response).to be_successful
+          expect(response.body).to include(I18n.t('error.saved'))
+          expect(response.body).to include('Invalid diary')
+        end
       end
+
     end
 
     describe 'DELETE /destroy' do

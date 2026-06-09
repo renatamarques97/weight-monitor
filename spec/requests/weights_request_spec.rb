@@ -11,7 +11,7 @@ RSpec.describe "Weights", type: :request do
   let(:user) { create(:user) }
   let(:weight) { create(:weight, user: user) }
   let(:valid_attributes) { attributes_for(:weight) }
-  let(:invalid_attributes) { attributes_for(:weight, kg: nil) }
+  let(:invalid_attributes) { attributes_for(:weight, value: nil) }
 
   before do
     sign_in user
@@ -22,7 +22,7 @@ RSpec.describe "Weights", type: :request do
       weight_record = create(:weight, user: user, weight_date: Date.current)
       get weights_path
       expect(response).to be_successful
-      expect(response.body).to include(weight_record.kg.to_i.to_s)
+      expect(response.body).to include(weight_record.value.to_i.to_s)
     end
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Workout < ApplicationRecord
   belongs_to :user
 
@@ -27,4 +29,6 @@ class Workout < ApplicationRecord
   validates :workout_type, presence: true
   validates :workout_date, presence: true
   validates :duration, presence: true, numericality: { greater_than: 0 }
+  enum :distance_unit, { km: DISTANCES::KM, mi: DISTANCES::MI }, prefix: true, validate: true
+  enum :weight_unit, { kg: WEIGHTS::KG, lbs: WEIGHTS::LBS }, prefix: true, validate: true
 end

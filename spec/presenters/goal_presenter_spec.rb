@@ -4,10 +4,10 @@ RSpec.describe GoalPresenter do
   describe "#achieved" do
     let(:user) { create(:user) }
     let(:valid_diet) { create(:diet, target_weight: 80, user: user) }
-    let(:valid_weight) { create(:weight, kg: 80, user: user) }
+    let(:valid_weight) { create(:weight, value: 80, user: user) }
 
     let(:diet) { create(:diet, target_weight: 80, user: user) }
-    let(:weight) { create(:weight, kg: 90, user: user) }
+    let(:weight) { create(:weight, value: 90, user: user) }
 
     context "when goal was not achieved" do
       it "weight and target weight don't match" do

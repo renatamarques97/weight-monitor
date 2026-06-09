@@ -13,7 +13,7 @@ class GoalPresenter
   attr_reader :user
 
   def last_weight
-    user.weights.last.try(:kg)
+    user.weights.last.try(:value)
   end
 
   def target_weight

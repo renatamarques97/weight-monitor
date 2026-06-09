@@ -13,7 +13,7 @@
           <% @weights.each do |weight| %>
             <li class="px-4 py-3 flex items-center justify-between">
               <span class="text-sm font-semibold fit-text-primary"><%= weight.weight_date.strftime("%b %d, %Y") %></span>
-              <span class="text-sm fit-text-secondary"><%= weight.kg %> kg</span>
+              <span class="text-sm fit-text-secondary"><%= weight.value %> <%= weight.weight_unit %></span>
             </li>
           <% end %>
         </ul>

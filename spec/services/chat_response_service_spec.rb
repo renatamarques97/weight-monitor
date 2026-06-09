@@ -109,7 +109,7 @@ RSpec.describe ChatResponseService do
         target_weight: 72
       )
       create(:meal, diet: diet, schedule: '2026-01-03 08:00:00', description: 'Eggs and toast', meal_type: 1)
-      create(:weight, user: user, weight_date: Date.new(2026, 1, 2), kg: 79.2)
+      create(:weight, user: user, weight_date: Date.new(2026, 1, 2), value: 79.2)
       create(:running, user: user, workout_date: Date.new(2026, 1, 2), duration: 30, distance: 5)
 
       captured_messages = nil
@@ -126,10 +126,10 @@ RSpec.describe ChatResponseService do
       expect(system_prompt).to include('Meals in current diet:')
       expect(system_prompt).to include('description=Eggs and toast')
       expect(system_prompt).to include('Weight history (most recent):')
-      expect(system_prompt).to include('kg=79.2')
+      expect(system_prompt).to include("value=79.2 #{WEIGHTS::KG}")
       expect(system_prompt).to include('Running history (most recent):')
       expect(system_prompt).to include('date=2026-01-02')
-      expect(system_prompt).to include('distance=5.0')
+      expect(system_prompt).to include("distance=5.0 #{DISTANCES::KM}")
     end
 
     it 'builds empty workout sections when user has no workouts' do

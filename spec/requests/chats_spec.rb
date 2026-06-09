@@ -70,8 +70,8 @@ RSpec.describe "Chats", type: :request do
       describe "pagination" do
         # PER_PAGE = 5, so 6 messages create 2 pages
         let!(:messages) do
-          (1..6).map do |i|
-            create(:user_chat_message, user: user, created_at: (7 - i).minutes.ago)
+          (1..6).map do |index|
+            create(:user_chat_message, user: user, created_at: (7 - index).minutes.ago)
           end
         end
 
