@@ -6,8 +6,8 @@
   <div class="mb-5 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
     <div class="rounded-lg border fit-border-subtle fit-surface-card p-3"><strong><%= t('diet.start_date') %>:</strong> <%= @diet.start_date %></div>
     <div class="rounded-lg border fit-border-subtle fit-surface-card p-3"><strong><%= t('diet.end_date') %>:</strong> <%= @diet.end_date %></div>
-    <div class="rounded-lg border fit-border-subtle fit-surface-card p-3"><strong><%= t('diet.initial_weight') %>:</strong> <%= @diet.initial_weight %></div>
-    <div class="rounded-lg border fit-border-subtle fit-surface-card p-3"><strong><%= t('diet.target_weight') %>:</strong> <%= @diet.target_weight %></div>
+    <div class="rounded-lg border fit-border-subtle fit-surface-card p-3"><strong><%= t('diet.initial_weight', unit: @diet.weight_unit) %>:</strong> <%= @diet.initial_weight %></div>
+    <div class="rounded-lg border fit-border-subtle fit-surface-card p-3"><strong><%= t('diet.target_weight', unit: @diet.weight_unit) %>:</strong> <%= @diet.target_weight %></div>
   </div>
 
   <h2 class="mb-2 text-lg font-semibold fit-text-primary"><%= t('meal.title') %></h2>

@@ -4,7 +4,11 @@
     <%= form.number_field "details[exercises_count]", step: 1, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:exercises_count)) ? form.object.details.exercises_count : nil %>
   </div>
   <div>
-    <%= form.label "details[volume]", t('workout.details.volume'), class: "tw-label" %>
-    <%= form.number_field "details[volume]", step: :any, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:volume)) ? form.object.details.volume : nil %>
+    <% weight_unit_value = form.object.persisted? ? form.object.weight_unit : current_user.weight_unit %>
+    <%= form.label "details[volume]", t('workout.details.volume', unit: '').gsub(/\s*\(.*?\)/, ''), class: "tw-label" %>
+    <%= form.number_field "details[volume]", step: :any, class: "tw-input",
+          placeholder: weight_placeholder(weight_unit_value),
+          value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:volume)) ? form.object.details.volume : nil %>
+    <%= form.hidden_field :weight_unit, value: weight_unit_value %>
   </div>
 </div>

@@ -83,7 +83,7 @@
           <p class="fit-stat-label"><%= t('weight.title') %></p>
           <p class="fit-stat-value">
             <% if @recent_weight.present? %>
-              <%= @recent_weight %> kg
+              <%= @recent_weight.value %> <%= @recent_weight.weight_unit %>
             <% else %>
               --
             <% end %>
@@ -156,32 +156,41 @@
     </div>
 
     <div>
-
       <div data-tabs-target="panel"
            class="grid gap-6 lg:grid-cols-4"
            style="<%= is_weight_active ? 'display: grid;' : 'display: none;' %>">
         <div class="lg:col-span-3 rounded-2xl border fit-border-subtle fit-surface-card p-6 shadow-sm">
-          <h3 class="fit-section-title"><%= t('weight.chart_label') %></h3>
-          <%= area_chart @weights,
-            discrete: true,
-            height: "320px",
-            colors: ["#10b981"],
-            library: {
-              plugins: { legend: { display: false } },
-              scales: {
-                x: { ticks: { maxTicksLimit: 10, maxRotation: 0 } },
-                y: {
-                  min: @weight_chart_bounds[:min],
-                  max: @weight_chart_bounds[:max]
-                }
-              },
-              elements: {
-                line: {
-                  tension: 0.4
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="fit-section-title fit-section-title--no-mb"><%= t('weight.chart_label', unit: current_user.weight_unit) %></h3>
+            <span class="fit-badge"><%= t('dashboard.last_days', days: @period_in_days) %></span>
+          </div>
+
+          <% if @weights.empty? %>
+            <div class="flex items-center justify-center h-[320px] fit-surface-muted rounded-xl border border-dashed fit-border-subtle">
+              <p class="fit-text-secondary"><%= t('dashboard.no_records', sport: t('weight.title')) %></p>
+            </div>
+          <% else %>
+            <%= area_chart @weights,
+              discrete: true,
+              height: "320px",
+              colors: ["#10b981"],
+              library: {
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: { ticks: { maxTicksLimit: 10, maxRotation: 0 } },
+                  y: {
+                    min: @weight_chart_bounds[:min],
+                    max: @weight_chart_bounds[:max]
+                  }
+                },
+                elements: {
+                  line: {
+                    tension: 0.4
+                  }
                 }
               }
-            }
-          %>
+            %>
+          <% end %>
         </div>
 
         <div class="lg:col-span-1 flex flex-col gap-4">
@@ -194,7 +203,7 @@
                     <p class="text-sm font-bold fit-text-primary"><%= weight.weight_date.strftime("%b %d") %></p>
                   </div>
                   <div class="flex items-center text-xs fit-text-secondary gap-2">
-                    <span><%= weight.kg %> kg</span>
+                    <span><%= weight.value %> <%= weight.weight_unit %></span>
                   </div>
                 </div>
               <% end %>
@@ -234,13 +243,13 @@
 
           <div class="lg:col-span-3 rounded-2xl border fit-border-subtle fit-surface-card p-6 shadow-sm">
             <div class="flex items-center justify-between mb-6">
-              <h3 class="fit-section-title fit-section-title--no-mb"><%= t(chart[:translation_metric_key]) %></h3>
+              <h3 class="fit-section-title fit-section-title--no-mb"><%= t(chart[:translation_metric_key], unit: current_user.distance_unit) %></h3>
               <span class="fit-badge"><%= t('dashboard.last_days', days: @period_in_days) %></span>
             </div>
 
             <% if chart[:data].empty? %>
               <div class="flex items-center justify-center h-[320px] fit-surface-muted rounded-xl border border-dashed fit-border-subtle">
-                <p class="fit-text-secondary"><%= t('workout.no_records', sport: t("workout.types.#{sport}")) %></p>
+                <p class="fit-text-secondary"><%= t('dashboard.no_records', sport: t("workout.types.#{sport}")) %></p>
               </div>
             <% else %>
               <%= area_chart chart[:data],
@@ -287,7 +296,7 @@
                       <span><%= workout.duration %> min</span>
                       <% if workout.distance.present? %>
                         <span class="w-1 h-1 rounded-full fit-surface-border"></span>
-                        <span><%= workout.distance %> km</span>
+                        <span><%= workout.distance %> <%= workout.distance_unit %></span>
                       <% end %>
                     </div>
                   </div>

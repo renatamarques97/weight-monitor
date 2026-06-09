@@ -11,9 +11,34 @@
       <%= f.text_field :name, autocomplete: "name", class: "tw-input" %>
     </div>
 
-    <div class="mb-3">
-      <%= f.label :height, class: "tw-label" %>
-      <%= f.text_field :height, class: "tw-input" %>
+    <div data-controller="height-converter"
+         data-height-converter-placeholder-ft-value="<%= height_placeholder(HEIGHTS::FT) %>"
+         data-height-converter-placeholder-cm-value="<%= height_placeholder(HEIGHTS::CM) %>"
+         data-height-converter-placeholder-m-value="<%= height_placeholder(HEIGHTS::M) %>">
+      <div class="mb-3">
+        <% height_placeholder_value = height_placeholder(resource.height_unit.presence || HEIGHTS::M) %>
+        <%= f.label :height, t('diet.height', unit: '').gsub(/\s*\(.*?\)/, ''), class: "tw-label", data: { height_converter_target: "label" } %>
+        <%= f.text_field :height, class: "tw-input", placeholder: height_placeholder_value, data: { height_converter_target: "input" } %>
+      </div>
+
+      <div class="mb-2 text-xs fit-text-secondary">
+        <%= t('preferences.edit_info') %>
+      </div>
+
+      <div class="mb-3 grid grid-cols-3 gap-3">
+        <div>
+          <%= f.label :weight_unit, t('preferences.weight_unit'), class: "tw-label" %>
+          <%= f.select :weight_unit, WEIGHTS::ALL.map { |unit| [t("units.#{unit}"), unit] }, {}, class: "tw-input" %>
+        </div>
+        <div>
+          <%= f.label :distance_unit, t('preferences.distance_unit'), class: "tw-label" %>
+          <%= f.select :distance_unit, DISTANCES::ALL.map { |unit| [t("units.#{unit}"), unit] }, {}, class: "tw-input" %>
+        </div>
+        <div>
+          <%= f.label :height_unit, t('preferences.height_unit'), class: "tw-label" %>
+          <%= f.select :height_unit, HEIGHTS::ALL.map { |unit| [t("units.#{unit}"), unit] }, {}, class: "tw-input", data: { height_converter_target: "select", action: "change->height-converter#convert" } %>
+        </div>
+      </div>
     </div>
 
     <div class="mb-3">
