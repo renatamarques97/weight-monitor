@@ -1,8 +1,5 @@
 module ApplicationHelper
-  HEIGHTS = MeasurementUnits::HEIGHTS
-  WEIGHTS = MeasurementUnits::WEIGHTS
-  DISTANCES = MeasurementUnits::DISTANCES
-  TIMES = MeasurementUnits::TIMES
+  include MeasurementUnits
 
   def app_version
     ENV['APP_VERSION'] || '1.0.0'
@@ -23,6 +20,8 @@ module ApplicationHelper
       value = rand(4.0..6.0)
     end
 
+    value = value.round(2)
+
     t('preferences.placeholder', value: value, unit: unit)
   end
 
@@ -32,6 +31,6 @@ module ApplicationHelper
   end
 
   def distance_placeholder(unit)
-    t('preferences.placeholder', value: rand(1..10), unit: unit)
+    t('preferences.placeholder', value: rand(1.0..10.0).round(1), unit: unit)
   end
 end
