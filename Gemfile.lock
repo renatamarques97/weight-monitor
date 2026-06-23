@@ -86,7 +86,7 @@ GEM
     chartkick (5.2.1)
     cocoon (1.2.15)
     coderay (1.1.3)
-    concurrent-ruby (1.3.6)
+    concurrent-ruby (1.3.7)
     connection_pool (3.0.2)
     crass (1.0.6)
     date (3.5.1)
@@ -463,7 +463,7 @@ CHECKSUMS
   chartkick (5.2.1) sha256=2848d7de87189f30f28d077eb0bbdebc8a1f0f6f81de1ded95008fe564369949
   cocoon (1.2.15) sha256=d08f14e69653287d7a060ee43389b8c824e55191dffbca0c5c586f38ef491f0d
   coderay (1.1.3) sha256=dc530018a4684512f8f38143cd2a096c9f02a1fc2459edcfe534787a7fc77d4b
-  concurrent-ruby (1.3.6) sha256=6b56837e1e7e5292f9864f34b69c5a2cbc75c0cf5338f1ce9903d10fa762d5ab
+  concurrent-ruby (1.3.7) sha256=4412caec3a5ea2e5fdc52076724c071a81f2c0593d83b2ac8cbb8ca63b3151b0
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
