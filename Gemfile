@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '4.0.2'
+ruby '4.0.9'
 
 gem 'rails', '~> 8.0.0'
 gem 'pg'
@@ -19,6 +19,7 @@ gem 'stimulus-rails'
 gem 'propshaft'
 gem 'turbo-rails'
 gem 'importmap-rails'
+gem 'json', '~> 2.18'
 
 group :development, :test do
   gem 'byebug'

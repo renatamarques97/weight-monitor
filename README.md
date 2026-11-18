@@ -11,7 +11,7 @@ evolution of weight over the period of the diet.
 
 ### Ruby version
 ```
-4.0.2
+4.0.9
 ```
 
 ### Rails version
