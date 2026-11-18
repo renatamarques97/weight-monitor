@@ -60,6 +60,7 @@ en:
     chart_duration: "Total Duration (minutes)"
     chart_distance: "Total Distance (km)"
     chart_pace: "Avg Pace (min/km)"
+    highlights: "Highlights"
     types:
       other: "Other"
       running: "Running"
