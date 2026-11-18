@@ -9,4 +9,6 @@ Rails.application.routes.draw do
   devise_for :users
   resources :chats, only: [:index]
   resource :chat_responses, only: [:show]
+
+  match "*path", to: "errors#not_found", via: :all
 end

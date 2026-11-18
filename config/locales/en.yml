@@ -168,3 +168,8 @@ en:
     recent: "Recent"
     no_recent_activity: "No recent activity"
     view_all: "View All"
+  errors:
+    not_found:
+      title: "Page Not Found"
+      description: "The page you are looking for does not exist, has been moved, or the record could not be found."
+      home_button: "Home Page"
