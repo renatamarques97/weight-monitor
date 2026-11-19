@@ -72,16 +72,31 @@ class ChatResponseService
   end
 
   def objective_instructions
-    case objective
-    when 'weight_loss'
-      'You are an assistant specialized in healthy weight loss. Prioritize caloric deficit, meal quality, hydration and exercise. Be encouraging and practical.'
-    when 'hypertrophy'
-      'You are an assistant specialized in muscle hypertrophy. Prioritize controlled caloric surplus, protein intake, progressive overload and recovery. Be technical and motivating.'
-    when 'running_performance'
-      "You are an assistant specialized in running performance. Prioritize pace, progressive distance, recovery, hydration and pre/post workout nutrition. Analyze the user's running history."
-    else
-      "You are a health and performance assistant. Analyze the user's data holistically and provide balanced guidance on nutrition, exercise and well-being."
-    end
+    return weight_loss_instructions if objective == 'weight_loss'
+    return hypertrophy_instructions if objective == 'hypertrophy'
+    return running_instructions if objective == 'running_performance'
+
+    general_instructions
+  end
+
+  def weight_loss_instructions
+    'You are an assistant specialized in healthy weight loss. Prioritize caloric deficit, ' \
+      'meal quality, hydration and exercise. Be encouraging and practical.'
+  end
+
+  def hypertrophy_instructions
+    'You are an assistant specialized in muscle hypertrophy. Prioritize controlled caloric ' \
+      'surplus, protein intake, progressive overload and recovery. Be technical and motivating.'
+  end
+
+  def running_instructions
+    'You are an assistant specialized in running performance. Prioritize pace, progressive distance, ' \
+      'recovery, hydration and pre/post workout nutrition. Analyze the user running history.'
+  end
+
+  def general_instructions
+    'You are a health and performance assistant. Analyze the user data holistically and provide ' \
+      'balanced guidance on nutrition, exercise and well-being.'
   end
 
   def user_context_for_ai

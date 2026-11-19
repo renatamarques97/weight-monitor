@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,124 +12,124 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_07_173500) do
+ActiveRecord::Schema[8.0].define(version: 20_260_607_173_500) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
+  enable_extension 'pg_catalog.plpgsql'
 
-  create_table "chat_messages", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "role", null: false
-    t.text "content", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id", "created_at"], name: "index_chat_messages_on_user_id_and_created_at"
-    t.index ["user_id"], name: "index_chat_messages_on_user_id"
+  create_table 'chat_messages', force: :cascade do |t|
+    t.bigint 'user_id', null: false
+    t.string 'role', null: false
+    t.text 'content', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index %w[user_id created_at], name: 'index_chat_messages_on_user_id_and_created_at'
+    t.index ['user_id'], name: 'index_chat_messages_on_user_id'
   end
 
-  create_table "diets", force: :cascade do |t|
-    t.date "start_date", null: false
-    t.date "end_date", null: false
-    t.float "initial_weight", null: false
-    t.float "target_weight", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "weight_unit", default: "kg", null: false
-    t.index ["user_id"], name: "index_diets_on_user_id"
+  create_table 'diets', force: :cascade do |t|
+    t.date 'start_date', null: false
+    t.date 'end_date', null: false
+    t.float 'initial_weight', null: false
+    t.float 'target_weight', null: false
+    t.bigint 'user_id', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.string 'weight_unit', default: 'kg', null: false
+    t.index ['user_id'], name: 'index_diets_on_user_id'
   end
 
-  create_table "meal_diaries", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.date "diary_date", null: false
-    t.text "notes"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_meal_diaries_on_user_id"
+  create_table 'meal_diaries', force: :cascade do |t|
+    t.bigint 'user_id', null: false
+    t.date 'diary_date', null: false
+    t.text 'notes'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['user_id'], name: 'index_meal_diaries_on_user_id'
   end
 
-  create_table "meal_foods", force: :cascade do |t|
-    t.bigint "meal_id", null: false
-    t.string "food_name", null: false
-    t.string "fatsecret_food_id"
-    t.float "calories"
-    t.float "protein"
-    t.float "carbs"
-    t.float "fat"
-    t.string "metric_serving_unit"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.float "metric_serving_amount"
-    t.index ["meal_id"], name: "index_meal_foods_on_meal_id"
+  create_table 'meal_foods', force: :cascade do |t|
+    t.bigint 'meal_id', null: false
+    t.string 'food_name', null: false
+    t.string 'fatsecret_food_id'
+    t.float 'calories'
+    t.float 'protein'
+    t.float 'carbs'
+    t.float 'fat'
+    t.string 'metric_serving_unit'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.float 'metric_serving_amount'
+    t.index ['meal_id'], name: 'index_meal_foods_on_meal_id'
   end
 
-  create_table "meals", force: :cascade do |t|
-    t.time "schedule", null: false
-    t.text "description", null: false
-    t.integer "meal_type", null: false
-    t.bigint "diet_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.float "calories"
-    t.float "protein"
-    t.float "carbs"
-    t.float "fat"
-    t.string "food_name"
-    t.string "fatsecret_food_id"
-    t.string "metric_serving_unit"
-    t.bigint "meal_diary_id"
-    t.index ["diet_id"], name: "index_meals_on_diet_id"
-    t.index ["meal_diary_id"], name: "index_meals_on_meal_diary_id"
+  create_table 'meals', force: :cascade do |t|
+    t.time 'schedule', null: false
+    t.text 'description', null: false
+    t.integer 'meal_type', null: false
+    t.bigint 'diet_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.float 'calories'
+    t.float 'protein'
+    t.float 'carbs'
+    t.float 'fat'
+    t.string 'food_name'
+    t.string 'fatsecret_food_id'
+    t.string 'metric_serving_unit'
+    t.bigint 'meal_diary_id'
+    t.index ['diet_id'], name: 'index_meals_on_diet_id'
+    t.index ['meal_diary_id'], name: 'index_meals_on_meal_diary_id'
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "name", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.float "target_pace"
-    t.float "height"
-    t.string "weight_unit", default: "kg", null: false
-    t.string "distance_unit", default: "km", null: false
-    t.string "height_unit", default: "m", null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  create_table 'users', force: :cascade do |t|
+    t.string 'email', default: '', null: false
+    t.string 'name', null: false
+    t.string 'encrypted_password', default: '', null: false
+    t.string 'reset_password_token'
+    t.datetime 'reset_password_sent_at'
+    t.datetime 'remember_created_at'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.float 'target_pace'
+    t.float 'height'
+    t.string 'weight_unit', default: 'kg', null: false
+    t.string 'distance_unit', default: 'km', null: false
+    t.string 'height_unit', default: 'm', null: false
+    t.index ['email'], name: 'index_users_on_email', unique: true
+    t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
   end
 
-  create_table "weights", force: :cascade do |t|
-    t.float "kg", null: false
-    t.date "weight_date", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "weight_unit", default: "kg", null: false
-    t.index ["user_id"], name: "index_weights_on_user_id"
+  create_table 'weights', force: :cascade do |t|
+    t.float 'kg', null: false
+    t.date 'weight_date', null: false
+    t.bigint 'user_id', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.string 'weight_unit', default: 'kg', null: false
+    t.index ['user_id'], name: 'index_weights_on_user_id'
   end
 
-  create_table "workouts", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.integer "workout_type", default: 0, null: false
-    t.date "workout_date", null: false
-    t.float "duration", null: false
-    t.float "distance"
-    t.integer "calories"
-    t.jsonb "details", default: {}, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "distance_unit", default: "km", null: false
-    t.string "weight_unit", default: "kg", null: false
-    t.index ["user_id"], name: "index_workouts_on_user_id"
+  create_table 'workouts', force: :cascade do |t|
+    t.bigint 'user_id', null: false
+    t.integer 'workout_type', default: 0, null: false
+    t.date 'workout_date', null: false
+    t.float 'duration', null: false
+    t.float 'distance'
+    t.integer 'calories'
+    t.jsonb 'details', default: {}, null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.string 'distance_unit', default: 'km', null: false
+    t.string 'weight_unit', default: 'kg', null: false
+    t.index ['user_id'], name: 'index_workouts_on_user_id'
   end
 
-  add_foreign_key "chat_messages", "users"
-  add_foreign_key "diets", "users"
-  add_foreign_key "meal_diaries", "users"
-  add_foreign_key "meal_foods", "meals"
-  add_foreign_key "meals", "diets"
-  add_foreign_key "meals", "meal_diaries"
-  add_foreign_key "weights", "users"
-  add_foreign_key "workouts", "users"
+  add_foreign_key 'chat_messages', 'users'
+  add_foreign_key 'diets', 'users'
+  add_foreign_key 'meal_diaries', 'users'
+  add_foreign_key 'meal_foods', 'meals'
+  add_foreign_key 'meals', 'diets'
+  add_foreign_key 'meals', 'meal_diaries'
+  add_foreign_key 'weights', 'users'
+  add_foreign_key 'workouts', 'users'
 end

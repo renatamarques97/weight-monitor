@@ -23,7 +23,8 @@ FactoryBot.define do
         description = ''
 
         if record.is_a?(Diet)
-          description = "This is a #{meal_type} for a diet starting on #{record.start_date} with target weight #{record.target_weight}kg."
+          description = "This is a #{meal_type} for a diet starting on " \
+                        "#{record.start_date} with target weight #{record.target_weight}kg."
         elsif record.is_a?(MealDiary)
           description = "This is a #{meal_type} entry for a meal diary on #{record.diary_date}."
         end

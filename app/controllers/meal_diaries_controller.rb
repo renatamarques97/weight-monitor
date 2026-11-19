@@ -55,30 +55,20 @@ class MealDiariesController < ApplicationController
   end
 
   def meal_diary_params
-    params.require(:meal_diary).permit(
-      :diary_date,
-      :notes,
-      meals_attributes: [
-        :id,
-        :schedule,
-        :description,
-        :meal_type,
-        :_destroy,
-        {
-          meal_foods_attributes: %i[
-            id
-            food_name
-            fatsecret_food_id
-            metric_serving_amount
-            calories
-            protein
-            carbs
-            fat
-            metric_serving_unit
-            _destroy
-          ]
-        }
-      ]
-    )
+    params.require(:meal_diary).permit(:diary_date, :notes, meals_attributes: meal_attributes)
+  end
+
+  def meal_attributes
+    [
+      :id, :schedule, :description, :meal_type, :_destroy,
+      { meal_foods_attributes: meal_food_attributes }
+    ]
+  end
+
+  def meal_food_attributes
+    %i[
+      id food_name fatsecret_food_id metric_serving_amount calories protein carbs fat
+      metric_serving_unit _destroy
+    ]
   end
 end

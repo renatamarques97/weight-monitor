@@ -2,25 +2,31 @@
 
 class CreateWorkouts < ActiveRecord::Migration[8.0]
   def change
-    create_table :workouts do |t|
-      t.references :user, null: false, foreign_key: true
-      t.integer :workout_type, null: false, default: 0
-      t.date :workout_date, null: false
-      t.float :duration, null: false
-      t.float :distance
-      t.integer :calories
-      t.jsonb :details, default: {}, null: false
+    create_workouts_table
+    drop_runnings_table
+  end
 
-      t.timestamps
+  def create_workouts_table
+    create_table :workouts do |table|
+      table.references :user, null: false, foreign_key: true
+      table.integer :workout_type, null: false, default: 0
+      table.date :workout_date, null: false
+      table.float :duration, null: false
+      table.float :distance
+      table.integer :calories
+      table.jsonb :details, default: {}, null: false
+      table.timestamps
     end
+  end
 
-    drop_table :runnings do |t|
-      t.float :duration, null: false
-      t.float :distance, null: false
-      t.float :avg_pace
-      t.references :user, null: false, foreign_key: true
-      t.date :running_date, null: false
-      t.timestamps
+  def drop_runnings_table
+    drop_table :runnings do |table|
+      table.float :duration, null: false
+      table.float :distance, null: false
+      table.float :avg_pace
+      table.references :user, null: false, foreign_key: true
+      table.date :running_date, null: false
+      table.timestamps
     end
   end
 end

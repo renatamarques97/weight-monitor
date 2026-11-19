@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
 class ChatResponseContext
+  WORKOUT_ASSOCIATIONS = {
+    running: :runnings,
+    walking: :walkings,
+    cycling: :cyclings,
+    swimming: :swimmings,
+    weightlifting: :weightliftings,
+    yoga: :yogas,
+    soccer: :soccers,
+    basketball: :basketballs,
+    tennis: :tennis,
+    martial_arts: :martial_arts,
+    other: :others
+  }.freeze
+
   def initialize(user)
     @user = user
   end
@@ -64,20 +78,7 @@ class ChatResponseContext
   end
 
   def type_association(type)
-    associations = {
-      running: :runnings,
-      walking: :walkings,
-      cycling: :cyclings,
-      swimming: :swimmings,
-      weightlifting: :weightliftings,
-      yoga: :yogas,
-      soccer: :soccers,
-      basketball: :basketballs,
-      tennis: :tennis,
-      martial_arts: :martial_arts,
-      other: :others
-    }
-    associations.fetch(type)
+    WORKOUT_ASSOCIATIONS.fetch(type)
   end
 
   def workout_type_lines(type, records)

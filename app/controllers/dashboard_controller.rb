@@ -10,13 +10,25 @@ class DashboardController < ApplicationController
   end
 
   def assign_dashboard_data
+    assign_presenter_data
+    assign_weight_data
+    assign_workout_data
+  end
+
+  def assign_presenter_data
     @goal = ::GoalPresenter.new(current_user).achieved?
     @recent_weight = ::RecentWeightPresenter.new(current_user).call
-    @recent_weights = current_user.weights.order(weight_date: :desc, created_at: :desc).limit(3)
     @diets = ::Diet.authorized_user(current_user)
     @imc = ::ImcPresenter.new(current_user).call
+  end
+
+  def assign_weight_data
+    @recent_weights = current_user.weights.order(weight_date: :desc, created_at: :desc).limit(3)
     @weights = ::WeightQuery.weights(current_user, @period_in_days)
     @weight_chart_bounds = build_weight_chart_bounds(@weights)
+  end
+
+  def assign_workout_data
     @workout_charts = ::WorkoutQuery.chart_data(current_user, @period_in_days)
   end
 
