@@ -8,12 +8,12 @@ class ChatResponseService
     @client = client || OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'] || ENV.fetch('OPEN_API_KEY', nil))
   end
 
-  def call(&stream_block)
+  def call(&)
     create_user_message
     assistant_response = +''
 
     begin
-      client.chat(parameters: chat_parameters(assistant_response, &stream_block))
+      client.chat(parameters: chat_parameters(assistant_response, &))
     ensure
       create_assistant_message(assistant_response)
     end
@@ -29,11 +29,11 @@ class ChatResponseService
     user.chat_messages.create!(role: 'user', content: prompt)
   end
 
-  def chat_parameters(assistant_response, &stream_block)
+  def chat_parameters(assistant_response, &)
     {
-      model: 'gpt-3.5-turbo',
+      model: ENV.fetch('OPENAI_MODEL', 'gpt-4o-mini'),
       messages: [system_message, *history_messages],
-      stream: stream_handler(assistant_response, &stream_block)
+      stream: stream_handler(assistant_response, &)
     }
   end
 
