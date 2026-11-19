@@ -12,8 +12,8 @@
         <tr>
           <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('diet.start_date') %></th>
           <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('diet.end_date') %></th>
-          <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('diet.initial_weight', unit: current_user.weight_unit) %></th>
-          <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('diet.target_weight', unit: current_user.weight_unit) %></th>
+          <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('diet.initial_weight', unit: '').gsub(/\s*\(.*?\)/, '') %></th>
+          <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('diet.target_weight', unit: '').gsub(/\s*\(.*?\)/, '') %></th>
           <th class="px-4 py-3 text-right font-semibold fit-text-primary"><%= t('actions') %></th>
         </tr>
       </thead>

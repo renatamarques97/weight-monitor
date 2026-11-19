@@ -184,4 +184,3 @@ en:
     height_unit: "Height Unit"
     new_info: "Select your preferred units of measurement. These will be the defaults used across all diets, weights, and workouts in Fit Tracker."
     edit_info: "These preferences will be used as the default units of measurement across all workouts, weights, and diets in the system."
-    placeholder: "e.g. %{value} (%{unit})"

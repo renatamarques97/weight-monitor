@@ -5,9 +5,9 @@
   </div>
   <div>
     <% weight_unit_value = form.object.persisted? ? form.object.weight_unit : current_user.weight_unit %>
-    <%= form.label "details[volume]", t('workout.details.volume', unit: '').gsub(/\s*\(.*?\)/, ''), class: "tw-label" %>
+    <%= form.label "details[volume]", t('workout.details.volume', unit: weight_unit_value), class: "tw-label" %>
     <%= form.number_field "details[volume]", step: :any, class: "tw-input",
-          placeholder: weight_placeholder(weight_unit_value),
+          placeholder: weight_unit_value,
           value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:volume)) ? form.object.details.volume : nil %>
     <%= form.hidden_field :weight_unit, value: weight_unit_value %>
   </div>

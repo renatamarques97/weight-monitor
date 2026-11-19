@@ -46,8 +46,8 @@
 
       <div data-workout-form-target="distanceField">
         <% distance_unit_val = workout.persisted? ? workout.distance_unit : current_user.distance_unit %>
-        <%= form.label :distance, t('workout.distance', unit: '').gsub(/\s*\(.*?\)/, ''), class: "tw-label" %>
-        <%= form.number_field :distance, step: :any, class: "tw-input", placeholder: distance_placeholder(distance_unit_val) %>
+        <%= form.label :distance, t('workout.distance', unit: distance_unit_val), class: "tw-label" %>
+        <%= form.number_field :distance, step: :any, class: "tw-input", placeholder: distance_unit_val %>
         <%= form.hidden_field :distance_unit, value: distance_unit_val %>
       </div>
 

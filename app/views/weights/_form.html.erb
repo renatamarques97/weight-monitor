@@ -14,8 +14,8 @@
     <div class="grid gap-4 md:grid-cols-2">
       <div>
         <% weight_unit_value = weight.persisted? ? weight.weight_unit : current_user.weight_unit %>
-        <%= form.label :value, t('weight.title'), class: "tw-label" %>
-        <%= form.number_field :value, step: :any, class: "tw-input", placeholder: weight_placeholder(weight_unit_value) %>
+        <%= form.label :value, "#{t('weight.title')} (#{weight_unit_value})", class: "tw-label" %>
+        <%= form.number_field :value, step: :any, class: "tw-input", placeholder: weight_unit_value %>
         <%= form.hidden_field :weight_unit, value: weight_unit_value %>
       </div>
 

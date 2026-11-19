@@ -44,13 +44,13 @@
       <%= form.hidden_field :weight_unit, value: diet_weight_unit_value %>
 
       <div>
-        <%= form.label :initial_weight, t('diet.initial_weight', unit: '').gsub(/\s*\(.*?\)/, ''), class: "tw-label" %>
-        <%= form.number_field :initial_weight, step: :any, class: "tw-input", placeholder: weight_placeholder(diet_weight_unit_value) %>
+        <%= form.label :initial_weight, t('diet.initial_weight', unit: diet_weight_unit_value), class: "tw-label" %>
+        <%= form.number_field :initial_weight, step: :any, class: "tw-input", placeholder: diet_weight_unit_value %>
       </div>
 
       <div>
-        <%= form.label :target_weight, t('diet.target_weight', unit: '').gsub(/\s*\(.*?\)/, ''), class: "tw-label" %>
-        <%= form.number_field :target_weight, step: :any, class: "tw-input", placeholder: weight_placeholder(diet_weight_unit_value) %>
+        <%= form.label :target_weight, t('diet.target_weight', unit: diet_weight_unit_value), class: "tw-label" %>
+        <%= form.number_field :target_weight, step: :any, class: "tw-input", placeholder: diet_weight_unit_value %>
       </div>
     </div>
 
