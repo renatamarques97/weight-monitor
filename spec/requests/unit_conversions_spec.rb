@@ -78,12 +78,23 @@ RSpec.describe 'UnitConversions', type: :request do
       end
     end
 
-    context 'when an error is raised during conversion' do
-      it 'handles StandardError gracefully and returns nil' do
-        allow(UnitConverter).to receive(:convert_height_between).and_raise(StandardError.new('Conversion error'))
-        get '/unit_conversions/convert', params: { value: '1.80', from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
-        expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)).to eq({ 'value' => nil })
+    context 'with invalid conversion parameters' do
+      it 'rejects unknown unit types' do
+        get '/unit_conversions/convert', params: { value: '1.80', from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: 'unknown' }
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)).to include('error')
+      end
+
+      it 'rejects non-numeric values' do
+        get '/unit_conversions/convert', params: { value: '1.80m', from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)).to include('error')
+      end
+
+      it 'rejects units that do not match the conversion type' do
+        get '/unit_conversions/convert', params: { value: '1.80', from_unit: WEIGHTS::KG, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)).to include('error')
       end
     end
   end
