@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeWeightType < ActiveRecord::Migration[7.1]
   def change
     change_column(:diets, :initial_weight, :float)

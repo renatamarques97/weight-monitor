@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateChatMessages < ActiveRecord::Migration[7.1]
   def change
     create_table :chat_messages do |t|
@@ -8,6 +10,6 @@ class CreateChatMessages < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    add_index :chat_messages, [:user_id, :created_at]
+    add_index :chat_messages, %i[user_id created_at]
   end
 end
