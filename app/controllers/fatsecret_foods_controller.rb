@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FatsecretFoodsController < ApplicationController
   def index
     query = params[:q]

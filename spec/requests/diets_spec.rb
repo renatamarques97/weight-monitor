@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe "/diets", type: :request do
-  describe "when user is not signed in" do
-    describe "GET /index" do
-      it "redirects to the index" do
+RSpec.describe '/diets', type: :request do
+  describe 'when user is not signed in' do
+    describe 'GET /index' do
+      it 'redirects to the index' do
         get diets_url
         expect(response).to have_http_status(302)
       end
     end
   end
 
-  describe "when user is not allowed" do
+  describe 'when user is not allowed' do
     let(:user) { create(:user) }
     let(:user_not_allowed) { create(:user) }
     let(:valid_attributes) { attributes_for(:diet, user_id: user.id) }
@@ -19,8 +21,8 @@ RSpec.describe "/diets", type: :request do
       sign_in user_not_allowed
     end
 
-    describe "GET /index" do
-      it "return code 401" do
+    describe 'GET /index' do
+      it 'return code 401' do
         diet = Diet.create! valid_attributes
         get edit_diet_url(diet)
         expect(response).to have_http_status(401)
@@ -28,7 +30,7 @@ RSpec.describe "/diets", type: :request do
     end
   end
 
-  describe "When User is signed in" do
+  describe 'When User is signed in' do
     let!(:user) { create(:user) }
 
     before do
@@ -41,56 +43,56 @@ RSpec.describe "/diets", type: :request do
       attributes_for(:diet, target_weight: nil, user_id: user.id)
     end
 
-    describe "GET /index" do
-      it "renders a successful response" do
+    describe 'GET /index' do
+      it 'renders a successful response' do
         Diet.create! valid_attributes
         get diets_url
         expect(response).to be_successful
       end
     end
 
-    describe "GET /show" do
-      it "renders a successful response" do
+    describe 'GET /show' do
+      it 'renders a successful response' do
         diet = Diet.create! valid_attributes
         get diet_url(diet)
         expect(response).to be_successful
       end
     end
 
-    describe "GET /new" do
-      it "renders a successful response" do
+    describe 'GET /new' do
+      it 'renders a successful response' do
         get new_diet_url
         expect(response).to be_successful
       end
     end
 
-    describe "GET /edit" do
-      it "render a successful response" do
+    describe 'GET /edit' do
+      it 'render a successful response' do
         diet = Diet.create! valid_attributes
         get edit_diet_url(diet)
         expect(response).to be_successful
       end
     end
 
-    describe "POST /create" do
-      context "with valid parameters" do
-        it "creates a new Diet" do
-          expect {
+    describe 'POST /create' do
+      context 'with valid parameters' do
+        it 'creates a new Diet' do
+          expect do
             post diets_url, params: { diet: valid_attributes }
-          }.to change(Diet, :count).by(1)
+          end.to change(Diet, :count).by(1)
         end
 
-        it "redirects to the created diet" do
+        it 'redirects to the created diet' do
           post diets_url, params: { diet: valid_attributes }
           expect(response).to redirect_to(root_path)
         end
       end
 
-      context "with invalid parameters" do
-        it "does not create a new Diet" do
-          expect {
+      context 'with invalid parameters' do
+        it 'does not create a new Diet' do
+          expect do
             post diets_url, params: { diet: invalid_attributes }
-          }.to change(Diet, :count).by(0)
+          end.to change(Diet, :count).by(0)
         end
 
         it "renders a successful response (i.e. to display the 'new' template)" do
@@ -100,18 +102,18 @@ RSpec.describe "/diets", type: :request do
       end
     end
 
-    describe "PATCH /update" do
-      context "with valid parameters" do
+    describe 'PATCH /update' do
+      context 'with valid parameters' do
         let(:new_attributes) { attributes_for(:diet, user_id: user.id) }
 
-        it "updates the requested diet" do
+        it 'updates the requested diet' do
           diet = Diet.create! valid_attributes
           patch diet_url(diet), params: { diet: new_attributes }
           diet.reload
           expect(response).to have_http_status(302)
         end
 
-        it "redirects to the diet" do
+        it 'redirects to the diet' do
           diet = Diet.create! valid_attributes
           patch diet_url(diet), params: { diet: new_attributes }
           diet.reload
@@ -119,7 +121,7 @@ RSpec.describe "/diets", type: :request do
         end
       end
 
-      context "with invalid parameters" do
+      context 'with invalid parameters' do
         it "renders a successful response (i.e. to display the 'edit' template)" do
           diet = Diet.create! valid_attributes
           patch diet_url(diet), params: { diet: invalid_attributes }
@@ -128,15 +130,15 @@ RSpec.describe "/diets", type: :request do
       end
     end
 
-    describe "DELETE /destroy" do
-      it "destroys the requested diet" do
+    describe 'DELETE /destroy' do
+      it 'destroys the requested diet' do
         diet = Diet.create! valid_attributes
-        expect {
+        expect do
           delete diet_url(diet)
-        }.to change(Diet, :count).by(-1)
+        end.to change(Diet, :count).by(-1)
       end
 
-      it "redirects to the diets list" do
+      it 'redirects to the diets list' do
         diet = Diet.create! valid_attributes
         delete diet_url(diet)
         expect(response).to redirect_to(root_path)

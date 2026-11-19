@@ -16,8 +16,7 @@ class WorkoutsController < ApplicationController
     @workout = Workout.new(workout_type: workout_type, workout_date: Date.current)
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @workout = Workout.new(workout_params)

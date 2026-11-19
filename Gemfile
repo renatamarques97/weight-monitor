@@ -1,46 +1,48 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '4.0.9'
 
-gem 'rails', '~> 8.0.0'
-gem 'pg'
-gem 'puma'
-gem 'jbuilder'
 gem 'bootsnap', require: false
+gem 'chartkick'
+gem 'cocoon'
+gem 'date_validator'
 gem 'devise'
 gem 'enumerize'
-gem 'cocoon'
-gem 'chartkick'
 gem 'font-awesome-rails'
-gem 'date_validator'
+gem 'importmap-rails'
+gem 'jbuilder'
+gem 'json', '~> 2.18'
+gem 'pg'
+gem 'propshaft'
+gem 'puma'
+gem 'rails', '~> 8.0.0'
 gem 'ruby-openai'
 gem 'stimulus-rails'
-gem 'propshaft'
 gem 'turbo-rails'
-gem 'importmap-rails'
-gem 'json', '~> 2.18'
 
 group :development, :test do
   gem 'byebug'
-  gem 'rspec-rails'
-  gem 'pry'
-  gem 'ostruct'
+  gem 'dotenv-rails'
   gem 'factory_bot_rails'
   gem 'ffaker'
-  gem 'shoulda-matchers'
+  gem 'ostruct'
+  gem 'pry'
   gem 'pry-nav'
-  gem 'dotenv-rails'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers'
 end
 
 group :development do
-  gem 'web-console', '>= 3.3.0'
+  gem 'foreman'
   gem 'listen', '~> 3.2'
   gem 'mutex_m'
-  gem 'foreman'
   gem 'rubocop'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
+  gem 'web-console', '>= 3.3.0'
 end
 
 group :test do
@@ -49,8 +51,8 @@ end
 
 gem 'tzinfo-data', platforms: [:jruby]
 
-gem "redis", "~> 4.0"
+gem 'redis', '~> 4.0'
 
-gem "tailwindcss-rails", "~> 4.4"
+gem 'tailwindcss-rails', '~> 4.4'
 
-gem "store_model", "~> 4.5"
+gem 'store_model', '~> 4.5'

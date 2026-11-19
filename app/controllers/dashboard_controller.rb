@@ -6,6 +6,10 @@ class DashboardController < ApplicationController
   def index
     @period_in_days = params[:period_in_days]&.to_i || 30
     @active_tab = params[:active_tab] || 'weight'
+    assign_dashboard_data
+  end
+
+  def assign_dashboard_data
     @goal = ::GoalPresenter.new(current_user).achieved?
     @recent_weight = ::RecentWeightPresenter.new(current_user).call
     @recent_weights = current_user.weights.order(weight_date: :desc, created_at: :desc).limit(3)
@@ -26,7 +30,6 @@ class DashboardController < ApplicationController
     max_weight = values.max
 
     step = 2
-
 
     {
       min: (min_weight / step).floor * step,

@@ -1,40 +1,42 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Workout, type: :model do
-  describe "relations" do
+  describe 'relations' do
     it { is_expected.to belong_to(:user) }
   end
 
-  describe "validations" do
+  describe 'validations' do
     it { is_expected.to validate_presence_of(:workout_type) }
     it { is_expected.to validate_presence_of(:workout_date) }
     it { is_expected.to validate_presence_of(:duration) }
     it { is_expected.to validate_numericality_of(:duration).is_greater_than(0) }
   end
 
-  describe ".find_sti_class" do
-    it "returns subclass from numeric type" do
+  describe '.find_sti_class' do
+    it 'returns subclass from numeric type' do
       expect(described_class.find_sti_class(WorkoutType::RUNNING)).to eq(Running)
     end
 
-    it "returns subclass from string type" do
-      expect(described_class.find_sti_class("running")).to eq(Running)
+    it 'returns subclass from string type' do
+      expect(described_class.find_sti_class('running')).to eq(Running)
     end
 
-    it "returns subclass from string type for all sports" do
-      WorkoutType::MAPPING.keys.each do |sport_key|
+    it 'returns subclass from string type for all sports' do
+      WorkoutType::MAPPING.each_key do |sport_key|
         expected_class = sport_key.to_s.camelize.constantize
         expect(described_class.find_sti_class(sport_key.to_s)).to eq(expected_class)
       end
     end
   end
 
-  describe ".sti_name" do
-    it "returns enum mapping value for subclass" do
+  describe '.sti_name' do
+    it 'returns enum mapping value for subclass' do
       expect(Running.sti_name).to eq(WorkoutType::RUNNING)
     end
 
-    it "returns correct sti_name for all subclasses" do
+    it 'returns correct sti_name for all subclasses' do
       WorkoutType::MAPPING.each do |sport_key, sport_value|
         subclass = sport_key.to_s.camelize.constantize
         expect(subclass.sti_name).to eq(sport_value)
@@ -42,17 +44,17 @@ RSpec.describe Workout, type: :model do
     end
   end
 
-  describe ".model_name" do
-    it "uses workout model name for STI subclasses" do
-      expect(Running.model_name.name).to eq("Workout")
-      expect(Running.model_name.param_key).to eq("workout")
+  describe '.model_name' do
+    it 'uses workout model name for STI subclasses' do
+      expect(Running.model_name.name).to eq('Workout')
+      expect(Running.model_name.param_key).to eq('workout')
     end
 
-    it "uses workout model name for all subclasses" do
-      WorkoutType::MAPPING.keys.each do |sport_key|
+    it 'uses workout model name for all subclasses' do
+      WorkoutType::MAPPING.each_key do |sport_key|
         subclass = sport_key.to_s.camelize.constantize
-        expect(subclass.model_name.name).to eq("Workout")
-        expect(subclass.model_name.param_key).to eq("workout")
+        expect(subclass.model_name.name).to eq('Workout')
+        expect(subclass.model_name.param_key).to eq('workout')
       end
     end
   end
@@ -90,33 +92,33 @@ RSpec.describe Workout, type: :model do
   end
 
   describe Running do
-    describe "validations" do
+    describe 'validations' do
       subject { build(:running) }
 
       it { is_expected.to validate_presence_of(:distance) }
       it { is_expected.to validate_numericality_of(:distance).is_greater_than(0) }
     end
 
-    it "is valid with required distance" do
+    it 'is valid with required distance' do
       running = build(:running, distance: 6.5)
       expect(running).to be_valid
     end
 
-    it "is invalid without distance" do
+    it 'is invalid without distance' do
       running = build(:running)
       running.distance = nil
       expect(running).not_to be_valid
       expect(running.errors[:distance]).to be_present
     end
 
-    it "is invalid with zero distance" do
+    it 'is invalid with zero distance' do
       running = build(:running)
       running.distance = 0
       expect(running).not_to be_valid
       expect(running.errors[:distance]).to be_present
     end
 
-    it "calculates average pace in details before save" do
+    it 'calculates average pace in details before save' do
       running = build(:running, duration: 30, distance: 5)
       running.details.avg_pace = nil
 
@@ -127,26 +129,26 @@ RSpec.describe Workout, type: :model do
   end
 
   describe Cycling do
-    describe "validations" do
+    describe 'validations' do
       subject { build(:cycling) }
 
       it { is_expected.to validate_presence_of(:distance) }
       it { is_expected.to validate_numericality_of(:distance).is_greater_than(0) }
     end
 
-    it "is valid with distance" do
+    it 'is valid with distance' do
       cycling = build(:cycling, distance: 10.2)
       expect(cycling).to be_valid
     end
 
-    it "is invalid without distance" do
+    it 'is invalid without distance' do
       cycling = build(:cycling)
       cycling.distance = nil
       expect(cycling).not_to be_valid
       expect(cycling.errors[:distance]).to be_present
     end
 
-    it "is invalid with zero distance" do
+    it 'is invalid with zero distance' do
       cycling = build(:cycling)
       cycling.distance = 0
       expect(cycling).not_to be_valid
@@ -155,19 +157,19 @@ RSpec.describe Workout, type: :model do
   end
 
   describe Walking do
-    describe "validations" do
+    describe 'validations' do
       subject { build(:walking) }
 
       it { is_expected.to validate_presence_of(:distance) }
       it { is_expected.to validate_numericality_of(:distance).is_greater_than(0) }
     end
 
-    it "is valid with distance" do
+    it 'is valid with distance' do
       walking = build(:walking, distance: 3.4)
       expect(walking).to be_valid
     end
 
-    it "is invalid without distance" do
+    it 'is invalid without distance' do
       walking = build(:walking)
       walking.distance = nil
       expect(walking).not_to be_valid

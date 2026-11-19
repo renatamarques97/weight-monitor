@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe '/meal_diaries', type: :request do
@@ -98,15 +100,15 @@ RSpec.describe '/meal_diaries', type: :request do
     describe 'POST /create' do
       context 'with valid parameters' do
         it 'creates a new MealDiary' do
-          expect {
+          expect do
             post meal_diaries_url, params: { meal_diary: valid_attributes }
-          }.to change(MealDiary, :count).by(1)
+          end.to change(MealDiary, :count).by(1)
         end
 
         it 'creates nested meal and meal_food' do
-          expect {
+          expect do
             post meal_diaries_url, params: { meal_diary: valid_attributes }
-          }.to change(Meal, :count).by(1).and change(MealFood, :count).by(1)
+          end.to change(Meal, :count).by(1).and change(MealFood, :count).by(1)
         end
 
         it 'redirects to meal diaries index' do
@@ -117,9 +119,9 @@ RSpec.describe '/meal_diaries', type: :request do
 
       context 'with invalid parameters' do
         it 'does not create a new MealDiary' do
-          expect {
+          expect do
             post meal_diaries_url, params: { meal_diary: invalid_attributes }
-          }.to change(MealDiary, :count).by(0)
+          end.to change(MealDiary, :count).by(0)
         end
 
         it 'renders a successful response' do
@@ -149,9 +151,9 @@ RSpec.describe '/meal_diaries', type: :request do
     describe 'DELETE /destroy' do
       it 'destroys the requested meal diary' do
         meal_diary = create(:meal_diary, user: user)
-        expect {
+        expect do
           delete meal_diary_url(meal_diary)
-        }.to change(MealDiary, :count).by(-1)
+        end.to change(MealDiary, :count).by(-1)
       end
 
       it 'redirects to meal diaries list' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ChatResponseService do
@@ -9,8 +11,8 @@ RSpec.describe ChatResponseService do
     it 'streams chunks and persists user/assistant messages' do
       allow(client).to receive(:chat) do |args|
         stream = args.dig(:parameters, :stream)
-        stream.call({ "choices" => [{ "delta" => { "content" => 'First chunk ' } }] })
-        stream.call({ "choices" => [{ "delta" => { "content" => 'second chunk' } }] })
+        stream.call({ 'choices' => [{ 'delta' => { 'content' => 'First chunk ' } }] })
+        stream.call({ 'choices' => [{ 'delta' => { 'content' => 'second chunk' } }] })
       end
 
       streamed_parts = []
@@ -21,9 +23,10 @@ RSpec.describe ChatResponseService do
       expect(response).to eq('First chunk second chunk')
       expect(streamed_parts).to eq(['First chunk ', 'second chunk'])
       expect(user.chat_messages.order(:created_at).pluck(:role, :content)).to eq([
-        ['user', prompt],
-        ['assistant', 'First chunk second chunk']
-      ])
+                                                                                   ['user', prompt],
+                                                                                   ['assistant',
+                                                                                    'First chunk second chunk']
+                                                                                 ])
     end
 
     it 'uses objective-specific instructions in the system prompt' do
@@ -31,7 +34,7 @@ RSpec.describe ChatResponseService do
       allow(client).to receive(:chat) do |args|
         captured_messages = args.dig(:parameters, :messages)
         stream = args.dig(:parameters, :stream)
-        stream.call({ "choices" => [{ "delta" => { "content" => 'ok' } }] })
+        stream.call({ 'choices' => [{ 'delta' => { 'content' => 'ok' } }] })
       end
 
       described_class.new(user: user, prompt: prompt, objective: 'running_performance', client: client).call
@@ -46,7 +49,7 @@ RSpec.describe ChatResponseService do
       allow(client).to receive(:chat) do |args|
         captured_messages = args.dig(:parameters, :messages)
         stream = args.dig(:parameters, :stream)
-        stream.call({ "choices" => [{ "delta" => { "content" => 'ok' } }] })
+        stream.call({ 'choices' => [{ 'delta' => { 'content' => 'ok' } }] })
       end
 
       described_class.new(user: user, prompt: prompt, objective: 'hypertrophy', client: client).call
@@ -60,7 +63,7 @@ RSpec.describe ChatResponseService do
       allow(client).to receive(:chat) do |args|
         captured_messages = args.dig(:parameters, :messages)
         stream = args.dig(:parameters, :stream)
-        stream.call({ "choices" => [{ "delta" => { "content" => 'ok' } }] })
+        stream.call({ 'choices' => [{ 'delta' => { 'content' => 'ok' } }] })
       end
 
       described_class.new(user: user, prompt: prompt, objective: 'unsupported_objective', client: client).call
@@ -78,7 +81,7 @@ RSpec.describe ChatResponseService do
       allow(client).to receive(:chat) do |args|
         captured_messages = args.dig(:parameters, :messages)
         stream = args.dig(:parameters, :stream)
-        stream.call({ "choices" => [{ "delta" => { "content" => 'ok' } }] })
+        stream.call({ 'choices' => [{ 'delta' => { 'content' => 'ok' } }] })
       end
 
       described_class.new(user: user, prompt: prompt, objective: 'general_health', client: client).call
@@ -91,6 +94,7 @@ RSpec.describe ChatResponseService do
 
     it 'does not create assistant message when stream has no content' do
       allow(client).to receive(:chat) do |_args|
+        nil
       end
 
       response = described_class.new(user: user, prompt: prompt, objective: 'general_health', client: client).call
@@ -102,12 +106,11 @@ RSpec.describe ChatResponseService do
     it 'builds user context with diet, meals, weight history and workout history' do
       user.update(height: 1.70)
       diet = create(:diet,
-        user: user,
-        start_date: Date.new(2026, 1, 1),
-        end_date: Date.new(2026, 3, 1),
-        initial_weight: 80,
-        target_weight: 72
-      )
+                    user: user,
+                    start_date: Date.new(2026, 1, 1),
+                    end_date: Date.new(2026, 3, 1),
+                    initial_weight: 80,
+                    target_weight: 72)
       create(:meal, diet: diet, schedule: '2026-01-03 08:00:00', description: 'Eggs and toast', meal_type: 1)
       create(:weight, user: user, weight_date: Date.new(2026, 1, 2), kg: 79.2)
       create(:running, user: user, workout_date: Date.new(2026, 1, 2), duration: 30, distance: 5)
@@ -116,7 +119,7 @@ RSpec.describe ChatResponseService do
       allow(client).to receive(:chat) do |args|
         captured_messages = args.dig(:parameters, :messages)
         stream = args.dig(:parameters, :stream)
-        stream.call({ "choices" => [{ "delta" => { "content" => 'context-ready' } }] })
+        stream.call({ 'choices' => [{ 'delta' => { 'content' => 'context-ready' } }] })
       end
 
       described_class.new(user: user, prompt: prompt, objective: 'weight_loss', client: client).call
@@ -137,7 +140,7 @@ RSpec.describe ChatResponseService do
       allow(client).to receive(:chat) do |args|
         captured_messages = args.dig(:parameters, :messages)
         stream = args.dig(:parameters, :stream)
-        stream.call({ "choices" => [{ "delta" => { "content" => 'context-ready' } }] })
+        stream.call({ 'choices' => [{ 'delta' => { 'content' => 'context-ready' } }] })
       end
 
       described_class.new(user: user, prompt: prompt, objective: 'weight_loss', client: client).call
@@ -152,15 +155,18 @@ RSpec.describe ChatResponseService do
     end
 
     it 'includes details for other workout types in user context' do
-      create(:walking, user: user, workout_date: Date.new(2026, 1, 5), duration: 35, distance: 3.0, calories: 190, details: { steps: 1000 })
-      create(:yoga, user: user, workout_date: Date.new(2026, 1, 4), duration: 45, calories: 220, details: { style: 'vinyasa' })
-      create(:other, user: user, workout_date: Date.new(2026, 1, 3), duration: 20, calories: 120, details: { notes: 'Custom training session' })
+      create(:walking, user: user, workout_date: Date.new(2026, 1, 5), duration: 35, distance: 3.0, calories: 190,
+                       details: { steps: 1000 })
+      create(:yoga, user: user, workout_date: Date.new(2026, 1, 4), duration: 45, calories: 220,
+                    details: { style: 'vinyasa' })
+      create(:other, user: user, workout_date: Date.new(2026, 1, 3), duration: 20, calories: 120,
+                     details: { notes: 'Custom training session' })
 
       captured_messages = nil
       allow(client).to receive(:chat) do |args|
         captured_messages = args.dig(:parameters, :messages)
         stream = args.dig(:parameters, :stream)
-        stream.call({ "choices" => [{ "delta" => { "content" => 'context-ready' } }] })
+        stream.call({ 'choices' => [{ 'delta' => { 'content' => 'context-ready' } }] })
       end
 
       described_class.new(user: user, prompt: prompt, objective: 'weight_loss', client: client).call
@@ -183,13 +189,13 @@ RSpec.describe ChatResponseService do
       allow(client).to receive(:chat) do |args|
         captured_messages = args.dig(:parameters, :messages)
         stream = args.dig(:parameters, :stream)
-        stream.call({ "choices" => [{ "delta" => { "content" => 'context-ready' } }] })
+        stream.call({ 'choices' => [{ 'delta' => { 'content' => 'context-ready' } }] })
       end
 
       described_class.new(user: user, prompt: prompt, objective: 'weight_loss', client: client).call
 
       system_prompt = captured_messages.first[:content]
-      WorkoutType::MAPPING.keys.each do |type|
+      WorkoutType::MAPPING.each_key do |type|
         expect(system_prompt).to include("#{type.to_s.humanize.titleize} history (most recent):")
       end
     end

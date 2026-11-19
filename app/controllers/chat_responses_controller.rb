@@ -9,17 +9,22 @@ class ChatResponsesController < ApplicationController
     user_prompt = params[:prompt].to_s.strip
     return head :unprocessable_entity if user_prompt.blank?
 
-    response.headers['Content-type']  = 'text/event-stream'
-    response.headers['Last-Modified'] = Time.now.httpdate
-    sse                               = SSE.new(response.stream, event: "message")
+    configure_stream_headers
+    stream_response(user_prompt)
+  end
 
+  private
+
+  def configure_stream_headers
+    response.headers['Content-type'] = 'text/event-stream'
+    response.headers['Last-Modified'] = Time.now.httpdate
+  end
+
+  def stream_response(user_prompt)
+    sse = SSE.new(response.stream, event: 'message')
     begin
-      ::ChatResponseService.new(
-        user: current_user,
-        prompt: user_prompt,
-        objective: params[:objective]
-      ).call do |content|
-        sse.write({ message: content })
+      ChatResponseService.new(user: current_user, prompt: user_prompt, objective: params[:objective]).call do |content|
+        sse.write(message: content)
       end
     ensure
       sse.close
