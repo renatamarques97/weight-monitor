@@ -48,6 +48,11 @@ jobs:
       - run: bundle exec rails db:migrate
       - run: bundle exec rake db:schema:load
 
+      # Lint
+      - run:
+          name: run rubocop
+          command: bundle exec rubocop
+
       # run tests!
       - run:
           name: run tests

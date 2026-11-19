@@ -54,6 +54,10 @@ jobs:
         with:
           bundler-cache: true
 
+      # Lint
+      - name: Run RuboCop
+        run: bundle exec rubocop
+
       # Database and Assets
       - name: Setup database
         run: bin/rails db:setup
