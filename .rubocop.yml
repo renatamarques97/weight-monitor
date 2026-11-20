@@ -6,6 +6,10 @@ AllCops:
   NewCops: enable
   Exclude:
     - 'db/schema.rb'
+    - 'vendor/**/*'
+    - 'coverage/**/*'
+    - 'tmp/**/*'
+    - 'node_modules/**/*'
 
 Style/Documentation:
   Enabled: false
