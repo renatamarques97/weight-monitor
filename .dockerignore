@@ -45,3 +45,7 @@ Icon
 
 # Ignore storage folder
 /storage
+
+# Ignore generated assets and uploads.
+/public/assets
+/app/assets/builds
