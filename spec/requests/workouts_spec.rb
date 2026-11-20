@@ -38,51 +38,51 @@ RSpec.describe '/workouts', type: :request do
         expect(response.body).not_to include(cycling.workout_date.strftime('%b %d, %Y'))
       end
 
-      it "renders distance and running pace for running workouts" do
+      it 'renders distance and running pace for running workouts' do
         create(:running, user: user, distance: 5.2, duration: 30, details: { avg_pace: 5.77 })
 
         get workouts_path, params: { type: :running }
 
         expect(response).to be_successful
-        expect(response.body).to include("5.2 km")
-        expect(response.body).to include("0.1 min/km")
-        expect(response.body).to include(I18n.t("workout.distance"))
+        expect(response.body).to include('5.2 km')
+        expect(response.body).to include('0.1 min/km')
+        expect(response.body).to include(I18n.t('workout.distance'))
       end
 
-      it "renders goals and position for soccer workouts" do
-        create(:soccer, user: user, details: { goals: 3, position: "Forward" })
+      it 'renders goals and position for soccer workouts' do
+        create(:soccer, user: user, details: { goals: 3, position: 'Forward' })
 
         get workouts_path, params: { type: :soccer }
 
         expect(response).to be_successful
-        expect(response.body).to include("3")
-        expect(response.body).to include(I18n.t("workout.details.goals"))
-        expect(response.body).to include("Forward")
+        expect(response.body).to include('3')
+        expect(response.body).to include(I18n.t('workout.details.goals'))
+        expect(response.body).to include('Forward')
       end
 
-      it "renders points and rebounds for basketball workouts" do
+      it 'renders points and rebounds for basketball workouts' do
         create(:basketball, user: user, details: { points: 24, rebounds: 8 })
 
         get workouts_path, params: { type: :basketball }
 
         expect(response).to be_successful
-        expect(response.body).to include("24")
-        expect(response.body).to include(I18n.t("workout.details.points"))
-        expect(response.body).to include("8")
-        expect(response.body).to include(I18n.t("workout.details.rebounds"))
+        expect(response.body).to include('24')
+        expect(response.body).to include(I18n.t('workout.details.points'))
+        expect(response.body).to include('8')
+        expect(response.body).to include(I18n.t('workout.details.rebounds'))
       end
 
-      it "renders mixed workout highlights in the unfiltered table" do
+      it 'renders mixed workout highlights in the unfiltered table' do
         create(:soccer, user: user)
         create(:cycling, user: user)
 
         get workouts_path
 
         expect(response).to be_successful
-        expect(response.body).to include(I18n.t("workout.highlights"))
+        expect(response.body).to include(I18n.t('workout.highlights'))
       end
 
-      it "includes the Stimulus scroll position controller for workout filters" do
+      it 'includes the Stimulus scroll position controller for workout filters' do
         get workouts_path
 
         expect(response).to be_successful

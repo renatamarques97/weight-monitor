@@ -41,18 +41,18 @@ RSpec.describe '/dashboard', type: :request do
         get root_path, params: { period_in_days: 60, active_tab: 'running' }
       end
 
-      it "renders all day-period controls and preserves the tab scroll position" do
+      it 'renders all day-period controls and preserves the tab scroll position' do
         get root_path, params: { period_in_days: 90, active_tab: 'cycling' }
 
         expect(response).to be_successful
-        expect(response.body).to include("30")
-        expect(response.body).to include("60")
-        expect(response.body).to include("90")
+        expect(response.body).to include('30')
+        expect(response.body).to include('60')
+        expect(response.body).to include('90')
         expect(response.body).to include('tabs#savePeriodScroll')
         expect(response.body).to include('data-scroll-position-key-value="dashboard-tabs-scroll"')
       end
 
-      it "keeps the requested active workout tab" do
+      it 'keeps the requested active workout tab' do
         get root_path, params: { period_in_days: 60, active_tab: 'soccer' }
 
         expect(response).to be_successful
