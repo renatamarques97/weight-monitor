@@ -15,17 +15,17 @@ RSpec.describe GoalPresenter do
       it "weight and target weight don't match" do
         diet
         weight
-        expect(described_class.new(user).achieved?).to eq(false)
+        expect(described_class.new(user).achieved?).to be(false)
       end
 
       it 'weight is nil' do
         diet
-        expect(described_class.new(user).achieved?).to eq(false)
+        expect(described_class.new(user).achieved?).to be(false)
       end
 
       it 'target weight is nil' do
         weight
-        expect(described_class.new(user).achieved?).to eq(false)
+        expect(described_class.new(user).achieved?).to be(false)
       end
     end
 
@@ -33,7 +33,7 @@ RSpec.describe GoalPresenter do
       it 'weight and target weight match' do
         valid_diet
         valid_weight
-        expect(described_class.new(user).achieved?).to eq(true)
+        expect(described_class.new(user).achieved?).to be(true)
       end
     end
   end

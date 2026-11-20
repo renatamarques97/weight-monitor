@@ -51,7 +51,7 @@ class FatSecretApiService
 
   def cached_token(scope)
     cached = @tokens_by_scope[scope]
-    cached[:token] if cached && Time.now < cached[:expires_at]
+    cached[:token] if cached && Time.zone.now < cached[:expires_at]
   end
 
   def request_token(scope)
@@ -64,7 +64,7 @@ class FatSecretApiService
 
   def cache_token(scope, body)
     token = body['access_token']
-    expires_at = Time.now + body.fetch('expires_in', 3600).to_i
+    expires_at = Time.zone.now + body.fetch('expires_in', 3600).to_i
     @tokens_by_scope[scope] = { token: token, expires_at: expires_at }
     token
   end

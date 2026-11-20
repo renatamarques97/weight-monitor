@@ -9,7 +9,7 @@ class FatsecretFoodsController < ApplicationController
 
     response = service.search_foods(query)
     if response['error'].present?
-      return render json: { error: response['error']['message'] }, status: :unprocessable_entity
+      return render json: { error: response['error']['message'] }, status: :unprocessable_content
     end
 
     foods = response.dig('foods', 'food') || response.dig('foods_search', 'results', 'food') || []

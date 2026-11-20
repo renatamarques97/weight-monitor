@@ -32,15 +32,13 @@ RSpec.describe '/diets', type: :request do
 
   describe 'When User is signed in' do
     let!(:user) { create(:user) }
+    let(:valid_attributes) { attributes_for(:diet, user_id: user.id) }
+    let(:invalid_attributes) do
+      attributes_for(:diet, target_weight: nil, user_id: user.id)
+    end
 
     before do
       sign_in user
-    end
-
-    let(:valid_attributes) { attributes_for(:diet, user_id: user.id) }
-
-    let(:invalid_attributes) do
-      attributes_for(:diet, target_weight: nil, user_id: user.id)
     end
 
     describe 'GET /index' do
@@ -92,7 +90,7 @@ RSpec.describe '/diets', type: :request do
         it 'does not create a new Diet' do
           expect do
             post diets_url, params: { diet: invalid_attributes }
-          end.to change(Diet, :count).by(0)
+          end.not_to change(Diet, :count)
         end
 
         it "renders a successful response (i.e. to display the 'new' template)" do

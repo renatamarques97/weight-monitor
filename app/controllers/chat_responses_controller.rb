@@ -7,7 +7,7 @@ class ChatResponsesController < ApplicationController
 
   def show
     user_prompt = params[:prompt].to_s.strip
-    return head :unprocessable_entity if user_prompt.blank?
+    return head :unprocessable_content if user_prompt.blank?
 
     configure_stream_headers
     stream_response(user_prompt)

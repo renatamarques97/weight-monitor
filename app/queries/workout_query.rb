@@ -4,8 +4,8 @@ class WorkoutQuery
   def self.chart_data(user, period_in_days = 30)
     start_date = period_in_days.days.ago.to_date
 
-    WorkoutType::MAPPING.keys.to_h do |sport|
-      [sport, chart_for(user, sport, start_date)]
+    WorkoutType::MAPPING.keys.index_with do |sport|
+      chart_for(user, sport, start_date)
     end
   end
 

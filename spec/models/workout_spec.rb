@@ -86,7 +86,7 @@ RSpec.describe Workout, type: :model do
 
     it 'enum values match WorkoutType::MAPPING' do
       WorkoutType::MAPPING.each do |key, value|
-        expect(Workout.workout_types[key.to_s]).to eq(value)
+        expect(described_class.workout_types[key.to_s]).to eq(value)
       end
     end
   end

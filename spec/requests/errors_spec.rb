@@ -21,11 +21,11 @@ RSpec.describe 'Error Handling', type: :request do
   end
 
   describe 'GET /meal_diaries/:id/edit when record does not exist' do
+    subject { get edit_meal_diary_path(id: 999_999) }
+
     let(:user) { create(:user) }
 
     before { sign_in user }
-
-    subject { get edit_meal_diary_path(id: 999_999) }
 
     it_behaves_like 'a not found response'
   end

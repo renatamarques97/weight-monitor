@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :workouts, dependent: :destroy
   has_many :chat_messages, dependent: :destroy
 
-  validates_uniqueness_of :email
+  validates :email, uniqueness: true
   validates :name, presence: true
   validates :height, numericality: { greater_than: 0 }, allow_nil: true
 

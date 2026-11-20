@@ -9,7 +9,7 @@ RSpec.describe WorkoutQuery do
     it 'returns chart metadata and data for all workout types' do
       result = described_class.chart_data(user, 30)
 
-      expect(result.keys).to contain_exactly(*WorkoutType::MAPPING.keys)
+      expect(result.keys).to match_array(WorkoutType::MAPPING.keys)
       expect(result[:running][:color]).to eq(WorkoutType::COLORS[:running])
       expect(result[:running][:translation_metric_key]).to eq('workout.chart_distance')
       expect(result[:yoga][:translation_metric_key]).to eq('workout.chart_duration')

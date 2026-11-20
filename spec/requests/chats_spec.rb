@@ -46,7 +46,7 @@ RSpec.describe 'Chats', type: :request do
           expect(response).to be_successful
           expect(response.content_type).to include('application/json')
 
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json).to have_key('messages_html')
           expect(json).to have_key('pagination')
         end
@@ -54,7 +54,7 @@ RSpec.describe 'Chats', type: :request do
         it 'returns pagination with page and total_pages' do
           get chats_path, headers: { 'ACCEPT' => 'application/json' }
 
-          pagination = JSON.parse(response.body)['pagination']
+          pagination = response.parsed_body['pagination']
           expect(pagination).to have_key('page')
           expect(pagination).to have_key('total_pages')
         end
@@ -62,7 +62,7 @@ RSpec.describe 'Chats', type: :request do
         it 'includes message HTML content' do
           get chats_path, headers: { 'ACCEPT' => 'application/json' }
 
-          html = JSON.parse(response.body)['messages_html']
+          html = response.parsed_body['messages_html']
           expect(html).not_to be_empty
         end
       end
@@ -78,7 +78,7 @@ RSpec.describe 'Chats', type: :request do
         it 'defaults to the last page when no page param is given' do
           get chats_path, headers: { 'ACCEPT' => 'application/json' }
 
-          pagination = JSON.parse(response.body)['pagination']
+          pagination = response.parsed_body['pagination']
           expect(pagination['total_pages']).to eq(2)
           expect(pagination['page']).to eq(2)
         end
@@ -86,7 +86,7 @@ RSpec.describe 'Chats', type: :request do
         it 'returns page 1 when explicitly requested' do
           get chats_path(page: 1), headers: { 'ACCEPT' => 'application/json' }
 
-          pagination = JSON.parse(response.body)['pagination']
+          pagination = response.parsed_body['pagination']
           expect(pagination['page']).to eq(1)
           expect(pagination['total_pages']).to eq(2)
         end
@@ -94,21 +94,21 @@ RSpec.describe 'Chats', type: :request do
         it 'returns page 2 when explicitly requested' do
           get chats_path(page: 2), headers: { 'ACCEPT' => 'application/json' }
 
-          pagination = JSON.parse(response.body)['pagination']
+          pagination = response.parsed_body['pagination']
           expect(pagination['page']).to eq(2)
         end
 
         it 'clamps an out-of-range page to the maximum' do
           get chats_path(page: 999), headers: { 'ACCEPT' => 'application/json' }
 
-          pagination = JSON.parse(response.body)['pagination']
+          pagination = response.parsed_body['pagination']
           expect(pagination['page']).to eq(2)
         end
 
         it 'clamps a page below 1 to 1' do
           get chats_path(page: 0), headers: { 'ACCEPT' => 'application/json' }
 
-          pagination = JSON.parse(response.body)['pagination']
+          pagination = response.parsed_body['pagination']
           expect(pagination['page']).to eq(1)
         end
       end
@@ -123,7 +123,7 @@ RSpec.describe 'Chats', type: :request do
           get chats_path(after_id: msg2.id), headers: { 'ACCEPT' => 'application/json' }
 
           expect(response).to be_successful
-          html = JSON.parse(response.body)['messages_html']
+          html = response.parsed_body['messages_html']
           expect(html).to include(msg3.content)
           expect(html).to include(msg4.content)
           expect(html).not_to include(msg1.content)
@@ -133,7 +133,7 @@ RSpec.describe 'Chats', type: :request do
         it 'returns an empty messages_html when after_id is the last message' do
           get chats_path(after_id: msg4.id), headers: { 'ACCEPT' => 'application/json' }
 
-          html = JSON.parse(response.body)['messages_html']
+          html = response.parsed_body['messages_html']
           expect(html).to be_empty
         end
 
@@ -141,14 +141,14 @@ RSpec.describe 'Chats', type: :request do
           get chats_path, headers: { 'ACCEPT' => 'application/json' }
 
           # With 4 messages and PER_PAGE=5, all fit on one page
-          pagination = JSON.parse(response.body)['pagination']
+          pagination = response.parsed_body['pagination']
           expect(pagination['total_pages']).to eq(1)
         end
 
         it 'returns all messages after after_id regardless of pagination' do
           get chats_path(after_id: msg1.id), headers: { 'ACCEPT' => 'application/json' }
 
-          html = JSON.parse(response.body)['messages_html']
+          html = response.parsed_body['messages_html']
           # msg2, msg3, msg4 should all appear
           expect(html).to include(msg2.content)
           expect(html).to include(msg3.content)
@@ -161,7 +161,7 @@ RSpec.describe 'Chats', type: :request do
 
           get chats_path(after_id: msg1.id), headers: { 'ACCEPT' => 'application/json' }
 
-          html = JSON.parse(response.body)['messages_html']
+          html = response.parsed_body['messages_html']
           expect(html).not_to include(other_msg.content)
         end
       end
@@ -174,7 +174,7 @@ RSpec.describe 'Chats', type: :request do
 
           get chats_path, headers: { 'ACCEPT' => 'application/json' }
 
-          html = JSON.parse(response.body)['messages_html']
+          html = response.parsed_body['messages_html']
           expect(html).to include(own_msg.content)
           expect(html).not_to include(other_msg.content)
         end

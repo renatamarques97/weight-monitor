@@ -10,12 +10,16 @@ class DietsController < ApplicationController
     @diets = Diet.authorized_user(current_user)
   end
 
+  def show; end
+
   # GET /diets/new
   def new
     @diet = Diet.new
     meal = @diet.meals.build
     meal.meal_foods.build
   end
+
+  def edit; end
 
   # POST /diets
   def create
@@ -51,7 +55,7 @@ class DietsController < ApplicationController
   private
 
   def set_diet
-    @diet = Diet.find(params[:id])
+    @diet = Diet.find(params.expect(:id))
   end
 
   def authorized?
@@ -61,7 +65,7 @@ class DietsController < ApplicationController
   end
 
   def diet_params
-    params.require(:diet).permit(*diet_attributes, meals_attributes: meal_attributes)
+    params.expect(diet: [*diet_attributes, { meals_attributes: meal_attributes }])
   end
 
   def diet_attributes

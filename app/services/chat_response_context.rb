@@ -74,7 +74,7 @@ class ChatResponseContext
   end
 
   def workout_types
-    WorkoutType::MAPPING.keys.to_h { |type| [type, type_association(type)] }
+    WorkoutType::MAPPING.keys.index_with { |type| type_association(type) }
   end
 
   def type_association(type)

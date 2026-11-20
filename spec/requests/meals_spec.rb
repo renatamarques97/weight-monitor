@@ -57,7 +57,7 @@ RSpec.describe '/meals', type: :request do
       it 'does not create a new Meal' do
         expect do
           post meals_url, params: { meal: invalid_attributes }
-        end.to change(Meal, :count).by(0)
+        end.not_to change(Meal, :count)
       end
 
       it "renders a successful response (i.e. to display the 'new' template)" do

@@ -8,7 +8,7 @@ RSpec.describe '/fatsecret_foods', type: :request do
       get fatsecret_foods_url, params: { q: '' }
 
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to eq([])
+      expect(response.parsed_body).to eq([])
     end
 
     it 'returns food list from foods.food format' do
@@ -27,7 +27,7 @@ RSpec.describe '/fatsecret_foods', type: :request do
       get fatsecret_foods_url, params: { q: 'banana' }
 
       expect(response).to have_http_status(:ok)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed.first['food_name']).to eq('Banana')
     end
 
@@ -49,7 +49,7 @@ RSpec.describe '/fatsecret_foods', type: :request do
       get fatsecret_foods_url, params: { q: 'apple' }
 
       expect(response).to have_http_status(:ok)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed.first['food_name']).to eq('Apple')
     end
 
@@ -69,7 +69,7 @@ RSpec.describe '/fatsecret_foods', type: :request do
       get fatsecret_foods_url, params: { q: 'orange' }
 
       expect(response).to have_http_status(:ok)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed).to be_an(Array)
       expect(parsed.first['food_name']).to eq('Orange')
     end
@@ -86,7 +86,7 @@ RSpec.describe '/fatsecret_foods', type: :request do
       get fatsecret_foods_url, params: { q: 'banana' }
 
       expect(response).to have_http_status(:unprocessable_entity)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed['error']).to eq('Missing scope: premier')
     end
   end
@@ -102,7 +102,7 @@ RSpec.describe '/fatsecret_foods', type: :request do
       get fatsecret_food_url('33691')
 
       expect(response).to have_http_status(:ok)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed.dig('food', 'food_name')).to eq('Colby Cheese')
     end
   end

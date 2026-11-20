@@ -89,13 +89,11 @@ RSpec.describe ChatResponseService do
       history_messages = captured_messages.drop(1)
       expect(history_messages.size).to eq(20)
       expect(history_messages.last).to include(role: 'user', content: prompt)
-      expect(history_messages.map { |msg| msg[:content] }).not_to include('previous message 0')
+      expect(history_messages.pluck(:content)).not_to include('previous message 0')
     end
 
     it 'does not create assistant message when stream has no content' do
-      allow(client).to receive(:chat) do |_args|
-        nil
-      end
+      allow(client).to receive(:chat).and_return(nil)
 
       response = described_class.new(user: user, prompt: prompt, objective: 'general_health', client: client).call
 

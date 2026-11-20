@@ -3,20 +3,20 @@
 require 'rails_helper'
 
 RSpec.describe 'Weights', type: :request do
+  let(:invalid_attributes) { attributes_for(:weight, kg: nil) }
+  let(:valid_attributes) { attributes_for(:weight) }
+  let(:weight) { create(:weight, user: user) }
+  let(:user) { create(:user) }
+
+  before do
+    sign_in user
+  end
+
   describe 'GET /new' do
     it 'renders a successful response' do
       get '/weights/new'
       expect(response).to be_successful
     end
-  end
-
-  let(:user) { create(:user) }
-  let(:weight) { create(:weight, user: user) }
-  let(:valid_attributes) { attributes_for(:weight) }
-  let(:invalid_attributes) { attributes_for(:weight, kg: nil) }
-
-  before do
-    sign_in user
   end
 
   describe 'GET /index' do
@@ -46,7 +46,7 @@ RSpec.describe 'Weights', type: :request do
       it 'does not create a new Weight' do
         expect do
           post weights_url, params: { weight: invalid_attributes }
-        end.to change(Weight, :count).by(0)
+        end.not_to change(Weight, :count)
       end
 
       it "renders a successful response (i.e. to display the 'new' template)" do
