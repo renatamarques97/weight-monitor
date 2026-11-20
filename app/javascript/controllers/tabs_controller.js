@@ -10,10 +10,25 @@ export default class extends Controller {
     if (index === -1) index = 0
     
     this.showTab(index, false)
+
+    const strip = this.element.querySelector('[data-scroll-position-key-value="dashboard-tabs-scroll"]')
+    const saved = sessionStorage.getItem("dashboard-tabs-scroll")
+    if (strip && saved !== null) {
+      strip.scrollLeft = Number(saved)
+    }
+  }
+
+  savePeriodScroll() {
+    const strip = this.element.querySelector('[data-scroll-position-key-value="dashboard-tabs-scroll"]')
+    if (strip) sessionStorage.setItem("dashboard-tabs-scroll", String(strip.scrollLeft))
   }
 
   switch(event) {
     event.preventDefault()
+
+    const strip = this.element.querySelector('[data-scroll-position-key-value="dashboard-tabs-scroll"]')
+    if (strip) sessionStorage.setItem("dashboard-tabs-scroll", String(strip.scrollLeft))
+
     const tab = event.currentTarget
     const index = this.tabTargets.indexOf(tab)
     const tabName = tab.dataset.tabName
