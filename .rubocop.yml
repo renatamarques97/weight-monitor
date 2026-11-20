@@ -1,5 +1,11 @@
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
+
 AllCops:
   NewCops: enable
+  Exclude:
+    - 'db/schema.rb'
 
 Style/Documentation:
   Enabled: false
@@ -8,4 +14,30 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*_spec.rb'
     - 'spec/factories/*.rb'
-    - 'db/schema.rb'
+
+RSpec/ExampleLength:
+  Max: 30
+
+RSpec/MultipleExpectations:
+  Max: 10
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/RepeatedExample:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/StubbedMock:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+Rails/StrongParametersExpect:
+  Enabled: false
