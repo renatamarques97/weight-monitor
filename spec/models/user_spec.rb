@@ -1,31 +1,33 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe "relations" do
+  describe 'relations' do
     it { is_expected.to have_many(:diets).dependent(:destroy) }
     it { is_expected.to have_many(:meal_diaries).dependent(:destroy) }
     it { is_expected.to have_many(:weights).dependent(:destroy) }
     it { is_expected.to have_many(:workouts).dependent(:destroy) }
   end
 
-  describe "validations" do
+  describe 'validations' do
     let!(:user) { create(:user) }
 
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity }
   end
 
-  describe "workout helpers" do
+  describe 'workout helpers' do
     let(:user) { create(:user) }
 
-    it "defines singular and plural methods for each workout type" do
-      WorkoutType::MAPPING.keys.each do |workout_type|
+    it 'defines singular and plural methods for each workout type' do
+      WorkoutType::MAPPING.each_key do |workout_type|
         expect(user).to respond_to(workout_type)
         expect(user).to respond_to(workout_type.to_s.pluralize)
       end
     end
 
-    it "returns workouts filtered by type" do
+    it 'returns workouts filtered by type' do
       create(:running, user: user)
       create(:running, user: user)
       create(:cycling, user: user)

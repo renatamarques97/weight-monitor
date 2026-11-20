@@ -1,17 +1,23 @@
 # frozen_string_literal: true
 
 class MealsController < ApplicationController
-  before_action :set_meal, only: [:show, :edit, :update, :destroy]
+  before_action :set_meal, only: %i[show edit update destroy]
 
   # GET /meals
   def index
     @meals = Meal.all
   end
 
+  # GET /meals/1
+  def show; end
+
   # GET /meals/new
   def new
     @meal = Meal.new
   end
+
+  # GET /meals/1/edit
+  def edit; end
 
   # POST /meals
   def create
@@ -23,7 +29,7 @@ class MealsController < ApplicationController
         format.json { render :show, status: :created, location: @meal }
       else
         format.html { render :new }
-        format.json { render json: @meal.errors, status: :unprocessable_entity }
+        format.json { render json: @meal.errors, status: :unprocessable_content }
       end
     end
   end
@@ -36,7 +42,7 @@ class MealsController < ApplicationController
         format.json { render :show, status: :ok, location: @meal }
       else
         format.html { render :edit }
-        format.json { render json: @meal.errors, status: :unprocessable_entity }
+        format.json { render json: @meal.errors, status: :unprocessable_content }
       end
     end
   end
@@ -53,10 +59,10 @@ class MealsController < ApplicationController
   private
 
   def set_meal
-    @meal = Meal.find(params[:id])
+    @meal = Meal.find(params.expect(:id))
   end
 
   def meal_params
-    params.require(:meal).permit(:schedule, :description, :diet_id, :meal_type)
+    params.expect(meal: %i[schedule description diet_id meal_type])
   end
 end

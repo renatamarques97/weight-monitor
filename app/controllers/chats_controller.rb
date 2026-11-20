@@ -6,26 +6,10 @@ class ChatsController < ApplicationController
   PER_PAGE = 5
 
   def index
-    page_data = pagination_data
-
-    @total_pages = page_data[:total_pages]
-    @page = page_data[:page]
-    @messages = page_data[:messages]
-    @serialized_chat_messages = serialized_messages(@messages)
-
-    rendered_messages = @serialized_chat_messages.any? ? render_to_string(partial: "chats/message", collection: @serialized_chat_messages, as: :message, formats: [:html]) : ""
-
+    assign_pagination
     respond_to do |format|
       format.html
-      format.json do
-        render json: {
-          messages_html: rendered_messages,
-          pagination: {
-            page: @page,
-            total_pages: @total_pages
-          }
-        }
-      end
+      format.json { render json: chat_json }
     end
   end
 
@@ -39,16 +23,40 @@ class ChatsController < ApplicationController
 
   def pagination_data
     messages = apply_filter(current_user.chat_messages.ordered)
+    total_pages = pagination_total(messages)
+    page = pagination_page(total_pages)
 
-    total = messages.count
-    total_pages = [(total.to_f / PER_PAGE).ceil, 1].max
-    page = (params[:page] || total_pages).to_i.clamp(1, total_pages)
+    { page:, total_pages:, messages: paginate_messages(messages, page) }
+  end
 
-    messages = messages
-                   .offset((page - 1) * PER_PAGE)
-                   .limit(PER_PAGE)
+  def pagination_total(messages)
+    [(messages.count.to_f / PER_PAGE).ceil, 1].max
+  end
 
-    { page:, total_pages:, messages: }
+  def pagination_page(total_pages)
+    (params[:page] || total_pages).to_i.clamp(1, total_pages)
+  end
+
+  def paginate_messages(messages, page)
+    messages.offset((page - 1) * PER_PAGE).limit(PER_PAGE)
+  end
+
+  def assign_pagination
+    page_data = pagination_data
+    @total_pages = page_data[:total_pages]
+    @page = page_data[:page]
+    @messages = page_data[:messages]
+    @serialized_chat_messages = serialized_messages(@messages)
+  end
+
+  def chat_json
+    { messages_html: rendered_messages, pagination: { page: @page, total_pages: @total_pages } }
+  end
+
+  def rendered_messages
+    return '' unless @serialized_chat_messages.any?
+
+    render_to_string(partial: 'chats/message', collection: @serialized_chat_messages, as: :message, formats: [:html])
   end
 
   def serialized_messages(messages)

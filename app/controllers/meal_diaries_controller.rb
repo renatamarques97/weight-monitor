@@ -17,6 +17,10 @@ class MealDiariesController < ApplicationController
     meal.meal_foods.build
   end
 
+  def edit
+    @meal_diary.meals.each { |meal| meal.meal_foods.build if meal.meal_foods.empty? }
+  end
+
   def create
     @meal_diary = current_user.meal_diaries.build(meal_diary_params)
 
@@ -25,10 +29,6 @@ class MealDiariesController < ApplicationController
     else
       render :new
     end
-  end
-
-  def edit
-    @meal_diary.meals.each { |meal| meal.meal_foods.build if meal.meal_foods.empty? }
   end
 
   def update
@@ -47,7 +47,7 @@ class MealDiariesController < ApplicationController
   private
 
   def set_meal_diary
-    @meal_diary = MealDiary.find(params[:id])
+    @meal_diary = MealDiary.find(params.expect(:id))
   end
 
   def authorized!
@@ -55,30 +55,20 @@ class MealDiariesController < ApplicationController
   end
 
   def meal_diary_params
-    params.require(:meal_diary).permit(
-      :diary_date,
-      :notes,
-      meals_attributes: [
-        :id,
-        :schedule,
-        :description,
-        :meal_type,
-        :_destroy,
-        {
-          meal_foods_attributes: %i[
-            id
-            food_name
-            fatsecret_food_id
-            metric_serving_amount
-            calories
-            protein
-            carbs
-            fat
-            metric_serving_unit
-            _destroy
-          ]
-        }
-      ]
-    )
+    params.require(:meal_diary).permit(:diary_date, :notes, meals_attributes: meal_attributes)
+  end
+
+  def meal_attributes
+    [
+      :id, :schedule, :description, :meal_type, :_destroy,
+      { meal_foods_attributes: meal_food_attributes }
+    ]
+  end
+
+  def meal_food_attributes
+    %i[
+      id food_name fatsecret_food_id metric_serving_amount calories protein carbs fat
+      metric_serving_unit _destroy
+    ]
   end
 end

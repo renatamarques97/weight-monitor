@@ -7,7 +7,7 @@ module Details
     attribute :notes, :string
 
     def to_s
-      as_json.compact.map { |key, value| "#{key}=#{value}" }.join(", ")
+      as_json.compact.map { |key, value| "#{key}=#{value}" }.join(', ')
     end
   end
 end

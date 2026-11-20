@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddMealDiaryRefToMeals < ActiveRecord::Migration[8.0]
   def change
     add_reference :meals, :meal_diary, foreign_key: true

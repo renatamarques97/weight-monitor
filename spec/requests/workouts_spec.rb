@@ -1,23 +1,25 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe "/workouts", type: :request do
-  describe "when user is not signed in" do
-    it "redirects index to sign in" do
+RSpec.describe '/workouts', type: :request do
+  describe 'when user is not signed in' do
+    it 'redirects index to sign in' do
       get workouts_path
 
       expect(response).to have_http_status(302)
     end
   end
 
-  describe "when user is signed in" do
+  describe 'when user is signed in' do
     let(:user) { create(:user) }
 
     before do
       sign_in user
     end
 
-    describe "GET /index" do
-      it "renders a successful response" do
+    describe 'GET /index' do
+      it 'renders a successful response' do
         create(:running, user: user)
 
         get workouts_path
@@ -25,15 +27,15 @@ RSpec.describe "/workouts", type: :request do
         expect(response).to be_successful
       end
 
-      it "filters workouts by type" do
+      it 'filters workouts by type' do
         running = create(:running, user: user, workout_date: Date.new(2026, 5, 2))
         cycling = create(:cycling, user: user, workout_date: Date.new(2026, 5, 1))
 
         get workouts_path, params: { type: :running }
 
         expect(response).to be_successful
-        expect(response.body).to include(running.workout_date.strftime("%b %d, %Y"))
-        expect(response.body).not_to include(cycling.workout_date.strftime("%b %d, %Y"))
+        expect(response.body).to include(running.workout_date.strftime('%b %d, %Y'))
+        expect(response.body).not_to include(cycling.workout_date.strftime('%b %d, %Y'))
       end
 
       it "renders distance and running pace for running workouts" do
@@ -90,43 +92,43 @@ RSpec.describe "/workouts", type: :request do
       end
     end
 
-    describe "GET /new" do
-      it "renders a successful response" do
+    describe 'GET /new' do
+      it 'renders a successful response' do
         get new_workout_path
 
         expect(response).to be_successful
       end
 
-      it "initializes workout with default type (other)" do
+      it 'initializes workout with default type (other)' do
         get new_workout_path
 
         expect(response).to be_successful
       end
 
-      it "initializes workout with specified type from params" do
+      it 'initializes workout with specified type from params' do
         get new_workout_path, params: { workout_type: :running }
 
         expect(response).to be_successful
       end
     end
 
-    describe "GET /edit" do
+    describe 'GET /edit' do
       let(:workout) { create(:running, user: user) }
 
-      it "renders a successful response" do
+      it 'renders a successful response' do
         get edit_workout_path(workout)
 
         expect(response).to be_successful
       end
 
-      it "shows correct workout for editing" do
+      it 'shows correct workout for editing' do
         get edit_workout_path(workout)
 
         expect(response.body).to include(workout.workout_date.to_s)
       end
     end
 
-    describe "POST /create" do
+    describe 'POST /create' do
       let(:valid_attributes) do
         {
           workout_type: :running,
@@ -148,54 +150,54 @@ RSpec.describe "/workouts", type: :request do
         }
       end
 
-      it "creates a new workout" do
+      it 'creates a new workout' do
         expect do
           post workouts_path, params: { workout: valid_attributes }
         end.to change(Workout, :count).by(1)
       end
 
-      it "redirects to root path after create" do
+      it 'redirects to root path after create' do
         post workouts_path, params: { workout: valid_attributes }
 
         expect(response).to redirect_to(root_path)
       end
 
-      it "sets flash notice after successful create" do
+      it 'sets flash notice after successful create' do
         post workouts_path, params: { workout: valid_attributes }
 
         expect(flash[:notice]).to eq(I18n.t('workout.created'))
       end
 
-      it "renders unprocessable entity with invalid parameters" do
+      it 'renders unprocessable entity with invalid parameters' do
         post workouts_path, params: { workout: invalid_attributes }
 
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
-      it "does not set flash notice when creation fails" do
+      it 'does not set flash notice when creation fails' do
         post workouts_path, params: { workout: invalid_attributes }
 
         expect(flash[:notice]).to be_nil
       end
     end
 
-    describe "PATCH /update" do
+    describe 'PATCH /update' do
       let(:workout) { create(:running, user: user) }
 
-      it "updates the requested workout" do
+      it 'updates the requested workout' do
         patch workout_path(workout), params: { workout: { duration: 55 } }
 
         expect(response).to redirect_to(workouts_path)
         expect(workout.reload.duration).to eq(55.0)
       end
 
-      it "sets flash notice on successful update" do
+      it 'sets flash notice on successful update' do
         patch workout_path(workout), params: { workout: { duration: 55 } }
 
         expect(flash[:notice]).to eq(I18n.t('workout.updated'))
       end
 
-      it "renders edit with error status when update fails" do
+      it 'renders edit with error status when update fails' do
         patch workout_path(workout), params: { workout: { duration: nil } }
 
         expect(response).to have_http_status(:unprocessable_entity)
@@ -212,22 +214,22 @@ RSpec.describe "/workouts", type: :request do
       end
     end
 
-    describe "DELETE /destroy" do
+    describe 'DELETE /destroy' do
       let!(:workout) { create(:running, user: user) }
 
-      it "destroys the requested workout" do
+      it 'destroys the requested workout' do
         expect do
           delete workout_path(workout)
         end.to change(Workout, :count).by(-1)
       end
 
-      it "redirects to workouts list" do
+      it 'redirects to workouts list' do
         delete workout_path(workout)
 
         expect(response).to redirect_to(workouts_path)
       end
 
-      it "sets flash notice after successful destroy" do
+      it 'sets flash notice after successful destroy' do
         delete workout_path(workout)
 
         expect(flash[:notice]).to eq(I18n.t('workout.destroyed'))
@@ -255,7 +257,7 @@ RSpec.describe "/workouts", type: :request do
       sign_in user
     end
 
-    it "returns not found for edit" do
+    it 'returns not found for edit' do
       get edit_workout_path(another_users_workout)
 
       expect(response).to have_http_status(:not_found)

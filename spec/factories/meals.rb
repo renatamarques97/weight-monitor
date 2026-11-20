@@ -19,11 +19,12 @@ FactoryBot.define do
         supper: 22
       }
 
-      Meal.meal_type.values.each do |meal_type|
-        description = ""
+      Meal.meal_type.each_value do |meal_type|
+        description = ''
 
         if record.is_a?(Diet)
-          description = "This is a #{meal_type} for a diet starting on #{record.start_date} with target weight #{record.target_weight}kg."
+          description = "This is a #{meal_type} for a diet starting on " \
+                        "#{record.start_date} with target weight #{record.target_weight}kg."
         elsif record.is_a?(MealDiary)
           description = "This is a #{meal_type} entry for a meal diary on #{record.diary_date}."
         end
@@ -32,8 +33,8 @@ FactoryBot.define do
           meal_type: meal_type,
           schedule: Time.current.change(hour: meal_hours[meal_type.to_sym], min: 0),
           description: description,
-          :diet => record.is_a?(Diet) ? record : nil,
-          :meal_diary => record.is_a?(MealDiary) ? record : nil
+          diet: record.is_a?(Diet) ? record : nil,
+          meal_diary: record.is_a?(MealDiary) ? record : nil
         }
 
         meal = create(:meal, **attributes)

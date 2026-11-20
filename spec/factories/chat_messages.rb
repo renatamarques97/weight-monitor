@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :chat_message do
     role { :user }
@@ -12,5 +14,4 @@ FactoryBot.define do
   factory :assistant_chat_message, parent: :chat_message do
     role { :assistant }
   end
-
 end

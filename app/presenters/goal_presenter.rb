@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GoalPresenter
   def initialize(user)
     @user = user
@@ -5,6 +7,7 @@ class GoalPresenter
 
   def achieved?
     return false if last_weight.nil? || target_weight.nil?
+
     last_weight == target_weight
   end
 

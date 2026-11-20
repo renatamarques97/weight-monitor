@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -8,11 +10,11 @@ class User < ApplicationRecord
   has_many :workouts, dependent: :destroy
   has_many :chat_messages, dependent: :destroy
 
-  validates_uniqueness_of :email
+  validates :email, uniqueness: true
   validates :name, presence: true
   validates :height, numericality: { greater_than: 0 }, allow_nil: true
 
-  WorkoutType::MAPPING.keys.each do |workout_type|
+  WorkoutType::MAPPING.each_key do |workout_type|
     define_method workout_type.to_s do
       workouts.send(workout_type)
     end

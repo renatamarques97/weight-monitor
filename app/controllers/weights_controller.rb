@@ -28,6 +28,6 @@ class WeightsController < ApplicationController
   private
 
   def weight_params
-    params.require(:weight).permit(:kg, :weight_date, :user_id)
+    params.expect(weight: %i[kg weight_date user_id])
   end
 end

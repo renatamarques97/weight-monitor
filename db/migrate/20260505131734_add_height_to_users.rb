@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddHeightToUsers < ActiveRecord::Migration[8.0]
   def change
     remove_column :diets, :height, :float

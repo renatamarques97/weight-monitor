@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :workout do
     association :user
@@ -34,7 +36,7 @@ FactoryBot.define do
 
     factory :weightlifting, class: 'Weightlifting' do
       workout_type { :weightlifting }
-      details { { exercises_count: rand(6..12), volume: rand(3000..10000) } }
+      details { { exercises_count: rand(6..12), volume: rand(3000..10_000) } }
     end
 
     factory :yoga, class: 'Yoga' do

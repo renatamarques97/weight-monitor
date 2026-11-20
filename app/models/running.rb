@@ -8,6 +8,6 @@ class Running < Workout
   before_save :calculate_average_pace
 
   def calculate_average_pace
-    self.details.avg_pace = ((self.duration / 60) / self.distance).round(2)
+    details.avg_pace = ((duration / 60) / distance).round(2)
   end
 end
