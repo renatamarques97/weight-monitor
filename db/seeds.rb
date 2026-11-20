@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 if ENV['RESET_SEED'].present?
-  puts 'Cleaning database...'
+  Rails.logger.debug 'Cleaning database...'
   ChatMessage.delete_all
   MealFood.delete_all
   Meal.delete_all
@@ -12,7 +12,7 @@ if ENV['RESET_SEED'].present?
   User.delete_all
 end
 
-puts 'Seeding users...'
+Rails.logger.debug 'Seeding users...'
 
 SEED_DAYS = 90
 DIET_DURATION_DAYS = 30
@@ -76,7 +76,7 @@ module DemoSeeder
   def seed_user(attributes)
     user = User.find_or_initialize_by(email: attributes[:email])
     update_user(user)
-    puts "  -> User: #{user.email}"
+    Rails.logger.debug { "  -> User: #{user.email}" }
 
     initial_weight = rand(70.0..95.0)
     target_weight = target_weight(initial_weight, attributes[:objective])
@@ -186,11 +186,11 @@ end
 
 DemoSeeder.seed_all
 
-puts "\nSeed completed successfully!"
-puts 'Summary:'
-puts " - Users: #{User.count}"
-puts " - Workouts: #{Workout.count}"
-puts " - Weights: #{Weight.count}"
-puts " - Diets: #{Diet.count}"
-puts " - Meals: #{Meal.count}"
-puts " - Meal Diaries: #{MealDiary.count}"
+Rails.logger.debug "\nSeed completed successfully!"
+Rails.logger.debug 'Summary:'
+Rails.logger.debug { " - Users: #{User.count}" }
+Rails.logger.debug { " - Workouts: #{Workout.count}" }
+Rails.logger.debug { " - Weights: #{Weight.count}" }
+Rails.logger.debug { " - Diets: #{Diet.count}" }
+Rails.logger.debug { " - Meals: #{Meal.count}" }
+Rails.logger.debug { " - Meal Diaries: #{MealDiary.count}" }
