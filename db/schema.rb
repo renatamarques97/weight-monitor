@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_07_173500) do
+ActiveRecord::Schema[8.0].define(version: 2026_11_22_184314) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -93,8 +93,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_07_173500) do
     t.string "weight_unit", default: "kg", null: false
     t.string "distance_unit", default: "km", null: false
     t.string "height_unit", default: "m", null: false
+    t.bigint "strava_athlete_id"
+    t.text "strava_access_token"
+    t.text "strava_refresh_token"
+    t.datetime "strava_token_expires_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["strava_athlete_id"], name: "index_users_on_strava_athlete_id", unique: true
   end
 
   create_table "weights", force: :cascade do |t|
@@ -119,6 +124,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_07_173500) do
     t.datetime "updated_at", null: false
     t.string "distance_unit", default: "km", null: false
     t.string "weight_unit", default: "kg", null: false
+    t.bigint "strava_activity_id"
+    t.index ["strava_activity_id"], name: "index_workouts_on_strava_activity_id", unique: true
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 
