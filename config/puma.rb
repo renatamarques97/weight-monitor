@@ -33,6 +33,7 @@ threads threads_count, threads_count
 port ENV.fetch('PORT', 3000)
 
 # Allow puma to be restarted by `bin/rails restart` command.
+ENV['SOLID_QUEUE_IN_PUMA'] = '1' if ENV['RAILS_ENV'] == 'development'
 plugin :tmp_restart
 
 # Run the Solid Queue supervisor inside of Puma for single-server deployments

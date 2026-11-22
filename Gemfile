@@ -56,3 +56,5 @@ gem 'redis', '~> 4.0'
 gem 'tailwindcss-rails', '~> 4.4'
 
 gem 'store_model', '~> 4.5'
+
+gem 'solid_queue', '~> 1.7'

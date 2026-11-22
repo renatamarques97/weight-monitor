@@ -27,5 +27,7 @@ module WeightMonitor
     config.eager_load_paths << Rails.root.join('app/services')
 
     config.generators.system_tests = nil
+
+    config.active_job.queue_adapter = :solid_queue
   end
 end
