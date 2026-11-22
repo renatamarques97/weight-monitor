@@ -52,23 +52,25 @@ RSpec.describe '/strava', type: :request do
   end
 
   describe 'POST /strava/sync' do
-    it 'reports imported activities' do
-      sync_service = instance_double(StravaActivitySyncService, sync: 3)
-      allow(StravaActivitySyncService).to receive(:new).with(user).and_return(sync_service)
-
-      post strava_sync_path
+    it 'enqueues synchronization and sets the syncing state' do
+      expect do
+        post strava_sync_path
+      end.to have_enqueued_job(StravaSyncJob).with(user.id)
 
       expect(response).to redirect_to(workouts_path)
-      expect(flash[:notice]).to eq(I18n.t('strava.sync_success', count: 3))
+      expect(flash[:notice]).to be_nil
+      expect(user.reload.strava_sync_status).to eq('syncing')
     end
+  end
 
-    it 'shows an alert when synchronization fails' do
-      allow(StravaActivitySyncService).to receive(:new).and_raise(StravaApiService::Error, 'Token expired')
+  describe 'GET /strava/status' do
+    it 'returns the synchronization status' do
+      user.update!(strava_sync_status: 'synced', strava_sync_imported_count: 3)
 
-      post strava_sync_path
+      get strava_status_path
 
-      expect(response).to redirect_to(workouts_path)
-      expect(flash[:alert]).to include('Token expired')
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('status' => 'synced', 'imported_count' => 3)
     end
   end
 
