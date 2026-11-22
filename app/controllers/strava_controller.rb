@@ -9,16 +9,16 @@ class StravaController < ApplicationController
 
   def callback
     strava_service.exchange_code(params.require(:code))
-    redirect_to workouts_path, notice: 'Strava conectado com sucesso.'
+    redirect_to workouts_path, notice: t('strava.connected')
   rescue ActionController::ParameterMissing, StravaApiService::Error => e
-    redirect_to workouts_path, alert: "Não foi possível conectar ao Strava: #{e.message}"
+    redirect_to workouts_path, alert: t('strava.connect_error', message: e.message)
   end
 
   def sync
     imported = StravaActivitySyncService.new(current_user).sync
-    redirect_to workouts_path, notice: "#{imported} atividade(s) importada(s) do Strava."
+    redirect_to workouts_path, notice: t('strava.sync_success', count: imported)
   rescue StravaApiService::Error => e
-    redirect_to workouts_path, alert: "Não foi possível sincronizar: #{e.message}"
+    redirect_to workouts_path, alert: t('strava.sync_error', message: e.message)
   end
 
   def disconnect
@@ -29,7 +29,7 @@ class StravaController < ApplicationController
       strava_token_expires_at: nil
     )
 
-    redirect_to workouts_path, notice: 'Strava desconectado.'
+    redirect_to workouts_path, notice: t('strava.disconnected')
   end
 
   private

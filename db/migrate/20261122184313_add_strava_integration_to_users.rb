@@ -2,10 +2,12 @@
 
 class AddStravaIntegrationToUsers < ActiveRecord::Migration[8.0]
   def change
-    add_column :users, :strava_athlete_id, :bigint
-    add_column :users, :strava_access_token, :text
-    add_column :users, :strava_refresh_token, :text
-    add_column :users, :strava_token_expires_at, :datetime
+    change_table :users, bulk: true do |table|
+      table.bigint :strava_athlete_id
+      table.text :strava_access_token
+      table.text :strava_refresh_token
+      table.datetime :strava_token_expires_at
+    end
 
     add_index :users, :strava_athlete_id, unique: true
   end

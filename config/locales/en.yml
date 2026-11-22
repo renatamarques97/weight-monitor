@@ -1,4 +1,12 @@
 en:
+  strava:
+    connected: "Strava connected successfully."
+    disconnected: "Strava disconnected."
+    connect_error: "Could not connect to Strava: %{message}"
+    sync_success: "%{count} activity/activities imported from Strava."
+    sync_error: "Could not synchronize: %{message}"
+    syncing: "Strava synchronization is in progress."
+    already_syncing: "Strava synchronization is already in progress."
   title: "MOVARA"
   about: "About"
   theme: "Theme"

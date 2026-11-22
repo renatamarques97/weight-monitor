@@ -4,6 +4,36 @@ require 'rails_helper'
 
 RSpec.describe StravaActivitySyncService do
   let(:user) { create(:user) }
+  let(:walking_activity) do
+    {
+      'id' => 111_111,
+      'sport_type' => 'Walk',
+      'start_date_local' => '2026-11-20T08:30:00Z',
+      'moving_time' => 1200,
+      'distance' => 2000,
+      'total_elevation_gain' => 25
+    }
+  end
+  let(:swimming_activity) do
+    {
+      'id' => 222_222,
+      'sport_type' => 'Swim',
+      'start_date_local' => '2026-11-20T09:30:00Z',
+      'moving_time' => 1800,
+      'distance' => 1000,
+      'lap_count' => 20
+    }
+  end
+  let(:unknown_activity) do
+    {
+      'id' => 333_333,
+      'sport_type' => 'Snowboard',
+      'start_date_local' => '2026-11-20T10:30:00Z',
+      'moving_time' => 3600,
+      'distance' => 0,
+      'calories' => nil
+    }
+  end
 
   describe '#sync' do
     it 'imports and normalizes a Strava running activity' do
@@ -34,18 +64,9 @@ RSpec.describe StravaActivitySyncService do
       api = instance_double(StravaApiService)
       allow(StravaApiService).to receive(:new).with(user).and_return(api)
       allow(api).to receive(:activities).with(per_page: 30).and_return([
-                                                                         {
-                                                                           'id' => 111_111, 'sport_type' => 'Walk', 'start_date_local' => '2026-11-20T08:30:00Z',
-                                                                           'moving_time' => 1200, 'distance' => 2000, 'total_elevation_gain' => 25
-                                                                         },
-                                                                         {
-                                                                           'id' => 222_222, 'sport_type' => 'Swim', 'start_date_local' => '2026-11-20T09:30:00Z',
-                                                                           'moving_time' => 1800, 'distance' => 1000, 'lap_count' => 20
-                                                                         },
-                                                                         {
-                                                                           'id' => 333_333, 'sport_type' => 'Snowboard', 'start_date_local' => '2026-11-20T10:30:00Z',
-                                                                           'moving_time' => 3600, 'distance' => 0, 'calories' => nil
-                                                                         }
+                                                                         walking_activity,
+                                                                         swimming_activity,
+                                                                         unknown_activity
                                                                        ])
 
       expect(described_class.new(user).sync).to eq(3)

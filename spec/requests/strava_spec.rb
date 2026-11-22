@@ -29,14 +29,14 @@ RSpec.describe '/strava', type: :request do
       get strava_callback_path, params: { code: 'valid-code' }
 
       expect(response).to redirect_to(workouts_path)
-      expect(flash[:notice]).to eq('Strava conectado com sucesso.')
+      expect(flash[:notice]).to eq(I18n.t('strava.connected'))
     end
 
     it 'shows an alert when the authorization is rejected' do
       get strava_callback_path
 
       expect(response).to redirect_to(workouts_path)
-      expect(flash[:alert]).to include('Não foi possível conectar ao Strava')
+      expect(flash[:alert]).to include(I18n.t('strava.connect_error', message: ''))
     end
 
     it 'shows an alert when Strava rejects the token exchange' do
@@ -59,7 +59,7 @@ RSpec.describe '/strava', type: :request do
       post strava_sync_path
 
       expect(response).to redirect_to(workouts_path)
-      expect(flash[:notice]).to include('3 atividade(s)')
+      expect(flash[:notice]).to eq(I18n.t('strava.sync_success', count: 3))
     end
 
     it 'shows an alert when synchronization fails' do
