@@ -3,9 +3,30 @@
 <turbo-frame id="main">
 <div class="flex items-center justify-between mb-6">
   <h1 class="text-2xl font-bold tracking-tight fit-text-primary"><%= t('workout.title') %></h1>
-  <%= link_to new_workout_path, data: { turbo_frame: "main" }, class: "tw-btn-primary" do %>
-    <i class="fa fa-plus mr-2"></i><%= t('workout.new') %>
-  <% end %>
+  <div class="flex items-center gap-2">
+    <% if current_user.strava_athlete_id.present? %>
+      <%= button_to strava_sync_path,
+            method: :post,
+            class: "tw-btn-primary",
+            form: { data: { turbo: true } } do %>
+        <i class="fa fa-arrows-rotate mr-2"></i>Sincronizar Strava
+      <% end %>
+      <%= button_to strava_disconnect_path,
+            method: :delete,
+            class: "tw-btn-secondary",
+            form: { data: { turbo_confirm: 'Desconectar o Strava?' } } do %>
+        <i class="fa fa-link-slash mr-2"></i>Desconectar
+      <% end %>
+    <% else %>
+      <%= link_to strava_connect_path, class: "tw-btn-primary", data: { turbo: false } do %>
+        <i class="fa fa-link mr-2"></i>Conectar Strava
+      <% end %>
+    <% end %>
+
+    <%= link_to new_workout_path, data: { turbo_frame: "main" }, class: "tw-btn-primary" do %>
+      <i class="fa fa-plus mr-2"></i><%= t('workout.new') %>
+    <% end %>
+  </div>
 </div>
 
 
@@ -79,7 +100,7 @@
               <%= workout.workout_date.strftime("%b %d, %Y") %>
             </td>
             <td class="fit-td">
-              <%= workout.duration %> min
+              <%= workout_duration(workout.duration) %> min
             </td>
             <td class="fit-td">
               <% case workout.workout_type.to_sym %>
