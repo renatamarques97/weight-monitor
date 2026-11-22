@@ -52,7 +52,7 @@ RSpec.describe '/strava', type: :request do
   end
 
   describe 'POST /strava/sync' do
-    it 'enqueues synchronization and sets the syncing state' do
+    it 'enqueues synchronization and redirects immediately' do
       expect do
         post strava_sync_path
       end.to have_enqueued_job(StravaSyncJob).with(user.id)
@@ -70,7 +70,10 @@ RSpec.describe '/strava', type: :request do
       get strava_status_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include('status' => 'synced', 'imported_count' => 3)
+      expect(response.parsed_body).to include(
+        'status' => 'synced',
+        'imported_count' => 3
+      )
     end
   end
 

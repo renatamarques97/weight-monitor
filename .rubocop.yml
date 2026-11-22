@@ -6,6 +6,7 @@ AllCops:
   NewCops: enable
   Exclude:
     - 'db/schema.rb'
+    - 'db/queue_schema.rb'
     - 'vendor/**/*'
     - 'coverage/**/*'
     - 'tmp/**/*'
