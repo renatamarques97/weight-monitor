@@ -1,7 +1,7 @@
 [![Build Status](https://circleci.com/gh/renatamarques97/weight-monitor.svg?style=svg)](https://app.circleci.com/)
 [![codecov](https://codecov.io/gh/renatamarques97/weight-monitor/branch/master/graph/badge.svg)](https://codecov.io/gh/renatamarques97/weight-monitor)
 
-# Fit Tracker
+# MOVARA
 This is a web solution for managing meals, weight, runnings, sleep and water consumption.
 The system allows the registration and updating of a diet, which has a predetermined
 beginning and end, in addition to the idealized weight.
@@ -48,6 +48,33 @@ bundle exec rspec
 ```shell
 bundle exec rails server
 ```
+
+### Development and asset rebuild
+
+For normal development, start the Rails and Tailwind watchers through `bin/dev`:
+
+```shell
+bin/dev
+```
+
+This keeps compiled Tailwind and JavaScript assets updated while the server is running.
+
+To rebuild assets after changing CSS, Tailwind configuration, SVG, or public assets:
+
+```shell
+bin/rails assets:clobber
+bin/rails tailwindcss:build
+bin/rails assets:precompile
+```
+
+For a clean Docker rebuild:
+
+```shell
+docker compose build --no-cache web
+docker compose up web
+```
+
+If the browser continues showing an old asset, refresh with `Ctrl+F5`/`Cmd+Shift+R` or open the app in an anonymous/private window.
 
 ### Run with Docker
 
