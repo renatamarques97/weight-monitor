@@ -333,11 +333,13 @@ h6,
   background: var(--action-danger-bg);
   border-color: var(--action-danger-border);
   color: var(--action-danger-text);
+  font-weight: 700;
 }
 
 .tw-btn-danger:hover {
-  background: color-mix(in srgb, var(--action-danger-bg) 70%, var(--action-danger-border) 30%);
-  border-color: color-mix(in srgb, var(--action-danger-border) 80%, var(--text-primary) 20%);
+  background: color-mix(in srgb, var(--action-danger-bg) 55%, var(--action-danger-border) 45%);
+  border-color: var(--action-danger-border);
+  color: var(--action-danger-text);
 }
 
 .tw-btn-primary,
@@ -398,9 +400,10 @@ h6,
 }
 
 .tw-btn-secondary:hover {
-  background: color-mix(in srgb, #cdbbb9 22%, #ffffff 78%) !important;
-  border-color: var(--brand-support, #49747f) !important;
-  color: var(--brand-strong, #441111) !important;
+  background: color-mix(in srgb, var(--surface-muted) 78%, var(--text-primary) 22%);
+  border-color: color-mix(in srgb, var(--surface-card-border) 68%, var(--text-primary) 32%);
+  color: var(--text-primary);
+  text-decoration: none;
 }
 
 :root[data-theme="dark"] .tw-btn-secondary {

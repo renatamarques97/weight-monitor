@@ -106,6 +106,6 @@ export default class extends Controller {
       return
     }
 
-    this.buttonTarget.innerHTML = '<i class="fa fa-arrows-rotate mr-2"></i>Sincronizar Strava'
+    this.buttonTarget.innerHTML = '<i class="fa fa-arrows-rotate mr-2"></i>Sync Strava'
   }
 }

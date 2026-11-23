@@ -14,14 +14,14 @@
               class: "tw-btn-primary",
               form: { data: { turbo: false } },
               data: { strava_sync_target: "button" } do %>
-          <i class="fa fa-arrows-rotate mr-2"></i>Sincronizar Strava
+          <i class="fa fa-arrows-rotate mr-2"></i>Sync Strava
         <% end %>
       </div>
       <%= button_to strava_disconnect_path,
             method: :delete,
-            class: "tw-btn-secondary",
-            form: { data: { turbo_confirm: 'Desconectar o Strava?' } } do %>
-        <i class="fa fa-link-slash mr-2"></i>Desconectar
+            class: "tw-btn-danger",
+            form: { data: { turbo_confirm: 'Disconnect Strava?' } } do %>
+        <i class="fa fa-link-slash mr-2"></i>Disconnect
       <% end %>
     <% else %>
       <%= link_to strava_connect_path, class: "tw-btn-primary", data: { turbo: false } do %>
