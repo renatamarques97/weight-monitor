@@ -21,4 +21,36 @@ RSpec.describe RecentWeightPresenter do
       end
     end
   end
+
+  describe '#trend_30_days' do
+    let(:user) { create(:user) }
+
+    it 'returns the weight decrease over the last 30 days' do
+      create(:weight, user: user, kg: 90, weight_date: 20.days.ago)
+      create(:weight, user: user, kg: 85, weight_date: Date.current)
+
+      expect(described_class.new(user).trend_30_days).to eq(-5.0)
+    end
+
+    it 'returns the weight increase over the last 30 days' do
+      create(:weight, user: user, kg: 70, weight_date: 25.days.ago)
+      create(:weight, user: user, kg: 72.5, weight_date: Date.current)
+
+      expect(described_class.new(user).trend_30_days).to eq(2.5)
+    end
+
+    it 'returns nil with fewer than two records' do
+      create(:weight, user: user, kg: 80)
+
+      expect(described_class.new(user).trend_30_days).to be_nil
+    end
+
+    it 'ignores records older than 30 days' do
+      create(:weight, user: user, kg: 95, weight_date: 31.days.ago)
+      create(:weight, user: user, kg: 90, weight_date: 20.days.ago)
+      create(:weight, user: user, kg: 85, weight_date: Date.current)
+
+      expect(described_class.new(user).trend_30_days).to eq(-5.0)
+    end
+  end
 end

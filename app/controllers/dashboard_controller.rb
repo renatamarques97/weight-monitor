@@ -16,8 +16,13 @@ class DashboardController < ApplicationController
   end
 
   def assign_presenter_data
-    @goal = ::GoalPresenter.new(current_user).achieved?
-    @recent_weight = ::RecentWeightPresenter.new(current_user).call
+    weight_goal_presenter = ::WeightGoalPresenter.new(current_user)
+    recent_weight_presenter = ::RecentWeightPresenter.new(current_user)
+
+    @weight_goal = weight_goal_presenter.achieved?
+    @weight_goal_progress = weight_goal_presenter.progress_percent
+    @recent_weight = recent_weight_presenter.call
+    @weight_trend_30_days = recent_weight_presenter.trend_30_days
     @diets = ::Diet.authorized_user(current_user)
     @imc = ::ImcPresenter.new(current_user).call
   end
