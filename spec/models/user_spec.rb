@@ -62,4 +62,29 @@ RSpec.describe User, type: :model do
       expect(stored_tokens['strava_refresh_token']).not_to eq('refresh-secret')
     end
   end
+
+  describe 'Strava synchronization state' do
+    let(:user) { create(:user) }
+
+    it 'starts synchronization when idle' do
+      expect(user.start_strava_sync?).to be(true)
+      expect(user.reload.strava_sync_status).to eq('syncing')
+    end
+
+    it 'does not start synchronization while another job is active' do
+      user.update!(strava_sync_status: 'syncing', strava_sync_started_at: 1.minute.ago)
+
+      expect(user.start_strava_sync?).to be(false)
+      expect(user.reload.strava_sync_status).to eq('syncing')
+    end
+
+    it 'expires stale synchronization' do
+      user.update!(strava_sync_status: 'syncing', strava_sync_started_at: 16.minutes.ago)
+
+      user.expire_stale_strava_sync!
+
+      expect(user.reload.strava_sync_status).to eq('failed')
+      expect(user.strava_sync_error).to eq('Strava synchronization timed out')
+    end
+  end
 end

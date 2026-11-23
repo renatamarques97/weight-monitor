@@ -15,18 +15,19 @@ class StravaController < ApplicationController
   end
 
   def sync
-    current_user.update!(
-      strava_sync_status: 'syncing',
-      strava_sync_started_at: Time.current,
-      strava_sync_finished_at: nil,
-      strava_sync_error: nil
-    )
+    unless current_user.start_strava_sync?
+      redirect_to workouts_path, alert: t('strava.already_syncing')
+      return
+    end
+
     StravaSyncJob.perform_later(current_user.id)
 
     redirect_to workouts_path
   end
 
   def status
+    current_user.expire_stale_strava_sync!
+
     render json: {
       status: current_user.strava_sync_status,
       imported_count: current_user.strava_sync_imported_count,

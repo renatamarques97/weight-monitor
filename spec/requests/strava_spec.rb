@@ -61,9 +61,30 @@ RSpec.describe '/strava', type: :request do
       expect(flash[:notice]).to be_nil
       expect(user.reload.strava_sync_status).to eq('syncing')
     end
+
+    it 'does not enqueue a second job while synchronization is active' do
+      user.update!(strava_sync_status: 'syncing', strava_sync_started_at: 1.minute.ago)
+
+      expect do
+        post strava_sync_path
+      end.not_to have_enqueued_job(StravaSyncJob)
+
+      expect(response).to redirect_to(workouts_path)
+      expect(flash[:alert]).to eq(I18n.t('strava.already_syncing'))
+    end
   end
 
   describe 'GET /strava/status' do
+    it 'returns failed and removes syncing status after timeout' do
+      user.update!(strava_sync_status: 'syncing', strava_sync_started_at: 16.minutes.ago)
+
+      get strava_status_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['status']).to eq('failed')
+      expect(response.parsed_body['error']).to eq('Strava synchronization timed out')
+    end
+
     it 'returns the synchronization status' do
       user.update!(strava_sync_status: 'synced', strava_sync_imported_count: 3)
 
