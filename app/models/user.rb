@@ -10,6 +10,9 @@ class User < ApplicationRecord
   has_many :workouts, dependent: :destroy
   has_many :chat_messages, dependent: :destroy
 
+  encrypts :strava_access_token, deterministic: false
+  encrypts :strava_refresh_token, deterministic: false
+
   validates :email, uniqueness: true
   validates :name, presence: true
   validates :height, numericality: { greater_than: 0 }, allow_nil: true

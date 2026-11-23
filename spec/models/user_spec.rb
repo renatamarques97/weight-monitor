@@ -36,4 +36,30 @@ RSpec.describe User, type: :model do
       expect(user.cyclings.count).to eq(1)
     end
   end
+
+  describe 'Strava token encryption' do
+    let(:user) { create(:user) }
+
+    it 'exposes the decrypted access and refresh tokens' do
+      user.update!(strava_access_token: 'access-secret', strava_refresh_token: 'refresh-secret')
+
+      expect(user.strava_access_token).to eq('access-secret')
+      expect(user.strava_refresh_token).to eq('refresh-secret')
+    end
+
+    it 'does not store Strava tokens as plaintext in the database' do
+      user.update!(strava_access_token: 'access-secret', strava_refresh_token: 'refresh-secret')
+
+      stored_tokens = ActiveRecord::Base.connection.select_one(
+        'SELECT strava_access_token, strava_refresh_token FROM users WHERE id = $1',
+        'strava tokens',
+        [ActiveRecord::Relation::QueryAttribute.new(
+          'id', user.id, ActiveRecord::Type::BigInteger.new
+        )]
+      )
+
+      expect(stored_tokens['strava_access_token']).not_to eq('access-secret')
+      expect(stored_tokens['strava_refresh_token']).not_to eq('refresh-secret')
+    end
+  end
 end
