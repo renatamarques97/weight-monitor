@@ -1,8 +1,8 @@
-<nav class="fit-nav fit-nav-shell mb-6 rounded-2xl bg-gradient-to-r from-emerald-700 to-teal-600 p-4 text-white shadow-lg">
+<nav class="fit-nav fit-nav-shell mb-6 rounded-2xl p-4 text-white shadow-lg">
   <div class="fit-nav-inner flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-    <%= link_to root_path, class: "fit-nav-brand inline-flex items-center gap-2 text-xl font-bold tracking-tight text-white" do %>
-      <i class="fa fa-heartbeat" aria-hidden="true"></i>
-      <span><%= t('title') %></span>
+    <%= link_to root_path, class: "fit-nav-brand inline-flex items-center gap-3 text-xl font-bold tracking-tight" do %>
+      <%= image_tag "/MOVARA.svg", alt: "", class: "fit-nav-logo h-10 w-auto" %>
+      <span>MOVARA</span>
     <% end %>
 
     <div class="fit-nav-actions flex flex-wrap items-center gap-2">

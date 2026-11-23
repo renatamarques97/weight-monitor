@@ -2,7 +2,7 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-const THEME_STORAGE_KEY = "fit_tracker_theme"
+const THEME_STORAGE_KEY = "movara_theme"
 const DEFAULT_THEME = "light"
 const AVAILABLE_THEMES = ["light", "dark"]
 

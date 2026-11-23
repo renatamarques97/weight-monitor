@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-const THEME_STORAGE_KEY = "fit_tracker_theme"
+const THEME_STORAGE_KEY = "movara_theme"
 const AVAILABLE_THEMES = ["light", "dark"]
 
 export default class extends Controller {

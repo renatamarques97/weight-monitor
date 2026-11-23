@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Fit Tracker</title>
+    <title>MOVARA</title>
+    <link rel="icon" type="image/svg+xml" href="/MOVARA.svg">
+    <link rel="shortcut icon" type="image/svg+xml" href="/MOVARA.svg">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <script>
       (function() {
         var availableThemes = ["light", "dark"];
-        var savedTheme = localStorage.getItem("fit_tracker_theme");
+        var savedTheme = localStorage.getItem("movara_theme");
         var resolvedTheme = availableThemes.includes(savedTheme) ? savedTheme : "light";
         document.documentElement.dataset.theme = resolvedTheme;
-        console.log("[Theme Init] Set to:", resolvedTheme);
       })();
     </script>
 
