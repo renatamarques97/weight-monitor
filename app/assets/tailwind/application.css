@@ -52,10 +52,10 @@
     @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition;
   }
 
-  /* Primary – solid emerald */
+  /* Primary – MOVARA accent */
   .tw-btn-primary {
     @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition
-           bg-emerald-600 text-white hover:bg-emerald-700;
+           bg-[#E34B26] text-white hover:bg-[#C93D1D];
   }
 
   /* Soft – outlined emerald */
