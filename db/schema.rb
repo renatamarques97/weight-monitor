@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_11_22_200651) do
+ActiveRecord::Schema[8.0].define(version: 2026_11_23_225714) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -280,7 +280,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_22_200651) do
     t.string "distance_unit", default: "km", null: false
     t.string "weight_unit", default: "kg", null: false
     t.bigint "strava_activity_id"
-    t.index ["strava_activity_id"], name: "index_workouts_on_strava_activity_id", unique: true
+    t.index ["user_id", "strava_activity_id"], name: "index_workouts_on_user_id_and_strava_activity_id", unique: true, where: "(strava_activity_id IS NOT NULL)"
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 

@@ -104,6 +104,26 @@ RSpec.describe StravaActivitySyncService do
       expect(user.workouts.where(strava_activity_id: 987_654).count).to eq(1)
     end
 
+    it 'allows the same Strava activity ID for another user' do
+      other_user = create(:user)
+      create(:cycling, user: other_user, strava_activity_id: 987_654)
+      api = instance_double(StravaApiService)
+      allow(StravaApiService).to receive(:new).with(user).and_return(api)
+      allow(api).to receive(:activities).with(per_page: 30).and_return([
+                                                                         {
+                                                                           'id' => 987_654,
+                                                                           'sport_type' => 'Ride',
+                                                                           'start_date_local' => '2026-11-21T08:30:00Z',
+                                                                           'moving_time' => 3600,
+                                                                           'distance' => 30_000,
+                                                                           'average_speed' => 8.33
+                                                                         }
+                                                                       ])
+
+      expect(described_class.new(user).sync).to eq(1)
+      expect(user.workouts.where(strava_activity_id: 987_654).count).to eq(1)
+    end
+
     it 'updates an existing synchronized workout' do
       create(:running, user: user, strava_activity_id: 555_555, duration: 10)
       api = instance_double(StravaApiService)

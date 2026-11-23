@@ -310,4 +310,27 @@ RSpec.describe Workout, type: :model do
       expect(other.details.notes).to be_present
     end
   end
+
+  describe 'Strava activity uniqueness' do
+    let(:user) { create(:user) }
+
+    it 'rejects duplicate Strava activity IDs for the same user' do
+      create(:running, user: user, strava_activity_id: 987_654)
+      duplicate = build(:running, user: user, strava_activity_id: 987_654)
+
+      expect(duplicate).not_to be_valid
+      expect(duplicate.errors[:strava_activity_id]).to be_present
+    end
+
+    it 'allows the same Strava activity ID for different users' do
+      create(:running, user: user, strava_activity_id: 987_654)
+      other_workout = build(:running, user: create(:user), strava_activity_id: 987_654)
+
+      expect(other_workout).to be_valid
+    end
+
+    it 'allows workouts without a Strava activity ID' do
+      expect(build(:running, user: user, strava_activity_id: nil)).to be_valid
+    end
+  end
 end
