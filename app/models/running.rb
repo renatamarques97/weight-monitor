@@ -10,11 +10,6 @@ class Running < Workout
   private
 
   def calculate_average_pace
-    return unless duration.present? && distance.present?
-
-    duration_in_seconds = UnitConverter.convert_time_between(duration, TIMES::MINUTES, TIMES::SECONDS)
-    pace_in_seconds = (duration_in_seconds / distance).round
-    pace_minutes, pace_seconds = pace_in_seconds.divmod(60)
-    details.avg_pace = format("%<minutes>d'%<seconds>02d\"", minutes: pace_minutes, seconds: pace_seconds)
+    details.avg_pace = PaceFormatter.call(duration, distance)
   end
 end
