@@ -21,7 +21,7 @@ RSpec.describe 'ChatResponses', type: :request do
       context 'with a blank prompt' do
         it 'returns unprocessable entity status' do
           get chat_responses_path, params: { prompt: '' }
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
         end
       end
 
