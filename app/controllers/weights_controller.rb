@@ -10,7 +10,7 @@ class WeightsController < ApplicationController
 
   # GET /weights/new
   def new
-    @weight = Weight.new
+    @weight = Weight.new(weight_unit: current_user.weight_unit)
   end
 
   # POST /weights

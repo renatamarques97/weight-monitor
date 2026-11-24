@@ -13,7 +13,8 @@ class WorkoutsController < ApplicationController
   def new
     workout_type = params[:workout_type] || WorkoutType::OTHER
 
-    @workout = Workout.new(workout_type: workout_type, workout_date: Date.current)
+    @workout = Workout.new(workout_type: workout_type, workout_date: Date.current,
+                           distance_unit: current_user.distance_unit, weight_unit: current_user.weight_unit)
   end
 
   def edit; end

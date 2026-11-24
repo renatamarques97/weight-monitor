@@ -14,7 +14,7 @@ class DietsController < ApplicationController
 
   # GET /diets/new
   def new
-    @diet = Diet.new
+    @diet = Diet.new(weight_unit: current_user.weight_unit)
     meal = @diet.meals.build
     meal.meal_foods.build
   end

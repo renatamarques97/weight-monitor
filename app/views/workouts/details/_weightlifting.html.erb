@@ -3,12 +3,16 @@
     <%= form.label "details[exercises_count]", t('workout.details.exercises_count'), class: "tw-label" %>
     <%= form.number_field "details[exercises_count]", step: 1, class: "tw-input", value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:exercises_count)) ? form.object.details.exercises_count : nil %>
   </div>
-  <div>
-    <% weight_unit_value = form.object.persisted? ? form.object.weight_unit : current_user.weight_unit %>
-    <%= form.label "details[volume]", t('workout.details.volume', unit: weight_unit_value), class: "tw-label" %>
-    <%= form.number_field "details[volume]", step: :any, class: "tw-input",
-          placeholder: weight_unit_value,
-          value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:volume)) ? form.object.details.volume : nil %>
-    <%= form.hidden_field :weight_unit, value: weight_unit_value %>
+  <div class="grid gap-4 grid-cols-2">
+    <div>
+      <%= form.label "details[volume]", t('workout.details.volume', unit: form.object.weight_unit), class: "tw-label", data: unit_label_data('weight', 'workout.details.volume') %>
+      <%= form.number_field "details[volume]", step: :any, class: "tw-input",
+            value: (form.object.respond_to?(:details) && form.object.details.respond_to?(:volume)) ? form.object.details.volume : nil %>
+    </div>
+
+    <div>
+      <%= form.label :weight_unit, t('unit'), class: "tw-label" %>
+      <%= form.select :weight_unit, unit_options(MeasurementUnits::WEIGHTS::ALL), {}, class: "tw-input", data: unit_select_data('weight') %>
+    </div>
   </div>
 </div>
