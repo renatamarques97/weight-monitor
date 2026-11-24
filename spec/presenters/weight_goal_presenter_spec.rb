@@ -8,11 +8,11 @@ RSpec.describe WeightGoalPresenter do
 
     let(:user) { create(:user) }
 
-    def diet(initial:, target:, unit: WEIGHTS::KG)
+    def diet(initial:, target:, unit: Units::WEIGHTS::KG)
       create(:diet, user: user, initial_weight: initial, target_weight: target, weight_unit: unit)
     end
 
-    def weight(value, unit: WEIGHTS::KG, date: Date.current)
+    def weight(value, unit: Units::WEIGHTS::KG, date: Date.current)
       create(:weight, user: user, value: value, weight_unit: unit, weight_date: date)
     end
 
@@ -75,7 +75,7 @@ RSpec.describe WeightGoalPresenter do
 
     it 'compares weights recorded in another unit' do
       diet(initial: 90, target: 70)
-      weight(154.3, unit: WEIGHTS::LBS)
+      weight(154.3, unit: Units::WEIGHTS::LBS)
 
       expect(achieved).to be(true)
     end
@@ -120,8 +120,8 @@ RSpec.describe WeightGoalPresenter do
     end
 
     it 'converts the latest weight to the unit of the diet' do
-      create(:diet, user: user, initial_weight: 220, target_weight: 200, weight_unit: WEIGHTS::LBS)
-      create(:weight, user: user, value: 95.25, weight_unit: WEIGHTS::KG)
+      create(:diet, user: user, initial_weight: 220, target_weight: 200, weight_unit: Units::WEIGHTS::LBS)
+      create(:weight, user: user, value: 95.25, weight_unit: Units::WEIGHTS::KG)
 
       expect(described_class.new(user).progress_percent).to eq(50)
     end

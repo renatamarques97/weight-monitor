@@ -29,7 +29,7 @@ RSpec.describe 'User Registrations & Updates', type: :request do
       end
 
       it 'saves the chosen unit preferences' do
-        units = { weight_unit: WEIGHTS::LBS, distance_unit: DISTANCES::MI, height_unit: HEIGHTS::FT }
+        units = { weight_unit: Units::WEIGHTS::LBS, distance_unit: Units::DISTANCES::MI, height_unit: Units::HEIGHTS::FT }
         post user_registration_path, params: { user: valid_params[:user].merge(units, height: 5.97) }
 
         expect(User.last).to have_attributes(**units, height: 5.97)
@@ -39,14 +39,14 @@ RSpec.describe 'User Registrations & Updates', type: :request do
     it 'renders the height label with the default unit on the sign-up page' do
       get new_user_registration_path
 
-      expect(response.body).to include("#{I18n.t('preferences.height')} (#{HEIGHTS::M})")
+      expect(response.body).to include("#{I18n.t('preferences.height')} (#{Units::HEIGHTS::M})")
       expect(response.body).to include(%(data-height-converter-label-value="#{I18n.t('preferences.height')}"))
     end
   end
 
   describe 'GET /users/edit' do
     it 'shows the height of users in feet as feet and inches' do
-      sign_in create(:user, height: 5.75, height_unit: HEIGHTS::FT)
+      sign_in create(:user, height: 5.75, height_unit: Units::HEIGHTS::FT)
 
       get edit_user_registration_path
 

@@ -28,7 +28,7 @@ RSpec.describe 'Weights', type: :request do
     end
 
     it 'shows weights saved in another unit in the preferred unit' do
-      create(:weight, user: user, value: 154.32, weight_unit: WEIGHTS::LBS)
+      create(:weight, user: user, value: 154.32, weight_unit: Units::WEIGHTS::LBS)
       get weights_path
       expect(response.body).to include('70 kg')
     end
@@ -43,9 +43,9 @@ RSpec.describe 'Weights', type: :request do
       end
 
       it 'saves the unit chosen for the weight' do
-        post weights_url, params: { weight: valid_attributes.merge(value: 154.3, weight_unit: WEIGHTS::LBS) }
+        post weights_url, params: { weight: valid_attributes.merge(value: 154.3, weight_unit: Units::WEIGHTS::LBS) }
 
-        expect(Weight.last).to have_attributes(value: 154.3, weight_unit: WEIGHTS::LBS)
+        expect(Weight.last).to have_attributes(value: 154.3, weight_unit: Units::WEIGHTS::LBS)
       end
 
       it 'redirects to the created weight' do

@@ -127,16 +127,16 @@ RSpec.describe ChatResponseService do
       expect(system_prompt).to include('Meals in current diet:')
       expect(system_prompt).to include('description=Eggs and toast')
       expect(system_prompt).to include('Weight history (most recent):')
-      expect(system_prompt).to include("value=79.2 #{WEIGHTS::KG}")
+      expect(system_prompt).to include("value=79.2 #{Units::WEIGHTS::KG}")
       expect(system_prompt).to include('Running history (most recent):')
       expect(system_prompt).to include('date=2026-01-02')
-      expect(system_prompt).to include("distance=5.0 #{DISTANCES::KM}")
+      expect(system_prompt).to include("distance=5.0 #{Units::DISTANCES::KM}")
     end
 
     it 'includes unit preferences and the unit of each record in user context' do
-      user.update!(weight_unit: WEIGHTS::LBS, distance_unit: DISTANCES::MI, height: 5.9, height_unit: HEIGHTS::FT)
-      create(:diet, user: user, initial_weight: 180, target_weight: 170, weight_unit: WEIGHTS::LBS)
-      create(:weightlifting, user: user, weight_unit: WEIGHTS::LBS)
+      user.update!(weight_unit: Units::WEIGHTS::LBS, distance_unit: Units::DISTANCES::MI, height: 5.9, height_unit: Units::HEIGHTS::FT)
+      create(:diet, user: user, initial_weight: 180, target_weight: 170, weight_unit: Units::WEIGHTS::LBS)
+      create(:weightlifting, user: user, weight_unit: Units::WEIGHTS::LBS)
 
       captured_messages = nil
       allow(client).to receive(:chat) do |args|
@@ -146,11 +146,11 @@ RSpec.describe ChatResponseService do
       described_class.new(user: user, prompt: prompt, objective: 'hypertrophy', client: client).call
 
       expect(captured_messages.first[:content]).to include(
-        "Weight Unit Preference: #{WEIGHTS::LBS}",
-        "Distance Unit Preference: #{DISTANCES::MI}",
-        "initial_weight=180.0 #{WEIGHTS::LBS}",
-        "height=5.9 #{HEIGHTS::FT}",
-        "weight_unit=#{WEIGHTS::LBS}"
+        "Weight Unit Preference: #{Units::WEIGHTS::LBS}",
+        "Distance Unit Preference: #{Units::DISTANCES::MI}",
+        "initial_weight=180.0 #{Units::WEIGHTS::LBS}",
+        "height=5.9 #{Units::HEIGHTS::FT}",
+        "weight_unit=#{Units::WEIGHTS::LBS}"
       )
     end
 

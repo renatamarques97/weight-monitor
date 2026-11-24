@@ -30,7 +30,7 @@ RSpec.describe WorkoutQuery do
     end
 
     it 'converts distance in chart data based on user preferred unit' do
-      user_mi = create(:user, distance_unit: DISTANCES::MI)
+      user_mi = create(:user, distance_unit: Units::DISTANCES::MI)
       running_date = 2.days.ago.to_date
       create(:running, user: user_mi, workout_date: running_date, distance: 10.0) # 10 km = 6.21 miles
 
@@ -41,8 +41,8 @@ RSpec.describe WorkoutQuery do
 
     it 'sums mixed-unit distances on the same day in the preferred unit' do
       running_date = 1.day.ago.to_date
-      create(:running, user: user, workout_date: running_date, distance: 5.0, distance_unit: DISTANCES::KM)
-      create(:running, user: user, workout_date: running_date, distance: 1.0, distance_unit: DISTANCES::MI)
+      create(:running, user: user, workout_date: running_date, distance: 5.0, distance_unit: Units::DISTANCES::KM)
+      create(:running, user: user, workout_date: running_date, distance: 1.0, distance_unit: Units::DISTANCES::MI)
 
       result = described_class.chart_data(user, 30)
 

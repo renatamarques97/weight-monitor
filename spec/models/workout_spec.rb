@@ -18,8 +18,8 @@ RSpec.describe Workout, type: :model do
     let(:workout) { build(:running) }
 
     it 'defaults to km and kg units' do
-      expect(workout.distance_unit).to eq(DISTANCES::KM)
-      expect(workout.weight_unit).to eq(WEIGHTS::KG)
+      expect(workout.distance_unit).to eq(Units::DISTANCES::KM)
+      expect(workout.weight_unit).to eq(Units::WEIGHTS::KG)
     end
 
     it 'validates distance_unit inclusion' do
@@ -120,10 +120,10 @@ RSpec.describe Workout, type: :model do
     end
 
     it 'stores distance exactly as entered (no conversion)' do
-      user = create(:user, distance_unit: DISTANCES::MI)
-      running = create(:running, user: user, duration: 300, distance: 5.0, distance_unit: DISTANCES::MI)
+      user = create(:user, distance_unit: Units::DISTANCES::MI)
+      running = create(:running, user: user, duration: 300, distance: 5.0, distance_unit: Units::DISTANCES::MI)
       expect(running.distance).to eq(5.0)
-      expect(running.distance_unit).to eq(DISTANCES::MI)
+      expect(running.distance_unit).to eq(Units::DISTANCES::MI)
     end
 
     it 'is invalid without distance' do
@@ -164,11 +164,11 @@ RSpec.describe Workout, type: :model do
     end
 
     it 'stores avg_speed exactly as entered (no conversion)' do
-      user = create(:user, distance_unit: DISTANCES::MI)
-      cycling = create(:cycling, user: user, distance_unit: DISTANCES::MI)
+      user = create(:user, distance_unit: Units::DISTANCES::MI)
+      cycling = create(:cycling, user: user, distance_unit: Units::DISTANCES::MI)
       cycling.details.avg_speed = 18.64
       expect(cycling.details.avg_speed).to eq(18.64)
-      expect(cycling.distance_unit).to eq(DISTANCES::MI)
+      expect(cycling.distance_unit).to eq(Units::DISTANCES::MI)
     end
 
     it 'is invalid without distance' do
@@ -328,11 +328,11 @@ RSpec.describe Workout, type: :model do
     end
 
     it 'stores volume exactly as entered (no conversion)' do
-      user = create(:user, weight_unit: WEIGHTS::LBS)
-      weightlifting = create(:weightlifting, user: user, weight_unit: WEIGHTS::LBS)
+      user = create(:user, weight_unit: Units::WEIGHTS::LBS)
+      weightlifting = create(:weightlifting, user: user, weight_unit: Units::WEIGHTS::LBS)
       weightlifting.details.volume = 154.32
       expect(weightlifting.details.volume).to eq(154.32)
-      expect(weightlifting.weight_unit).to eq(WEIGHTS::LBS)
+      expect(weightlifting.weight_unit).to eq(Units::WEIGHTS::LBS)
     end
   end
 

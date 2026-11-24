@@ -17,21 +17,19 @@ Rails.logger.debug 'Seeding users...'
 SEED_DAYS = 90
 DIET_DURATION_DAYS = 30
 
-WEIGHTS = MeasurementUnits::WEIGHTS
-DISTANCES = MeasurementUnits::DISTANCES
-HEIGHTS = MeasurementUnits::HEIGHTS
+UNITS = MeasurementUnits
 
 USER_SEEDS = [
   { email: 'demo1@fittracker.dev', objective: 'weight_loss',
-    weight_unit: WEIGHTS::KG, distance_unit: DISTANCES::KM, height_unit: HEIGHTS::M },
+    weight_unit: UNITS::WEIGHTS::KG, distance_unit: UNITS::DISTANCES::KM, height_unit: UNITS::HEIGHTS::M },
   { email: 'demo2@fittracker.dev', objective: 'running_performance',
-    weight_unit: WEIGHTS::LBS, distance_unit: DISTANCES::MI, height_unit: HEIGHTS::FT },
+    weight_unit: UNITS::WEIGHTS::LBS, distance_unit: UNITS::DISTANCES::MI, height_unit: UNITS::HEIGHTS::FT },
   { email: 'demo3@fittracker.dev', objective: 'hypertrophy',
-    weight_unit: WEIGHTS::KG, distance_unit: DISTANCES::KM, height_unit: HEIGHTS::CM },
+    weight_unit: UNITS::WEIGHTS::KG, distance_unit: UNITS::DISTANCES::KM, height_unit: UNITS::HEIGHTS::CM },
   { email: 'demo4@fittracker.dev', objective: 'general_health',
-    weight_unit: WEIGHTS::LBS, distance_unit: DISTANCES::MI, height_unit: HEIGHTS::CM },
+    weight_unit: UNITS::WEIGHTS::LBS, distance_unit: UNITS::DISTANCES::MI, height_unit: UNITS::HEIGHTS::CM },
   { email: 'demo5@fittracker.dev', objective: 'weight_loss',
-    weight_unit: WEIGHTS::KG, distance_unit: DISTANCES::MI, height_unit: HEIGHTS::FT }
+    weight_unit: UNITS::WEIGHTS::KG, distance_unit: UNITS::DISTANCES::MI, height_unit: UNITS::HEIGHTS::FT }
 ].freeze
 
 # Chance of a record being saved in the unit opposite to the user's preference.
@@ -83,7 +81,7 @@ module DemoSeeder
     module_function
 
     def height_in(unit)
-      UnitConverter.convert_height_between(rand(1.60..1.90), HEIGHTS::M, unit)
+      UnitConverter.convert_height_between(rand(1.60..1.90), UNITS::HEIGHTS::M, unit)
     end
 
     # Mostly the preferred unit, sometimes the other one, so the demo data exercises conversions.
@@ -92,17 +90,17 @@ module DemoSeeder
     end
 
     def from_kg(value, unit)
-      UnitConverter.convert_weight_between(value, WEIGHTS::KG, unit)
+      UnitConverter.convert_weight_between(value, UNITS::WEIGHTS::KG, unit)
     end
 
     def weight_attributes(user, value_in_kg)
-      unit = record_unit(user.weight_unit, WEIGHTS::ALL)
+      unit = record_unit(user.weight_unit, UNITS::WEIGHTS::ALL)
       { value: from_kg(value_in_kg, unit), weight_unit: unit }
     end
 
     def workout_units(user)
-      { distance_unit: record_unit(user.distance_unit, DISTANCES::ALL),
-        weight_unit: record_unit(user.weight_unit, WEIGHTS::ALL) }
+      { distance_unit: record_unit(user.distance_unit, UNITS::DISTANCES::ALL),
+        weight_unit: record_unit(user.weight_unit, UNITS::WEIGHTS::ALL) }
     end
   end
 

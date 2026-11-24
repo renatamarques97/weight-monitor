@@ -46,9 +46,9 @@ RSpec.describe RecentWeightPresenter do
     end
 
     it 'returns the trend in the preferred unit when records use different units' do
-      user.update!(weight_unit: WEIGHTS::LBS)
-      create(:weight, user: user, value: 70, weight_unit: WEIGHTS::KG, weight_date: 20.days.ago)
-      create(:weight, user: user, value: 152.1, weight_unit: WEIGHTS::LBS, weight_date: Date.current)
+      user.update!(weight_unit: Units::WEIGHTS::LBS)
+      create(:weight, user: user, value: 70, weight_unit: Units::WEIGHTS::KG, weight_date: 20.days.ago)
+      create(:weight, user: user, value: 152.1, weight_unit: Units::WEIGHTS::LBS, weight_date: Date.current)
 
       expect(described_class.new(user).trend_30_days).to eq(-2.2)
     end

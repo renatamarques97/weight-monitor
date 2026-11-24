@@ -18,11 +18,11 @@ RSpec.describe User, type: :model do
   end
 
   describe 'unit preferences' do
-    let(:user) { build(:user, height: 1.75, height_unit: HEIGHTS::FT) }
+    let(:user) { build(:user, height: 1.75, height_unit: Units::HEIGHTS::FT) }
 
     it 'stores height directly with its own unit' do
       expect(user.height).to eq(1.75)
-      expect(user.height_unit).to eq(HEIGHTS::FT)
+      expect(user.height_unit).to eq(Units::HEIGHTS::FT)
     end
 
     it 'validates accepted unit values' do
@@ -30,8 +30,8 @@ RSpec.describe User, type: :model do
       expect(user).not_to be_valid
       expect(user.errors[:weight_unit]).to be_present
 
-      user.weight_unit = WEIGHTS::KG
-      user.height_unit = HEIGHTS::CM
+      user.weight_unit = Units::WEIGHTS::KG
+      user.height_unit = Units::HEIGHTS::CM
       expect(user).to be_valid
     end
 
@@ -50,7 +50,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'does not read feet and inches for other units' do
-      user.assign_attributes(height_unit: HEIGHTS::M, height: %(5'9"))
+      user.assign_attributes(height_unit: Units::HEIGHTS::M, height: %(5'9"))
 
       expect(user).not_to be_valid
     end
