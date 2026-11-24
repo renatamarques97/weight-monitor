@@ -44,7 +44,7 @@ module ApplicationHelper
   end
 
   def training_duration_hours(total_minutes)
-    total_minutes = total_minutes.to_i
+    total_minutes = total_minutes.round
     hours = total_minutes / 60
     minutes = total_minutes % 60
 

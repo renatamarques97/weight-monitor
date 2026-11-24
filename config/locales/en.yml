@@ -62,7 +62,6 @@ en:
     type: "Workout Type"
     save: "Save"
     no_records: "No %{sport} records yet."
-    total: "Total Workouts"
     training: "Training"
     training_duration: "%{hours}h %{minutes}m"
     this_month: "this month"

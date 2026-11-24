@@ -55,7 +55,10 @@ class StravaActivitySyncService
 
     page_activities.each do |activity|
       existing_workout = find_workout(activity)
-      return [imported, true] if update_existing_workout?(existing_workout, activity)
+      if existing_workout.persisted?
+        update_existing_workout(existing_workout, activity)
+        return [imported, true]
+      end
 
       imported += import_activity(activity)
     end
@@ -63,12 +66,9 @@ class StravaActivitySyncService
     [imported, false]
   end
 
-  def update_existing_workout?(workout, activity)
-    return false unless workout.persisted?
-
+  def update_existing_workout(workout, activity)
     workout.assign_attributes(attributes_for(activity))
     workout.save
-    true
   end
 
   def activities(per_page:, page:)
@@ -89,9 +89,14 @@ class StravaActivitySyncService
   end
 
   def find_workout(activity)
+    existing = @user.workouts.find_by(strava_activity_id: activity.fetch('id'))
+    return existing if existing
+
     sport_type = map_sport(activity)
-    workout_class = sport_type.to_s.camelize.constantize
-    workout_class.where(user: @user).find_or_initialize_by(strava_activity_id: activity.fetch('id'))
+    sport_type.to_s.camelize.constantize.find_or_initialize_by(
+      user: @user,
+      strava_activity_id: activity.fetch('id')
+    )
   end
 
   def attributes_for(activity)
