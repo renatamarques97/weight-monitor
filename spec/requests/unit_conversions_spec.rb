@@ -26,59 +26,16 @@ RSpec.describe 'UnitConversions', type: :request do
       end
     end
 
-    context 'with height conversion' do
-      it 'converts meters to feet' do
-        value = rand(1.50..2.10).round(2)
-        expected = UnitConverter.convert_height_between(value, HEIGHTS::M, HEIGHTS::FT)
+    {
+      'meters to feet' => [TYPES::HEIGHT, '1.75', HEIGHTS::M, HEIGHTS::FT, 5.74],
+      'feet to cm' => [TYPES::HEIGHT, '6', HEIGHTS::FT, HEIGHTS::CM, 182.88],
+      'kg to lbs' => [TYPES::WEIGHT, '70', WEIGHTS::KG, WEIGHTS::LBS, 154.32],
+      'km to mi' => [TYPES::DISTANCE, '10', DISTANCES::KM, DISTANCES::MI, 6.21],
+      'km/h to mi/h' => [TYPES::SPEED, '20', DISTANCES::KM, DISTANCES::MI, 12.43]
+    }.each do |description, (type, value, from_unit, to_unit, expected)|
+      it "converts #{description}" do
+        get '/unit_conversions/convert', params: { value: value, from_unit: from_unit, to_unit: to_unit, type: type }
 
-        get '/unit_conversions/convert',
-            params: { value: value.to_s, from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
-        expect(response).to have_http_status(:ok)
-        expect(response.parsed_body['value']).to eq(expected)
-      end
-
-      it 'converts feet to cm' do
-        value = rand(4.50..7.00).round(2)
-        expected = UnitConverter.convert_height_between(value, HEIGHTS::FT, HEIGHTS::CM)
-
-        get '/unit_conversions/convert',
-            params: { value: value.to_s, from_unit: HEIGHTS::FT, to_unit: HEIGHTS::CM, type: TYPES::HEIGHT }
-        expect(response).to have_http_status(:ok)
-        expect(response.parsed_body['value']).to eq(expected)
-      end
-    end
-
-    context 'with weight conversion' do
-      it 'converts kg to lbs' do
-        value = rand(50.0..120.0).round(2)
-        expected = UnitConverter.convert_weight_between(value, WEIGHTS::KG, WEIGHTS::LBS)
-
-        get '/unit_conversions/convert',
-            params: { value: value.to_s, from_unit: WEIGHTS::KG, to_unit: WEIGHTS::LBS, type: TYPES::WEIGHT }
-        expect(response).to have_http_status(:ok)
-        expect(response.parsed_body['value']).to eq(expected)
-      end
-    end
-
-    context 'with distance conversion' do
-      it 'converts km to mi' do
-        value = rand(1.0..42.2).round(2)
-        expected = UnitConverter.convert_distance_between(value, DISTANCES::KM, DISTANCES::MI)
-
-        get '/unit_conversions/convert',
-            params: { value: value.to_s, from_unit: DISTANCES::KM, to_unit: DISTANCES::MI, type: TYPES::DISTANCE }
-        expect(response).to have_http_status(:ok)
-        expect(response.parsed_body['value']).to eq(expected)
-      end
-    end
-
-    context 'with speed conversion' do
-      it 'converts km to mi (as speed)' do
-        value = rand(5.0..30.0).round(2)
-        expected = UnitConverter.convert_speed_between(value, DISTANCES::KM, DISTANCES::MI)
-
-        get '/unit_conversions/convert',
-            params: { value: value.to_s, from_unit: DISTANCES::KM, to_unit: DISTANCES::MI, type: TYPES::SPEED }
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body['value']).to eq(expected)
       end

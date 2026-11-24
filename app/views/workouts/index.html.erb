@@ -86,7 +86,7 @@
               <% when :running %>
                 <%= workout.distance.present? ? "#{workout.distance} #{workout.distance_unit}" : "-" %>
                 <% if details.respond_to?(:avg_pace) && details.avg_pace.present? %>
-                  <span class="block text-xs fit-text-secondary"><%= details.avg_pace %> min/<%= workout.distance_unit %></span>
+                  <span class="block text-xs fit-text-secondary"><%= details.avg_pace %>/<%= workout.distance_unit %></span>
                 <% end %>
               <% when :walking, :cycling, :swimming %>
                 <%= workout.distance.present? ? "#{workout.distance} #{workout.distance_unit}" : "-" %>

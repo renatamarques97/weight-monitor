@@ -60,4 +60,20 @@ RSpec.describe '/dashboard', type: :request do
       end
     end
   end
+
+  describe 'when user prefers lbs and mi' do
+    let(:user) { create(:user, weight_unit: WEIGHTS::LBS, distance_unit: DISTANCES::MI) }
+
+    before do
+      sign_in user
+      create(:weight, user: user, value: 70, weight_unit: WEIGHTS::KG, weight_date: 1.day.ago)
+    end
+
+    it 'labels and converts the weight chart in the preferred unit' do
+      get root_path
+
+      expect(response.body).to include(I18n.t('weight.chart_label', unit: WEIGHTS::LBS))
+      expect(response.body).to include('154.32')
+    end
+  end
 end

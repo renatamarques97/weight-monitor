@@ -39,14 +39,23 @@ RSpec.describe '/workouts', type: :request do
       end
 
       it 'renders distance and running pace for running workouts' do
-        create(:running, user: user, distance: 5.2, duration: 30, details: { avg_pace: 5.77 })
+        create(:running, user: user, distance: 5.2, duration: 30)
 
         get workouts_path, params: { type: :running }
 
         expect(response).to be_successful
         expect(response.body).to include('5.2 km')
-        expect(response.body).to include('0.1 min/km')
-        expect(response.body).to include(I18n.t('workout.distance'))
+        expect(response.body).to include(ERB::Util.html_escape(%(5'46"/km)))
+        expect(response.body).to include(I18n.t('workout.distance_label'))
+      end
+
+      it 'renders each workout in the unit it was saved in' do
+        create(:running, user: user, distance: 3.1, duration: 30, distance_unit: MeasurementUnits::DISTANCES::MI)
+        create(:weightlifting, user: user, weight_unit: MeasurementUnits::WEIGHTS::LBS, details: { volume: 9000.5 })
+
+        get workouts_path
+
+        expect(response.body).to include('3.1 mi', ERB::Util.html_escape(%(9'41"/mi)), '9000.5 lbs')
       end
 
       it 'renders goals and position for soccer workouts' do

@@ -79,6 +79,20 @@ RSpec.describe UnitConverter do
     end
   end
 
+  describe 'FACTORS' do
+    it 'has a factor for every unit the models accept' do
+      {
+        TYPES::WEIGHT => WEIGHTS::ALL,
+        TYPES::DISTANCE => DISTANCES::ALL,
+        TYPES::SPEED => DISTANCES::ALL,
+        TYPES::HEIGHT => HEIGHTS::ALL,
+        TYPES::TIME => TIMES::ALL
+      }.each do |type, units|
+        expect(described_class::FACTORS.fetch(type).keys).to match_array(units)
+      end
+    end
+  end
+
   describe '.supports?' do
     it 'accepts known units of the same type' do
       expect(described_class.supports?(TYPES::HEIGHT, HEIGHTS::M, HEIGHTS::FT)).to be(true)
