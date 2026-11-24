@@ -57,21 +57,23 @@
         <span class="fit-stat-icon fit-stat-icon--goal">
           <i class="fa fa-star" aria-hidden="true"></i>
         </span>
-        <div>
-          <p class="fit-stat-label"><%= t('goal') %></p>
-          <p class="mt-1 text-lg font-semibold fit-text-primary">
-            <% if @goal %>
+        <div class="w-full">
+          <p class="fit-stat-label"><%= t('weight_goal') %></p>
+          <p class="fit-stat-value" style="font-size: 1.5rem; line-height: 1.2;">
+            <% if @weight_goal %>
               <span class="inline-flex items-center gap-1">
                 <i class="fa fa-trophy text-2xl fit-stat-icon--goal" aria-hidden="true"></i>
-                <%= t('dashboard.goal_achieved') %>
+                <span><%= t('dashboard.weight_goal_achieved') %></span>
               </span>
             <% else %>
-              <span class="inline-flex items-center gap-1">
-                <i class="far fa-clock text-2xl fit-text-secondary" aria-hidden="true"></i>
-                <%= t('dashboard.goal_in_progress') %>
-              </span>
+              <span><%= @weight_goal_progress %>%</span>
             <% end %>
           </p>
+          <% if @weight_goal_progress.positive? %>
+            <div class="mt-2 h-1.5 w-full max-w-40 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+              <div class="h-full rounded-full bg-emerald-500" style="width: <%= @weight_goal_progress %>%"></div>
+            </div>
+          <% end %>
         </div>
       </article>
 
@@ -88,6 +90,23 @@
               --
             <% end %>
           </p>
+          <% if @weight_trend_30_days.present? %>
+            <p class="mt-1 text-xs font-semibold <%= weight_trend_color(@weight_trend_30_days, @weight_goal_initial, @weight_goal_target) %>">
+              <% if @weight_trend_30_days.negative? %>
+                <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                <%= t('dashboard.weight_decreased', weight: @weight_trend_30_days.abs) %>
+              <% elsif @weight_trend_30_days.zero? %>
+                <i class="fa fa-minus" aria-hidden="true"></i>
+                <%= t('dashboard.weight_unchanged') %>
+              <% else %>
+                <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                <%= t('dashboard.weight_increased', weight: @weight_trend_30_days) %>
+              <% end %>
+              · <%= t('dashboard.last_days', days: 30) %>
+            </p>
+          <% elsif @recent_weight.present? %>
+            <p class="mt-1 text-xs fit-text-secondary"><%= t('dashboard.no_30_day_trend') %></p>
+          <% end %>
         </div>
       </article>
     </div>

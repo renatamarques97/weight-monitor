@@ -85,7 +85,7 @@ RSpec.describe '/fatsecret_foods', type: :request do
 
       get fatsecret_foods_url, params: { q: 'banana' }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       parsed = response.parsed_body
       expect(parsed['error']).to eq('Missing scope: premier')
     end

@@ -136,7 +136,7 @@ en:
   remove: "Remove"
   edit: "Edit"
   imc: "IMC"
-  goal: "GOAL"
+  weight_goal: "WEIGHT GOAL"
   progress: "Your Progress "
   send: "Send"
   back: "Back"
@@ -161,14 +161,17 @@ en:
       general_health: "General Health"
   dashboard:
     description: "Track your indicators and daily evolution in one place."
-    goal_achieved: "Achieved"
-    goal_in_progress: "In Progress"
+    weight_goal_achieved: "Achieved"
     no_records: "No %{sport} records yet."
     days: "Days"
     last_days: "Last %{days} days"
     recent: "Recent"
     no_recent_activity: "No recent activity"
     view_all: "View All"
+    no_30_day_trend: "No 30-day comparison"
+    weight_increased: "+%{weight} kg"
+    weight_decreased: "-%{weight} kg"
+    weight_unchanged: "No change"
   errors:
     not_found:
       title: "Page Not Found"

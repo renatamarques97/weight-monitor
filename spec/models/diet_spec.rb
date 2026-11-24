@@ -37,4 +37,18 @@ RSpec.describe Diet, type: :model do
       end
     end
   end
+
+  describe 'weight formatting' do
+    let(:user) { create(:user) }
+
+    it 'rounds initial and target weight to one decimal place' do
+      diet = build(:diet, user: user, initial_weight: 77.87161889553765,
+                          target_weight: 70.246789)
+
+      diet.valid?
+
+      expect(diet.initial_weight).to eq(77.9)
+      expect(diet.target_weight).to eq(70.2)
+    end
+  end
 end

@@ -42,12 +42,12 @@
 
       <div>
         <%= form.label :initial_weight, class: "tw-label" %>
-        <%= form.number_field :initial_weight, step: :any, class: "tw-input" %>
+        <%= form.number_field :initial_weight, step: 0.1, class: "tw-input" %>
       </div>
 
       <div>
         <%= form.label :target_weight, class: "tw-label" %>
-        <%= form.number_field :target_weight, step: :any, class: "tw-input" %>
+        <%= form.number_field :target_weight, step: 0.1, class: "tw-input" %>
       </div>
     </div>
 
