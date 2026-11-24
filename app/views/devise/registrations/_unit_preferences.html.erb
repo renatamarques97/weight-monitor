@@ -1,0 +1,29 @@
+<%# locals: (f:, info_key:) %>
+<% height_label = t('preferences.height') %>
+<% height_unit = f.object.height_unit %>
+
+<div data-controller="height-converter" data-height-converter-label-value="<%= height_label %>">
+  <div class="mb-3">
+    <%= f.label :height, "#{height_label} (#{height_unit})", class: "tw-label", data: { height_converter_target: "label" } %>
+    <%= f.text_field :height, class: "tw-input", placeholder: height_unit, data: { height_converter_target: "input" } %>
+  </div>
+
+  <div class="mb-2 text-xs fit-text-secondary">
+    <%= t(info_key) %>
+  </div>
+
+  <div class="mb-3 grid grid-cols-3 gap-3">
+    <div>
+      <%= f.label :weight_unit, t('preferences.weight_unit'), class: "tw-label" %>
+      <%= f.select :weight_unit, MeasurementUnits::WEIGHTS::ALL.map { |unit| [t("units.#{unit}"), unit] }, {}, class: "tw-input" %>
+    </div>
+    <div>
+      <%= f.label :distance_unit, t('preferences.distance_unit'), class: "tw-label" %>
+      <%= f.select :distance_unit, MeasurementUnits::DISTANCES::ALL.map { |unit| [t("units.#{unit}"), unit] }, {}, class: "tw-input" %>
+    </div>
+    <div>
+      <%= f.label :height_unit, t('preferences.height_unit'), class: "tw-label" %>
+      <%= f.select :height_unit, MeasurementUnits::HEIGHTS::ALL.map { |unit| [t("units.#{unit}"), unit] }, {}, class: "tw-input", data: { height_converter_target: "select", action: "change->height-converter#convert" } %>
+    </div>
+  </div>
+</div>

@@ -1,12 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 
+// The base label comes from a value, not from the DOM: reading textContent on
+// connect would append the unit again when Turbo restores a cached page.
 export default class extends Controller {
   static targets = ["input", "select", "label"]
+  static values = { label: String }
 
   connect() {
     this.currentUnit = this.selectTarget.value
-    this.labelText = this.labelTarget.textContent
-    this.updateLabel(this.currentUnit)
   }
 
   async convert() {
@@ -31,7 +32,9 @@ export default class extends Controller {
           to_unit: newUnit,
           type: "height"
         })
-        const response = await fetch(`/unit_conversions/convert?${params}`)
+        const response = await fetch(`/unit_conversions/convert?${params}`, {
+          headers: { Accept: "application/json" }
+        })
         if (!response.ok) throw new Error(`Conversion failed with status ${response.status}`)
 
         const data = await response.json()
@@ -53,6 +56,6 @@ export default class extends Controller {
   }
 
   updateLabel(unit) {
-    this.labelTarget.textContent = `${this.labelText} (${unit})`
+    this.labelTarget.textContent = `${this.labelValue} (${unit})`
   }
 }
