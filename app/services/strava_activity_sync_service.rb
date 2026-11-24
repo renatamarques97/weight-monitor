@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class StravaActivitySyncService
+  include StravaActivityDetailsMapper
+
   SPORT_TYPES = {
     'Run' => :running,
     'VirtualRun' => :running,
@@ -53,16 +55,20 @@ class StravaActivitySyncService
 
     page_activities.each do |activity|
       existing_workout = find_workout(activity)
-      if existing_workout.persisted?
-        existing_workout.assign_attributes(attributes_for(activity))
-        existing_workout.save
-        return [imported, true]
-      end
+      return [imported, true] if update_existing_workout?(existing_workout, activity)
 
       imported += import_activity(activity)
     end
 
     [imported, false]
+  end
+
+  def update_existing_workout?(workout, activity)
+    return false unless workout.persisted?
+
+    workout.assign_attributes(attributes_for(activity))
+    workout.save
+    true
   end
 
   def activities(per_page:, page:)
@@ -114,41 +120,5 @@ class StravaActivitySyncService
 
   def map_sport(activity)
     SPORT_TYPES.fetch(activity['sport_type'], SPORT_TYPES.fetch(activity['type'], :other))
-  end
-
-  def details_for(activity)
-    case map_sport(activity)
-    when :running then running_details(activity)
-    when :cycling then cycling_details(activity)
-    when :walking then walking_details(activity)
-    when :swimming then swimming_details(activity)
-    else {}
-    end
-  end
-
-  def running_details(activity)
-    { avg_pace: calculate_pace(activity) }.compact
-  end
-
-  def cycling_details(activity)
-    speed = (activity['average_speed'].to_f * 3.6).round(1)
-    { avg_speed: speed.presence }.compact
-  end
-
-  def walking_details(activity)
-    elevation = activity['total_elevation_gain'].to_i
-    elevation.positive? ? { steps: elevation } : {}
-  end
-
-  def swimming_details(activity)
-    laps = activity['lap_count'].to_i
-    { laps: laps.presence }.compact
-  end
-
-  def calculate_pace(activity)
-    duration_minutes = activity.fetch('moving_time', 0).to_f / 60.0
-    distance_km = activity['distance'].to_f / 1000.0
-
-    (duration_minutes / distance_km).round(2) if distance_km.positive?
   end
 end
