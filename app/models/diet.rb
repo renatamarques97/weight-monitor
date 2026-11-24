@@ -16,18 +16,6 @@ class Diet < ApplicationRecord
 
   scope :authorized_user, ->(user) { where(user_id: user.id) }
 
-  def initial_weight=(value)
-    super(weight_with_one_decimal(value))
-  end
-
-  def target_weight=(value)
-    super(weight_with_one_decimal(value))
-  end
-
-  private
-
-  def weight_with_one_decimal(value)
-    numeric_value = Float(value, exception: false)
-    numeric_value ? numeric_value.round(1) : value
-  end
+  normalizes :initial_weight, :target_weight,
+             with: ->(weight) { weight&.round(1) }
 end

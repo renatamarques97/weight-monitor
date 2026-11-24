@@ -91,7 +91,7 @@
             <% end %>
           </p>
           <% if @weight_trend_30_days.present? %>
-            <p class="mt-1 text-xs font-semibold <%= @weight_trend_30_days.negative? ? 'text-emerald-600' : (@weight_trend_30_days.zero? ? 'fit-text-secondary' : 'text-amber-600') %>">
+            <p class="mt-1 text-xs font-semibold <%= weight_trend_color(@weight_trend_30_days, @weight_goal_initial, @weight_goal_target) %>">
               <% if @weight_trend_30_days.negative? %>
                 <i class="fa fa-arrow-down" aria-hidden="true"></i>
                 <%= t('dashboard.weight_decreased', weight: @weight_trend_30_days.abs) %>

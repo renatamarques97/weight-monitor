@@ -19,6 +19,14 @@ class WeightGoalPresenter
     calculate_progress(current_weight, initial, target)
   end
 
+  def initial_weight
+    current_diet&.initial_weight
+  end
+
+  def target_weight
+    current_diet&.target_weight
+  end
+
   private
 
   attr_reader :user
@@ -37,14 +45,6 @@ class WeightGoalPresenter
 
   def last_weight
     user.weights.order(weight_date: :desc, created_at: :desc).first&.kg
-  end
-
-  def initial_weight
-    current_diet&.initial_weight
-  end
-
-  def target_weight
-    current_diet&.target_weight
   end
 
   def current_diet

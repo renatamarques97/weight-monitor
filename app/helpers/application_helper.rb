@@ -20,6 +20,25 @@ module ApplicationHelper
     sanitize_chat_markdown(html.join)
   end
 
+  def weight_trend_direction(trend, initial_weight, target_weight)
+    return 'neutral' if trend.nil? || trend.zero? || initial_weight.nil? || target_weight.nil?
+
+    goal_direction = target_weight <=> initial_weight
+    return 'neutral' if goal_direction.zero?
+
+    trend_direction = trend <=> 0
+
+    goal_direction == trend_direction ? 'positive' : 'negative'
+  end
+
+  def weight_trend_color(trend, initial_weight, target_weight)
+    {
+      'positive' => 'text-emerald-600',
+      'negative' => 'text-amber-600',
+      'neutral' => 'fit-text-secondary'
+    }.fetch(weight_trend_direction(trend, initial_weight, target_weight))
+  end
+
   private
 
   def append_chat_markdown_line(line, html, list_items)
