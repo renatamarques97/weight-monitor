@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ApplicationHelper, type: :helper do
@@ -38,6 +40,52 @@ RSpec.describe ApplicationHelper, type: :helper do
       it 'returns the value of BUILD_DATE' do
         expect(helper.app_build_date).to eq(random_date)
       end
+    end
+  end
+
+  describe '#render_chat_markdown' do
+    it 'returns an empty string for blank content' do
+      expect(helper.render_chat_markdown(nil)).to eq('')
+    end
+
+    it 'renders headings, paragraphs, emphasis, and lists' do
+      markdown = <<~MARKDOWN
+        ### Refeições
+
+        - **Café da manhã:** Iogurte
+        - _Almoço:_ Frango
+
+        Texto normal com *ênfase* e __negrito__.
+      MARKDOWN
+
+      html = helper.render_chat_markdown(markdown)
+
+      expect(html).to include('<h3>Refeições</h3>')
+      expect(html).to include('<li><strong>Café da manhã:</strong> Iogurte</li>')
+      expect(html).to include('<li><em>Almoço:</em> Frango</li>')
+      expect(html).to include('<em>ênfase</em>')
+      expect(html).to include('<strong>negrito</strong>')
+      expect(html).to include('<ul>')
+    end
+
+    it 'renders H1 and H2 headings' do
+      html = helper.render_chat_markdown("# Título\n\n## Subtítulo")
+
+      expect(html).to include('<h1>Título</h1>')
+      expect(html).to include('<h2>Subtítulo</h2>')
+    end
+
+    it 'escapes HTML from the Markdown content' do
+      html = helper.render_chat_markdown('<script>alert("unsafe")</script>')
+
+      expect(html).not_to include('<script>')
+      expect(html).to include('&lt;script&gt;')
+    end
+
+    it 'does not treat a fourth-level heading as a heading' do
+      html = helper.render_chat_markdown('#### Texto')
+
+      expect(html).to include('<p>#### Texto</p>')
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/config/version.rb
 # Application version configuration
 module FitTracker

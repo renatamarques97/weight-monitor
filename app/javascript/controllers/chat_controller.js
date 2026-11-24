@@ -80,11 +80,13 @@ export default class extends Controller {
     const params = new URLSearchParams({ prompt: text })
     if (this.hasObjectiveTarget) params.append("objective", this.objectiveTarget.value)
 
+    let streamedText = ""
     const eventSource = new EventSource(`/chat_responses?${params}`)
 
     eventSource.addEventListener("message", (e) => {
       const { message } = JSON.parse(e.data)
-      bubble.querySelector("pre").textContent += message
+      streamedText += message
+      bubble.querySelector(".chat-markdown").innerHTML = this.#renderMarkdown(streamedText)
       this.#scrollToBottom()
     })
 
@@ -93,6 +95,55 @@ export default class extends Controller {
       this.isLoadingValue = false
       this.#replaceLastBubbles()
     })
+  }
+
+  #renderMarkdown(text) {
+    const escapeHtml = (value) => {
+      const element = document.createElement("div")
+      element.textContent = value
+      return element.innerHTML
+    }
+
+    const inline = (value) => escapeHtml(value)
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/__(.+?)__/g, "<strong>$1</strong>")
+      .replace(/\*(.+?)\*/g, "<em>$1</em>")
+      .replace(/_(.+?)_/g, "<em>$1</em>")
+
+    const html = []
+    let listItems = []
+
+    const flushList = () => {
+      if (listItems.length) {
+        html.push(`<ul>${listItems.join("")}</ul>`)
+        listItems = []
+      }
+    }
+
+    text.replace(/\r/g, "").split("\n").forEach((line) => {
+      let match
+
+      if ((match = line.match(/^###\s+(.+)$/))) {
+        flushList()
+        html.push(`<h3>${inline(match[1])}</h3>`)
+      } else if ((match = line.match(/^##\s+(.+)$/))) {
+        flushList()
+        html.push(`<h2>${inline(match[1])}</h2>`)
+      } else if ((match = line.match(/^#\s+(.+)$/))) {
+        flushList()
+        html.push(`<h1>${inline(match[1])}</h1>`)
+      } else if ((match = line.match(/^[-*]\s+(.+)$/))) {
+        listItems.push(`<li>${inline(match[1])}</li>`)
+      } else if (!line.trim()) {
+        flushList()
+      } else {
+        flushList()
+        html.push(`<p>${inline(line)}</p>`)
+      }
+    })
+
+    flushList()
+    return html.join("")
   }
 
   async #replaceLastBubbles() {
@@ -122,14 +173,26 @@ export default class extends Controller {
   #appendBubble(role, text) {
     const wrapper = document.createElement("div")
     wrapper.className = `message-bubble dynamic-bubble chat-bubble-wrapper ${role} animate-fade-in-up`
-    wrapper.innerHTML = `
-      <span class="chat-bubble-label">
-        ${role === 'user' ? this.userLabelValue : this.assistantLabelValue}
-      </span>
-      <div class="chat-bubble ${role}">
-        <pre class="chat-pre">${text}</pre>
-      </div>
-    `
+
+    const label = document.createElement("span")
+    label.className = "chat-bubble-label"
+    label.textContent = role === "user" ? this.userLabelValue : this.assistantLabelValue
+
+    const bubble = document.createElement("div")
+    bubble.className = `chat-bubble ${role}`
+
+    const content = document.createElement("div")
+    content.className = "chat-markdown"
+
+    if (role === "assistant") {
+      content.innerHTML = ""
+    } else {
+      content.classList.add("chat-user-message")
+      content.textContent = text
+    }
+
+    bubble.appendChild(content)
+    wrapper.append(label, bubble)
     this.conversationTarget.appendChild(wrapper)
     this.#scrollToBottom()
     return wrapper

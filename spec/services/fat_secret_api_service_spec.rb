@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe FatSecretApiService do
@@ -5,23 +7,23 @@ RSpec.describe FatSecretApiService do
     it 'requests token with provided scope and caches it by scope' do
       service = described_class.new
       http = instance_double(Net::HTTP)
-      response = instance_double(Net::HTTPResponse, body: { access_token: 'token-basic', expires_in: 3600 }.to_json)
+      response = double(body: { access_token: 'token-basic', expires_in: 3600 }.to_json)
 
       expect(Net::HTTP).to receive(:start).once.with('oauth.fatsecret.com', 443, use_ssl: true).and_yield(http)
       expect(http).to receive(:request).once.and_return(response)
 
-      token_1 = service.get_access_token(scope: 'basic')
-      token_2 = service.get_access_token(scope: 'basic')
+      basic_token = service.get_access_token(scope: 'basic')
+      cached_basic_token = service.get_access_token(scope: 'basic')
 
-      expect(token_1).to eq('token-basic')
-      expect(token_2).to eq('token-basic')
+      expect(basic_token).to eq('token-basic')
+      expect(cached_basic_token).to eq('token-basic')
     end
 
     it 'keeps separate token cache by scope' do
       service = described_class.new
       http = instance_double(Net::HTTP)
-      basic_response = instance_double(Net::HTTPResponse, body: { access_token: 'token-basic', expires_in: 3600 }.to_json)
-      premier_response = instance_double(Net::HTTPResponse, body: { access_token: 'token-premier', expires_in: 3600 }.to_json)
+      basic_response = double(body: { access_token: 'token-basic', expires_in: 3600 }.to_json)
+      premier_response = double(body: { access_token: 'token-premier', expires_in: 3600 }.to_json)
 
       expect(Net::HTTP).to receive(:start).twice.with('oauth.fatsecret.com', 443, use_ssl: true).and_yield(http)
       expect(http).to receive(:request).twice.and_return(basic_response, premier_response)
@@ -47,7 +49,7 @@ RSpec.describe FatSecretApiService do
           }
         }
       }
-      response = instance_double(Net::HTTPResponse, body: response_payload.to_json)
+      response = double(body: response_payload.to_json)
 
       expect(Net::HTTP).to receive(:start).with('platform.fatsecret.com', 443, use_ssl: true).and_yield(http)
       expect(http).to receive(:request) do |request|
@@ -70,7 +72,7 @@ RSpec.describe FatSecretApiService do
 
       http = instance_double(Net::HTTP)
       response_payload = { 'food' => { 'food_id' => '33691', 'food_name' => 'Colby Cheese' } }
-      response = instance_double(Net::HTTPResponse, body: response_payload.to_json)
+      response = double(body: response_payload.to_json)
 
       expect(Net::HTTP).to receive(:start).with('platform.fatsecret.com', 443, use_ssl: true).and_yield(http)
       expect(http).to receive(:request) do |request|

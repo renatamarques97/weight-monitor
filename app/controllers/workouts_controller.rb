@@ -16,8 +16,7 @@ class WorkoutsController < ApplicationController
     @workout = Workout.new(workout_type: workout_type, workout_date: Date.current)
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @workout = Workout.new(workout_params)
@@ -27,7 +26,7 @@ class WorkoutsController < ApplicationController
       flash[:notice] = t('workout.created')
       redirect_to(root_path)
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -36,7 +35,7 @@ class WorkoutsController < ApplicationController
       flash[:notice] = t('workout.updated')
       redirect_to(workouts_path)
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -49,13 +48,13 @@ class WorkoutsController < ApplicationController
   private
 
   def set_workout
-    @workout = current_user.workouts.find(params[:id])
+    @workout = current_user.workouts.find(params.expect(:id))
   end
 
   def workout_params
-    params.require(:workout).permit(
-      :duration, :distance, :distance_unit, :weight_unit, :calories, :workout_date, :workout_type,
-      details: {}
+    params.expect(
+      workout: [:duration, :distance, :distance_unit, :weight_unit, :calories, :workout_date, :workout_type,
+                { details: {} }]
     )
   end
 end

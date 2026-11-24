@@ -38,7 +38,7 @@ module WorkoutType
     basketball: 'fa fa-basketball',
     tennis: 'fa fa-table-tennis-paddle-ball',
     martial_arts: 'fa fa-hand-fist',
-    other: 'fa fa-heartbeat'
+    other: 'fa fa-shapes'
   }.freeze
 
   COLORS = {

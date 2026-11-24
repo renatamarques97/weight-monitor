@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -e
+
+RAILS_ENV=${RAILS_ENV:-production}
+export RAILS_ENV
+
+if [[ -z "${SECRET_KEY_BASE}" && "${RAILS_ENV}" == "production" ]]; then
+  export SECRET_KEY_BASE_DUMMY=1
+fi
+
+rm -rf public/assets
+mkdir -p public/assets app/assets/builds
+find app/assets/builds -type f ! -name '.keep' -delete
+
+bundle exec bootsnap precompile app/ lib/
+bundle exec rails assets:precompile

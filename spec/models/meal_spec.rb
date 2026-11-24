@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Meal, type: :model do
-  describe "relations" do
+  describe 'relations' do
     it { is_expected.to belong_to(:diet).optional }
     it { is_expected.to belong_to(:meal_diary).optional }
     it { is_expected.to have_many(:meal_foods).dependent(:destroy) }
   end
 
-  describe "validations" do
+  describe 'validations' do
     it { is_expected.to validate_presence_of(:schedule) }
     it { is_expected.to validate_presence_of(:description) }
     it { is_expected.to validate_presence_of(:meal_type) }

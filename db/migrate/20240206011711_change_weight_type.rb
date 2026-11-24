@@ -1,6 +1,17 @@
+# frozen_string_literal: true
+
 class ChangeWeightType < ActiveRecord::Migration[7.1]
-  def change
-    change_column(:diets, :initial_weight, :float)
-    change_column(:diets, :target_weight, :float)
+  def up
+    change_table :diets, bulk: true do |table|
+      table.float :initial_weight
+      table.float :target_weight
+    end
+  end
+
+  def down
+    change_table :diets, bulk: true do |table|
+      table.decimal :initial_weight
+      table.decimal :target_weight
+    end
   end
 end

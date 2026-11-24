@@ -4,6 +4,10 @@
   </span>
 
   <div class="chat-bubble <%= message[:role] %>">
-    <pre class="chat-pre"><%= message[:content] %></pre>
+    <% if message[:role] == 'assistant' %>
+      <div class="chat-markdown"><%= render_chat_markdown(message[:content]) %></div>
+    <% else %>
+      <div class="chat-markdown chat-user-message"><%= h(message[:content]) %></div>
+    <% end %>
   </div>
 </div>

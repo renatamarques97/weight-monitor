@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RecentWeightPresenter
   def initialize(user)
     @user = user

@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 class DietsController < ApplicationController
-  before_action :set_diet, only: [:show, :edit, :update, :destroy]
+  before_action :set_diet, only: %i[show edit update destroy]
   before_action :authenticate_user!
-  before_action :authorized?, only: [:show, :edit, :update, :destroy]
+  before_action :authorized?, only: %i[show edit update destroy]
 
   # GET /diets
   def index
     @diets = Diet.authorized_user(current_user)
   end
+
+  def show; end
 
   # GET /diets/new
   def new
@@ -16,6 +18,8 @@ class DietsController < ApplicationController
     meal = @diet.meals.build
     meal.meal_foods.build
   end
+
+  def edit; end
 
   # POST /diets
   def create
@@ -51,28 +55,35 @@ class DietsController < ApplicationController
   private
 
   def set_diet
-    @diet = Diet.find(params[:id])
+    @diet = Diet.find(params.expect(:id))
   end
 
   def authorized?
-    unless ::UserDietPolicy.new(current_user, @diet).diet_belongs_to_user?
-      render :file => "public/404.html", :status => :unauthorized
-    end
+    return false if ::UserDietPolicy.new(current_user, @diet).diet_belongs_to_user?
+
+    render file: 'public/404.html', status: :unauthorized
   end
 
   def diet_params
-    params.require(:diet).permit(
-      :start_date, :end_date, :initial_weight, :target_weight, :weight_unit, :user_id,
-      meals_attributes: [
-        :id, :schedule, :description, :meal_type, :food_name, :fatsecret_food_id,
-        :calories, :protein, :carbs, :fat, :metric_serving_unit, :_destroy,
-        {
-          meal_foods_attributes: %i[
-            id food_name fatsecret_food_id metric_serving_amount
-            calories protein carbs fat metric_serving_unit _destroy
-          ]
-        }
-      ]
-    )
+    params.expect(diet: [*diet_attributes, { meals_attributes: meal_attributes }])
+  end
+
+  def diet_attributes
+    %i[start_date end_date initial_weight target_weight weight_unit user_id]
+  end
+
+  def meal_attributes
+    [
+      :id, :schedule, :description, :meal_type, :food_name, :fatsecret_food_id,
+      :calories, :protein, :carbs, :fat, :metric_serving_unit, :_destroy,
+      { meal_foods_attributes: meal_food_attributes }
+    ]
+  end
+
+  def meal_food_attributes
+    %i[
+      id food_name fatsecret_food_id metric_serving_amount calories protein carbs fat
+      metric_serving_unit _destroy
+    ]
   end
 end

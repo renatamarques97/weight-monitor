@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe WeightQuery do
-  describe ".weights" do
+  describe '.weights' do
     let(:user) { create(:user) }
 
-    it "returns the latest Weight record for each date" do
+    it 'returns the latest Weight record for each date' do
       date = Date.current
       create(:weight, user: user, weight_date: date, value: 79.1)
       create(:weight, user: user, weight_date: date, value: 78.6)
@@ -15,7 +17,7 @@ RSpec.describe WeightQuery do
       expect(result[date - 1.day].value).to eq(80.0)
     end
 
-    it "filters by period in days" do
+    it 'filters by period in days' do
       create(:weight, user: user, weight_date: 40.days.ago.to_date, value: 82.0)
       create(:weight, user: user, weight_date: 10.days.ago.to_date, value: 79.0)
 

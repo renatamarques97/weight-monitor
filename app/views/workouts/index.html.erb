@@ -9,9 +9,12 @@
 </div>
 
 
-<div class="mb-6 overflow-x-auto no-scrollbar">
+<div class="mb-6 overflow-x-auto no-scrollbar"
+     data-controller="scroll-position"
+     data-scroll-position-key-value="workouts-filter-scroll">
   <div class="flex gap-2 p-1">
     <%= link_to workouts_path,
+          data: { action: "scroll-position#save" },
           class: "px-4 py-2 rounded-xl border text-sm font-semibold transition-all flex items-center gap-2 #{params[:type].blank? ? 'fit-filter-active' : 'fit-surface-card fit-text-secondary fit-border-subtle fit-hover-border-strong'}" do %>
       <i class='fa fa-list'></i>
       <%= t('workout.all') %>
@@ -20,6 +23,7 @@
     <% WorkoutType::MAPPING.each_key do |sport| %>
       <% is_active = params[:type] == sport.to_s %>
       <%= link_to workouts_path(type: sport),
+            data: { action: "scroll-position#save" },
             class: "px-4 py-2 rounded-xl border text-sm font-semibold transition-all flex items-center gap-2 #{is_active ? 'fit-filter-active' : 'fit-surface-card fit-text-secondary fit-border-subtle fit-hover-border-strong'}" do %>
         <i class="fa <%= WorkoutType::ICONS[sport] %>"
            style="color: <%= is_active ? 'inherit' : WorkoutType::COLORS[sport] %>;"></i>
@@ -37,12 +41,31 @@
           <th scope="col" class="fit-th"><%= t('workout.type') %></th>
           <th scope="col" class="fit-th"><%= t('workout.date') %></th>
           <th scope="col" class="fit-th"><%= t('workout.duration') %></th>
-          <th scope="col" class="fit-th"><%= t('workout.distance', unit: '') %></th>
+          <th scope="col" class="fit-th">
+            <%=
+              if params[:type].blank?
+                t('workout.highlights')
+              elsif %i[running walking cycling swimming].include?(params[:type].to_sym)
+                t('workout.distance_label')
+              elsif params[:type].to_sym == :soccer
+                t('workout.details.goals')
+              elsif params[:type].to_sym == :basketball
+                t('workout.details.points')
+              elsif params[:type].to_sym == :weightlifting
+                t('workout.details.exercises_count')
+              elsif params[:type].to_sym == :tennis
+                t('workout.details.sets_won')
+              else
+                t('workout.details.style')
+              end
+            %>
+          </th>
           <th scope="col" class="fit-th fit-th--right"><%= t('actions') %></th>
         </tr>
       </thead>
       <tbody class="fit-surface-card fit-divide-subtle">
         <% @workouts.each do |workout| %>
+          <% details = workout.details %>
           <tr class="fit-hover-surface-muted transition-colors">
             <td class="fit-td fit-td--primary">
               <div class="flex items-center gap-3">
@@ -59,7 +82,50 @@
               <%= workout.duration %> min
             </td>
             <td class="fit-td">
-              <%= workout.distance.present? ? "#{workout.distance} #{workout.distance_unit}" : "-" %>
+              <% case workout.workout_type.to_sym %>
+              <% when :running %>
+                <%= workout.distance.present? ? "#{workout.distance} #{workout.distance_unit}" : "-" %>
+                <% if details.respond_to?(:avg_pace) && details.avg_pace.present? %>
+                  <span class="block text-xs fit-text-secondary"><%= details.avg_pace %> min/<%= workout.distance_unit %></span>
+                <% end %>
+              <% when :walking, :cycling, :swimming %>
+                <%= workout.distance.present? ? "#{workout.distance} #{workout.distance_unit}" : "-" %>
+                <% if details.respond_to?(:steps) && details.steps.present? %>
+                  <span class="block text-xs fit-text-secondary"><%= details.steps %> <%= t('workout.details.steps') %></span>
+                <% elsif details.respond_to?(:avg_speed) && details.avg_speed.present? %>
+                  <span class="block text-xs fit-text-secondary"><%= details.avg_speed %> <%= workout.distance_unit %>/h</span>
+                <% elsif details.respond_to?(:laps) && details.laps.present? %>
+                  <span class="block text-xs fit-text-secondary"><%= details.laps %> <%= t('workout.details.laps') %></span>
+                <% end %>
+              <% when :weightlifting %>
+                <%= details.respond_to?(:exercises_count) && details.exercises_count.present? ? "#{details.exercises_count} #{t('workout.details.exercises_count')}" : "-" %>
+                <% if details.respond_to?(:volume) && details.volume.present? %>
+                  <span class="block text-xs fit-text-secondary"><%= details.volume %> <%= workout.weight_unit %></span>
+                <% end %>
+              <% when :yoga %>
+                <%= details.respond_to?(:style) && details.style.present? ? details.style.titleize : "-" %>
+              <% when :soccer %>
+                <%= details.respond_to?(:goals) && details.goals.present? ? "#{details.goals} #{t('workout.details.goals')}" : "-" %>
+                <% if details.respond_to?(:position) && details.position.present? %>
+                  <span class="block text-xs fit-text-secondary"><%= details.position %></span>
+                <% end %>
+              <% when :basketball %>
+                <%= details.respond_to?(:points) && details.points.present? ? "#{details.points} #{t('workout.details.points')}" : "-" %>
+                <% if details.respond_to?(:rebounds) && details.rebounds.present? %>
+                  <span class="block text-xs fit-text-secondary"><%= details.rebounds %> <%= t('workout.details.rebounds') %></span>
+                <% end %>
+              <% when :tennis %>
+                <% sets_won = details.respond_to?(:sets_won) ? details.sets_won : nil %>
+                <% sets_lost = details.respond_to?(:sets_lost) ? details.sets_lost : nil %>
+                <%= sets_won.present? || sets_lost.present? ? "#{sets_won || 0}-#{sets_lost || 0}" : "-" %>
+              <% when :martial_arts %>
+                <%= details.respond_to?(:style) && details.style.present? ? details.style.titleize : "-" %>
+                <% if details.respond_to?(:belt) && details.belt.present? %>
+                  <span class="block text-xs fit-text-secondary"><%= details.belt %></span>
+                <% end %>
+              <% else %>
+                -
+              <% end %>
             </td>
             <td class="fit-td fit-td--right">
               <div class="flex justify-end gap-2">

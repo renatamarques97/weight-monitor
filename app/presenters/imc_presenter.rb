@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ImcPresenter
   def initialize(user)
     @user = user
@@ -5,7 +7,8 @@ class ImcPresenter
 
   def call
     return 0 if weight.nil? || height.nil?
-    (weight / (height)**2).round(2)
+
+    (weight / (height**2)).round(2)
   end
 
   private
