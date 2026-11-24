@@ -59,11 +59,11 @@
         </span>
         <div class="w-full">
           <p class="fit-stat-label"><%= t('weight_goal') %></p>
-          <p class="mt-1 text-lg font-semibold fit-text-primary">
+          <p class="fit-stat-value" style="font-size: 1.5rem; line-height: 1.2;">
             <% if @weight_goal %>
               <span class="inline-flex items-center gap-1">
                 <i class="fa fa-trophy text-2xl fit-stat-icon--goal" aria-hidden="true"></i>
-                <%= t('dashboard.weight_goal_achieved') %>
+                <span><%= t('dashboard.weight_goal_achieved') %></span>
               </span>
             <% else %>
               <span><%= @weight_goal_progress %>%</span>
