@@ -142,5 +142,45 @@ RSpec.describe StravaActivitySyncService do
       expect(described_class.new(user).sync).to eq(0)
       expect(user.workouts.find_by!(strava_activity_id: 555_555).duration).to eq(60.0)
     end
+
+    it 'imports new activities before reaching 30 existing activities' do
+      30.times do |index|
+        create(:running, user: user, strava_activity_id: 900_000 + index)
+      end
+
+      api = instance_double(StravaApiService)
+      allow(StravaApiService).to receive(:new).with(user).and_return(api)
+
+      activities = [
+        {
+          'id' => 1_000_001,
+          'sport_type' => 'Run',
+          'start_date_local' => '2026-11-24T08:30:00Z',
+          'moving_time' => 1800,
+          'distance' => 5000
+        },
+        {
+          'id' => 1_000_002,
+          'sport_type' => 'Ride',
+          'start_date_local' => '2026-11-24T09:30:00Z',
+          'moving_time' => 3600,
+          'distance' => 30_000
+        }
+      ]
+      30.times do |index|
+        activities << {
+          'id' => 900_000 + index,
+          'sport_type' => 'Run',
+          'start_date_local' => '2026-11-20T08:30:00Z',
+          'moving_time' => 1800,
+          'distance' => 5000
+        }
+      end
+
+      allow(api).to receive(:activities).with(per_page: 30).and_return(activities)
+
+      expect(described_class.new(user).sync).to eq(2)
+      expect(user.workouts.where(strava_activity_id: [1_000_001, 1_000_002]).count).to eq(2)
+    end
   end
 end

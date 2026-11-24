@@ -23,8 +23,10 @@ class StravaActivitySyncService
   def sync(per_page: 30)
     imported = 0
 
-    activities(per_page).each do |activity|
-      imported += import_activity(activity)
+    each_activity_page(per_page) do |page_activities|
+      page_imported, found_existing = import_page(page_activities)
+      imported += page_imported
+      break if found_existing
     end
 
     imported
@@ -32,8 +34,42 @@ class StravaActivitySyncService
 
   private
 
-  def activities(per_page)
-    StravaApiService.new(@user).activities(per_page: per_page).reject do |activity|
+  def each_activity_page(per_page)
+    page = 1
+
+    loop do
+      page_activities = activities(per_page: per_page, page: page)
+      break if page_activities.empty?
+
+      yield page_activities
+      break if page_activities.length < per_page
+
+      page += 1
+    end
+  end
+
+  def import_page(page_activities)
+    imported = 0
+
+    page_activities.each do |activity|
+      existing_workout = find_workout(activity)
+      if existing_workout.persisted?
+        existing_workout.assign_attributes(attributes_for(activity))
+        existing_workout.save
+        return [imported, true]
+      end
+
+      imported += import_activity(activity)
+    end
+
+    [imported, false]
+  end
+
+  def activities(per_page:, page:)
+    api = StravaApiService.new(@user)
+    response = page == 1 ? api.activities(per_page: per_page) : api.activities(per_page: per_page, page: page)
+
+    response.reject do |activity|
       activity.fetch('id').nil?
     end
   end
