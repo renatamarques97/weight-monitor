@@ -83,7 +83,7 @@
           <p class="fit-stat-label"><%= t('weight.title') %></p>
           <p class="fit-stat-value">
             <% if @recent_weight.present? %>
-              <%= @recent_weight.value %> <%= @recent_weight.weight_unit %>
+              <%= weight_in_preferred_unit(@recent_weight.value, @recent_weight.weight_unit) %>
             <% else %>
               --
             <% end %>
@@ -205,7 +205,7 @@
                     <p class="text-sm font-bold fit-text-primary"><%= weight.weight_date.strftime("%b %d") %></p>
                   </div>
                   <div class="flex items-center text-xs fit-text-secondary gap-2">
-                    <span><%= weight.value %> <%= weight.weight_unit %></span>
+                    <span><%= weight_in_preferred_unit(weight.value, weight.weight_unit) %></span>
                   </div>
                 </div>
               <% end %>
@@ -298,7 +298,7 @@
                       <span><%= workout.duration %> min</span>
                       <% if workout.distance.present? %>
                         <span class="w-1 h-1 rounded-full fit-surface-border"></span>
-                        <span><%= workout.distance %> <%= workout.distance_unit %></span>
+                        <span><%= distance_in_preferred_unit(workout.distance, workout.distance_unit) %></span>
                       <% end %>
                     </div>
                   </div>

@@ -44,6 +44,16 @@ RSpec.describe 'User Registrations & Updates', type: :request do
     end
   end
 
+  describe 'GET /users/edit' do
+    it 'shows the height of users in feet as feet and inches' do
+      sign_in create(:user, height: 5.75, height_unit: HEIGHTS::FT)
+
+      get edit_user_registration_path
+
+      expect(response.body).to include(%(value="#{ERB::Util.html_escape(%(5'9"))}"))
+    end
+  end
+
   describe 'PUT /users' do
     let(:user) { create(:user, name: FFaker::Name.name, height: 1.70, password: 'password123', password_confirmation: 'password123') }
 
