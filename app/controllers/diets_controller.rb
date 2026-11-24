@@ -69,7 +69,7 @@ class DietsController < ApplicationController
   end
 
   def diet_attributes
-    %i[start_date end_date initial_weight target_weight weight_unit user_id]
+    %i[start_date end_date initial_weight target_weight weight_unit]
   end
 
   def meal_attributes

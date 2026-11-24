@@ -117,6 +117,23 @@ RSpec.describe '/diets', type: :request do
           diet.reload
           expect(response).to redirect_to(root_path)
         end
+
+        it 'does not move the diet to another user' do
+          diet = Diet.create! valid_attributes
+          other_user = create(:user)
+
+          patch diet_url(diet), params: { diet: { target_weight: 70, user_id: other_user.id } }
+
+          expect(response).to redirect_to(root_path)
+          expect(diet.reload).to have_attributes(user_id: user.id, target_weight: 70)
+        end
+
+        it 'keeps the weight unit chosen for the diet' do
+          diet = Diet.create! valid_attributes
+          patch diet_url(diet), params: { diet: { target_weight: 150, weight_unit: MeasurementUnits::WEIGHTS::LBS } }
+
+          expect(diet.reload).to have_attributes(target_weight: 150, weight_unit: MeasurementUnits::WEIGHTS::LBS)
+        end
       end
 
       context 'with invalid parameters' do

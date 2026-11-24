@@ -28,6 +28,6 @@ class WeightsController < ApplicationController
   private
 
   def weight_params
-    params.expect(weight: %i[value weight_unit weight_date user_id])
+    params.expect(weight: %i[value weight_unit weight_date])
   end
 end
