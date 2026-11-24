@@ -36,4 +36,55 @@ RSpec.describe User, type: :model do
       expect(user.cyclings.count).to eq(1)
     end
   end
+
+  describe 'Strava token encryption' do
+    let(:user) { create(:user) }
+
+    it 'exposes the decrypted access and refresh tokens' do
+      user.update!(strava_access_token: 'access-secret', strava_refresh_token: 'refresh-secret')
+
+      expect(user.strava_access_token).to eq('access-secret')
+      expect(user.strava_refresh_token).to eq('refresh-secret')
+    end
+
+    it 'does not store Strava tokens as plaintext in the database' do
+      user.update!(strava_access_token: 'access-secret', strava_refresh_token: 'refresh-secret')
+
+      stored_tokens = ActiveRecord::Base.connection.select_one(
+        'SELECT strava_access_token, strava_refresh_token FROM users WHERE id = $1',
+        'strava tokens',
+        [ActiveRecord::Relation::QueryAttribute.new(
+          'id', user.id, ActiveRecord::Type::BigInteger.new
+        )]
+      )
+
+      expect(stored_tokens['strava_access_token']).not_to eq('access-secret')
+      expect(stored_tokens['strava_refresh_token']).not_to eq('refresh-secret')
+    end
+  end
+
+  describe 'Strava synchronization state' do
+    let(:user) { create(:user) }
+
+    it 'starts synchronization when idle' do
+      expect(user.start_strava_sync?).to be(true)
+      expect(user.reload.strava_sync_status).to eq('syncing')
+    end
+
+    it 'does not start synchronization while another job is active' do
+      user.update!(strava_sync_status: 'syncing', strava_sync_started_at: 1.minute.ago)
+
+      expect(user.start_strava_sync?).to be(false)
+      expect(user.reload.strava_sync_status).to eq('syncing')
+    end
+
+    it 'expires stale synchronization' do
+      user.update!(strava_sync_status: 'syncing', strava_sync_started_at: 16.minutes.ago)
+
+      user.expire_stale_strava_sync!
+
+      expect(user.reload.strava_sync_status).to eq('failed')
+      expect(user.strava_sync_error).to eq('Strava synchronization timed out')
+    end
+  end
 end

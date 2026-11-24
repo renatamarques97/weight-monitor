@@ -21,6 +21,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'example.com' }
 
   config.active_support.deprecation = :stderr
+  config.active_job.queue_adapter = :test
 
   config.action_controller.raise_on_missing_callback_actions = true
 end

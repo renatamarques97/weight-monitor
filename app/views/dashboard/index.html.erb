@@ -305,7 +305,7 @@
                       <% end %>
                     </div>
                     <div class="flex items-center text-xs fit-text-secondary gap-2">
-                      <span><%= workout.duration %> min</span>
+                      <span><%= workout_duration(workout.duration) %> min</span>
                       <% if workout.distance.present? %>
                         <span class="w-1 h-1 rounded-full fit-surface-border"></span>
                         <span><%= workout.distance %> km</span>

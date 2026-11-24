@@ -9,6 +9,10 @@ module ApplicationHelper
     ENV['BUILD_DATE'] || Time.current.to_date.to_s
   end
 
+  def workout_duration(duration)
+    number_with_precision(duration, precision: 2, strip_insignificant_zeros: true)
+  end
+
   def render_chat_markdown(text)
     return '' if text.blank?
 

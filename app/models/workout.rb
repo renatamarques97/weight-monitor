@@ -29,4 +29,7 @@ class Workout < ApplicationRecord
   validates :workout_type, presence: true
   validates :workout_date, presence: true
   validates :duration, presence: true, numericality: { greater_than: 0 }
+  validates :strava_activity_id,
+            uniqueness: { scope: :user_id },
+            allow_nil: true
 end
