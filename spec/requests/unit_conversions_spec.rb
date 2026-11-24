@@ -6,9 +6,10 @@ RSpec.describe 'UnitConversions', type: :request do
   let(:user) { create(:user) }
 
   context 'when user is not signed in' do
-    it 'redirects to sign in' do
-      get '/unit_conversions/convert', params: { value: rand(1.0..2.0).round(2).to_s, from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
-      expect(response).to redirect_to(new_user_session_path)
+    it 'still converts, because the sign-up form needs it' do
+      get '/unit_conversions/convert', params: { value: '1.75', from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['value']).to eq(5.74)
     end
   end
 
@@ -21,7 +22,7 @@ RSpec.describe 'UnitConversions', type: :request do
       it 'returns nil value' do
         get '/unit_conversions/convert', params: { value: '', from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)).to eq({ 'value' => nil })
+        expect(response.parsed_body).to eq({ 'value' => nil })
       end
     end
 
@@ -30,18 +31,20 @@ RSpec.describe 'UnitConversions', type: :request do
         value = rand(1.50..2.10).round(2)
         expected = UnitConverter.convert_height_between(value, HEIGHTS::M, HEIGHTS::FT)
 
-        get '/unit_conversions/convert', params: { value: value.to_s, from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
+        get '/unit_conversions/convert',
+            params: { value: value.to_s, from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)['value']).to eq(expected)
+        expect(response.parsed_body['value']).to eq(expected)
       end
 
       it 'converts feet to cm' do
         value = rand(4.50..7.00).round(2)
         expected = UnitConverter.convert_height_between(value, HEIGHTS::FT, HEIGHTS::CM)
 
-        get '/unit_conversions/convert', params: { value: value.to_s, from_unit: HEIGHTS::FT, to_unit: HEIGHTS::CM, type: TYPES::HEIGHT }
+        get '/unit_conversions/convert',
+            params: { value: value.to_s, from_unit: HEIGHTS::FT, to_unit: HEIGHTS::CM, type: TYPES::HEIGHT }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)['value']).to eq(expected)
+        expect(response.parsed_body['value']).to eq(expected)
       end
     end
 
@@ -50,9 +53,10 @@ RSpec.describe 'UnitConversions', type: :request do
         value = rand(50.0..120.0).round(2)
         expected = UnitConverter.convert_weight_between(value, WEIGHTS::KG, WEIGHTS::LBS)
 
-        get '/unit_conversions/convert', params: { value: value.to_s, from_unit: WEIGHTS::KG, to_unit: WEIGHTS::LBS, type: TYPES::WEIGHT }
+        get '/unit_conversions/convert',
+            params: { value: value.to_s, from_unit: WEIGHTS::KG, to_unit: WEIGHTS::LBS, type: TYPES::WEIGHT }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)['value']).to eq(expected)
+        expect(response.parsed_body['value']).to eq(expected)
       end
     end
 
@@ -61,9 +65,10 @@ RSpec.describe 'UnitConversions', type: :request do
         value = rand(1.0..42.2).round(2)
         expected = UnitConverter.convert_distance_between(value, DISTANCES::KM, DISTANCES::MI)
 
-        get '/unit_conversions/convert', params: { value: value.to_s, from_unit: DISTANCES::KM, to_unit: DISTANCES::MI, type: TYPES::DISTANCE }
+        get '/unit_conversions/convert',
+            params: { value: value.to_s, from_unit: DISTANCES::KM, to_unit: DISTANCES::MI, type: TYPES::DISTANCE }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)['value']).to eq(expected)
+        expect(response.parsed_body['value']).to eq(expected)
       end
     end
 
@@ -72,9 +77,10 @@ RSpec.describe 'UnitConversions', type: :request do
         value = rand(5.0..30.0).round(2)
         expected = UnitConverter.convert_speed_between(value, DISTANCES::KM, DISTANCES::MI)
 
-        get '/unit_conversions/convert', params: { value: value.to_s, from_unit: DISTANCES::KM, to_unit: DISTANCES::MI, type: TYPES::SPEED }
+        get '/unit_conversions/convert',
+            params: { value: value.to_s, from_unit: DISTANCES::KM, to_unit: DISTANCES::MI, type: TYPES::SPEED }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)['value']).to eq(expected)
+        expect(response.parsed_body['value']).to eq(expected)
       end
     end
 
@@ -82,19 +88,19 @@ RSpec.describe 'UnitConversions', type: :request do
       it 'rejects unknown unit types' do
         get '/unit_conversions/convert', params: { value: '1.80', from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: 'unknown' }
         expect(response).to have_http_status(:bad_request)
-        expect(JSON.parse(response.body)).to include('error')
+        expect(response.parsed_body).to include('error')
       end
 
       it 'rejects non-numeric values' do
         get '/unit_conversions/convert', params: { value: '1.80m', from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
         expect(response).to have_http_status(:bad_request)
-        expect(JSON.parse(response.body)).to include('error')
+        expect(response.parsed_body).to include('error')
       end
 
       it 'rejects units that do not match the conversion type' do
         get '/unit_conversions/convert', params: { value: '1.80', from_unit: WEIGHTS::KG, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
         expect(response).to have_http_status(:bad_request)
-        expect(JSON.parse(response.body)).to include('error')
+        expect(response.parsed_body).to include('error')
       end
     end
   end
