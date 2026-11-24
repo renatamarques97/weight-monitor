@@ -13,7 +13,7 @@
 
     <div data-controller="height-converter">
       <div class="mb-3">
-        <%= f.label :height, t('diet.height', unit: '').gsub(/\s*\(.*?\)/, ''), class: "tw-label", data: { height_converter_target: "label" } %>
+        <%= f.label :height, t('preferences.height'), class: "tw-label", data: { height_converter_target: "label" } %>
         <%= f.text_field :height, class: "tw-input", placeholder: resource.height_unit.presence || MeasurementUnits::HEIGHTS::M, data: { height_converter_target: "input" } %>
       </div>
 
