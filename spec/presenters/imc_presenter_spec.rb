@@ -35,14 +35,20 @@ RSpec.describe ImcPresenter do
       end
 
       it 'calculates correctly when weight is in lbs and height is in ft' do
-        user_lbs_ft = create(:user, height: 5.58, height_unit: HEIGHTS::FT)
-        create(:weight, value: 176.37, weight_unit: WEIGHTS::LBS, user: user_lbs_ft)
+        user_lbs_ft = create(:user, height: 5.58, height_unit: Units::HEIGHTS::FT)
+        create(:weight, value: 176.37, weight_unit: Units::WEIGHTS::LBS, user: user_lbs_ft)
         expect(described_class.new(user_lbs_ft).call).to eq(27.68)
       end
 
+      it 'uses the latest weight by date, not the last one created' do
+        create(:weight, value: 80, weight_date: Date.current, user: user)
+        create(:weight, value: 90, weight_date: 3.days.ago, user: user)
+        expect(described_class.new(user).call).to eq(imc)
+      end
+
       it 'calculates correctly when height is in cm' do
-        user_cm = create(:user, height: 170.0, height_unit: HEIGHTS::CM)
-        create(:weight, value: 80.0, weight_unit: WEIGHTS::KG, user: user_cm)
+        user_cm = create(:user, height: 170.0, height_unit: Units::HEIGHTS::CM)
+        create(:weight, value: 80.0, weight_unit: Units::WEIGHTS::KG, user: user_cm)
         expect(described_class.new(user_cm).call).to eq(27.68)
       end
     end

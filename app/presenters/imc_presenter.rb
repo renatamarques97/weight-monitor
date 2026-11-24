@@ -16,7 +16,7 @@ class ImcPresenter
   attr_reader :user
 
   def weight
-    last_weight = user.weights.last
+    last_weight = RecentWeightPresenter.new(user).call
     return if last_weight.nil?
 
     UnitConverter.convert_weight_between(last_weight.value, last_weight.weight_unit, MeasurementUnits::WEIGHTS::KG)
