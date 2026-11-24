@@ -11,7 +11,7 @@ FactoryBot.define do
     factory :running, class: 'Running' do
       workout_type { :running }
       distance { rand(5.0..15.0).round(2) }
-      details { { avg_pace: (duration / distance).round(2) } }
+      details { { avg_pace: PaceFormatter.call(duration, distance) } }
     end
 
     factory :walking, class: 'Walking' do
