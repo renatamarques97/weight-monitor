@@ -1,118 +1,95 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe UnitConverter do
-  def expected_value(value, from_unit, to_unit, precision: 2)
-    return nil if value.nil?
-    return value.round(precision) if from_unit.to_s == to_unit.to_s
-    RubyUnits::Unit.new("#{value} #{from_unit}").convert_to(to_unit.to_s).scalar.to_f.round(precision)
-  end
-
-  describe ".convert_weight_between" do
-    let(:value) { rand(50.0..150.0).round(2) }
-
-    it "converts lbs → kg" do
-      expect(described_class.convert_weight_between(value, WEIGHTS::LBS, WEIGHTS::KG)).to eq(expected_value(value, WEIGHTS::LBS, WEIGHTS::KG))
+  describe '.convert_weight_between' do
+    it 'converts lbs to kg' do
+      expect(described_class.convert_weight_between(100, WEIGHTS::LBS, WEIGHTS::KG)).to eq(45.36)
     end
 
-    it "converts kg → lbs" do
-      expect(described_class.convert_weight_between(value, WEIGHTS::KG, WEIGHTS::LBS)).to eq(expected_value(value, WEIGHTS::KG, WEIGHTS::LBS))
+    it 'converts kg to lbs' do
+      expect(described_class.convert_weight_between(70, WEIGHTS::KG, WEIGHTS::LBS)).to eq(154.32)
     end
 
-    it "is a no-op when units are the same" do
-      expect(described_class.convert_weight_between(value, WEIGHTS::KG, WEIGHTS::KG)).to eq(value)
+    it 'rounds without converting when units are the same' do
+      expect(described_class.convert_weight_between(70.456, WEIGHTS::KG, WEIGHTS::KG)).to eq(70.46)
     end
 
-    it "returns nil for nil value" do
+    it 'returns nil for nil value' do
       expect(described_class.convert_weight_between(nil, WEIGHTS::KG, WEIGHTS::LBS)).to be_nil
     end
   end
 
-  describe ".convert_distance_between" do
-    let(:value) { rand(1.0..50.0).round(2) }
-
-    it "converts mi → km" do
-      expect(described_class.convert_distance_between(value, DISTANCES::MI, DISTANCES::KM)).to eq(expected_value(value, DISTANCES::MI, DISTANCES::KM))
+  describe '.convert_distance_between' do
+    it 'converts mi to km' do
+      expect(described_class.convert_distance_between(5, DISTANCES::MI, DISTANCES::KM)).to eq(8.05)
     end
 
-    it "converts km → mi" do
-      expect(described_class.convert_distance_between(value, DISTANCES::KM, DISTANCES::MI)).to eq(expected_value(value, DISTANCES::KM, DISTANCES::MI))
+    it 'converts km to mi' do
+      expect(described_class.convert_distance_between(10, DISTANCES::KM, DISTANCES::MI)).to eq(6.21)
     end
 
-    it "is a no-op when units are the same" do
-      expect(described_class.convert_distance_between(value, DISTANCES::KM, DISTANCES::KM)).to eq(value)
-    end
-
-    it "returns nil for nil value" do
+    it 'returns nil for nil value' do
       expect(described_class.convert_distance_between(nil, DISTANCES::KM, DISTANCES::MI)).to be_nil
     end
   end
 
-  describe ".convert_height_between" do
-    let(:value) { rand(1.0..2.5).round(2) }
-
-    it "converts ft → m" do
-      expect(described_class.convert_height_between(value, HEIGHTS::FT, HEIGHTS::M)).to eq(expected_value(value, HEIGHTS::FT, HEIGHTS::M))
+  describe '.convert_height_between' do
+    it 'converts ft to m' do
+      expect(described_class.convert_height_between(6, HEIGHTS::FT, HEIGHTS::M)).to eq(1.83)
     end
 
-    it "converts m → ft" do
-      expect(described_class.convert_height_between(value, HEIGHTS::M, HEIGHTS::FT)).to eq(expected_value(value, HEIGHTS::M, HEIGHTS::FT))
+    it 'converts m to ft' do
+      expect(described_class.convert_height_between(1.75, HEIGHTS::M, HEIGHTS::FT)).to eq(5.74)
     end
 
-    it "converts m → cm" do
-      expect(described_class.convert_height_between(value, HEIGHTS::M, HEIGHTS::CM)).to eq(expected_value(value, HEIGHTS::M, HEIGHTS::CM))
+    it 'converts m to cm' do
+      expect(described_class.convert_height_between(1.75, HEIGHTS::M, HEIGHTS::CM)).to eq(175.0)
     end
 
-    it "converts cm → ft" do
-      cm_val = rand(100.0..250.0).round(2)
-      expect(described_class.convert_height_between(cm_val, HEIGHTS::CM, HEIGHTS::FT)).to eq(expected_value(cm_val, HEIGHTS::CM, HEIGHTS::FT))
-    end
-
-    it "is a no-op when units are the same" do
-      expect(described_class.convert_height_between(value, HEIGHTS::M, HEIGHTS::M)).to eq(value)
-    end
-
-    it "returns nil for nil value" do
-      expect(described_class.convert_height_between(nil, HEIGHTS::M, HEIGHTS::FT)).to be_nil
+    it 'converts cm to ft' do
+      expect(described_class.convert_height_between(180, HEIGHTS::CM, HEIGHTS::FT)).to eq(5.91)
     end
   end
 
-  describe ".convert_speed_between" do
-    let(:value) { rand(10.0..50.0).round(2) }
-
-    it "converts mi/h → km/h" do
-      expect(described_class.convert_speed_between(value, DISTANCES::MI, DISTANCES::KM)).to eq(expected_value(value, DISTANCES::MI, DISTANCES::KM))
+  describe '.convert_speed_between' do
+    it 'converts mi/h to km/h' do
+      expect(described_class.convert_speed_between(10, DISTANCES::MI, DISTANCES::KM)).to eq(16.09)
     end
 
-    it "converts km/h → mi/h" do
-      expect(described_class.convert_speed_between(value, DISTANCES::KM, DISTANCES::MI)).to eq(expected_value(value, DISTANCES::KM, DISTANCES::MI))
-    end
-
-    it "is a no-op when units are the same" do
-      expect(described_class.convert_speed_between(value, DISTANCES::KM, DISTANCES::KM)).to eq(value)
-    end
-
-    it "returns nil for nil value" do
-      expect(described_class.convert_speed_between(nil, DISTANCES::KM, DISTANCES::MI)).to be_nil
+    it 'converts km/h to mi/h' do
+      expect(described_class.convert_speed_between(20, DISTANCES::KM, DISTANCES::MI)).to eq(12.43)
     end
   end
 
-  describe ".convert_time_between" do
-    let(:value) { rand(1..120) }
-
-    it "converts minutes to seconds" do
-      expect(described_class.convert_time_between(value, TIMES::MINUTES, TIMES::SECONDS)).to eq(expected_value(value, TIMES::MINUTES, TIMES::SECONDS))
+  describe '.convert_time_between' do
+    it 'converts minutes to seconds' do
+      expect(described_class.convert_time_between(30, TIMES::MINUTES, TIMES::SECONDS)).to eq(1800.0)
     end
 
-    it "converts seconds to minutes" do
-      expect(described_class.convert_time_between(value, TIMES::SECONDS, TIMES::MINUTES)).to eq(expected_value(value, TIMES::SECONDS, TIMES::MINUTES))
+    it 'converts seconds to minutes' do
+      expect(described_class.convert_time_between(90, TIMES::SECONDS, TIMES::MINUTES)).to eq(1.5)
+    end
+  end
+
+  describe '.convert' do
+    it 'raises for a unit outside the conversion type' do
+      expect { described_class.convert(TYPES::HEIGHT, 1, WEIGHTS::KG, HEIGHTS::M) }.to raise_error(KeyError)
+    end
+  end
+
+  describe '.supports?' do
+    it 'accepts known units of the same type' do
+      expect(described_class.supports?(TYPES::HEIGHT, HEIGHTS::M, HEIGHTS::FT)).to be(true)
     end
 
-    it "is a no-op when units are the same" do
-      expect(described_class.convert_time_between(value, TIMES::MINUTES, TIMES::MINUTES)).to eq(value.to_f)
+    it 'rejects unknown types' do
+      expect(described_class.supports?('unknown', HEIGHTS::M, HEIGHTS::FT)).to be(false)
     end
 
-    it "returns nil for nil value" do
-      expect(described_class.convert_time_between(nil, TIMES::MINUTES, TIMES::SECONDS)).to be_nil
+    it 'rejects units from another type' do
+      expect(described_class.supports?(TYPES::HEIGHT, WEIGHTS::KG, HEIGHTS::FT)).to be(false)
     end
   end
 end

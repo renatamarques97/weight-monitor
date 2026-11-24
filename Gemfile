@@ -20,7 +20,6 @@ gem 'propshaft'
 gem 'puma'
 gem 'rails', '~> 8.0.0'
 gem 'ruby-openai'
-gem 'ruby-units'
 gem 'stimulus-rails'
 gem 'turbo-rails'
 
