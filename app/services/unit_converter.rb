@@ -20,23 +20,23 @@ class UnitConverter
 
   class << self
     def convert_weight_between(value, from_unit, to_unit)
-      convert(TYPES::WEIGHT, value, from_unit, to_unit)
+      convert(MeasurementUnits::TYPES::WEIGHT, value, from_unit, to_unit)
     end
 
     def convert_distance_between(value, from_unit, to_unit)
-      convert(TYPES::DISTANCE, value, from_unit, to_unit)
+      convert(MeasurementUnits::TYPES::DISTANCE, value, from_unit, to_unit)
     end
 
     def convert_height_between(value, from_unit, to_unit)
-      convert(TYPES::HEIGHT, value, from_unit, to_unit)
+      convert(MeasurementUnits::TYPES::HEIGHT, value, from_unit, to_unit)
     end
 
     def convert_speed_between(value, from_unit, to_unit)
-      convert(TYPES::SPEED, value, from_unit, to_unit)
+      convert(MeasurementUnits::TYPES::SPEED, value, from_unit, to_unit)
     end
 
     def convert_time_between(value, from_unit, to_unit)
-      convert(TYPES::TIME, value, from_unit, to_unit)
+      convert(MeasurementUnits::TYPES::TIME, value, from_unit, to_unit)
     end
 
     def convert(type, value, from_unit, to_unit)
