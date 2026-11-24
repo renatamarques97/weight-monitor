@@ -42,12 +42,12 @@
 
       <div>
         <%= form.label :initial_weight, t('diet.initial_weight', unit: diet.weight_unit), class: "tw-label", data: unit_label_data('weight', 'diet.initial_weight') %>
-        <%= form.number_field :initial_weight, step: :any, class: "tw-input" %>
+        <%= form.number_field :initial_weight, step: 0.1, class: "tw-input" %>
       </div>
 
       <div>
         <%= form.label :target_weight, t('diet.target_weight', unit: diet.weight_unit), class: "tw-label", data: unit_label_data('weight', 'diet.target_weight') %>
-        <%= form.number_field :target_weight, step: :any, class: "tw-input" %>
+        <%= form.number_field :target_weight, step: 0.1, class: "tw-input" %>
       </div>
 
       <div>

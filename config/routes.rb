@@ -13,5 +13,11 @@ Rails.application.routes.draw do
   resource :chat_responses, only: [:show]
   get 'unit_conversions/convert', to: 'unit_conversions#convert'
 
+  get '/strava/connect', to: 'strava#connect', as: :strava_connect
+  get '/strava/callback', to: 'strava#callback', as: :strava_callback
+  post '/strava/sync', to: 'strava#sync', as: :strava_sync
+  get '/strava/status', to: 'strava#status', as: :strava_status
+  delete '/strava/disconnect', to: 'strava#disconnect', as: :strava_disconnect
+
   match '*path', to: 'errors#not_found', via: :all
 end

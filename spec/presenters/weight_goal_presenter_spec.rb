@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe GoalPresenter do
+RSpec.describe WeightGoalPresenter do
   describe '#achieved?' do
     subject(:achieved) { described_class.new(user).achieved? }
 
@@ -88,13 +88,49 @@ RSpec.describe GoalPresenter do
       expect(achieved).to be(true)
     end
 
-    it 'uses the diet that ends last' do
-      create(:diet, user: user, initial_weight: 90, target_weight: 80, end_date: 1.month.from_now)
-      create(:diet, user: user, initial_weight: 90, target_weight: 60, end_date: 1.month.ago,
-                    start_date: 2.months.ago)
+    it 'uses the diet that started last' do
+      create(:diet, user: user, initial_weight: 90, target_weight: 80, start_date: Date.current)
+      create(:diet, user: user, initial_weight: 90, target_weight: 60, start_date: 2.months.ago,
+                    end_date: 1.month.ago)
       weight(79)
 
       expect(achieved).to be(true)
+    end
+  end
+
+  describe '#progress_percent' do
+    let(:user) { create(:user) }
+
+    it 'returns 50 percent halfway from initial to target weight' do
+      create(:diet, user: user, initial_weight: 100, target_weight: 80)
+      create(:weight, user: user, value: 90)
+
+      expect(described_class.new(user).progress_percent).to eq(50)
+    end
+
+    it 'clamps progress at zero and 100 percent' do
+      create(:diet, user: user, initial_weight: 100, target_weight: 80)
+      create(:weight, user: user, value: 110)
+
+      presenter = described_class.new(user)
+      expect(presenter.progress_percent).to eq(0)
+
+      create(:weight, user: user, value: 75)
+      expect(presenter.progress_percent).to eq(100)
+    end
+
+    it 'converts the latest weight to the unit of the diet' do
+      create(:diet, user: user, initial_weight: 220, target_weight: 200, weight_unit: WEIGHTS::LBS)
+      create(:weight, user: user, value: 95.25, weight_unit: WEIGHTS::KG)
+
+      expect(described_class.new(user).progress_percent).to eq(50)
+    end
+
+    it 'works when the goal is weight gain' do
+      create(:diet, user: user, initial_weight: 70, target_weight: 80)
+      create(:weight, user: user, value: 75)
+
+      expect(described_class.new(user).progress_percent).to eq(50)
     end
   end
 end

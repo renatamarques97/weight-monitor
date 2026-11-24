@@ -195,7 +195,7 @@ RSpec.describe '/workouts', type: :request do
       it 'renders unprocessable entity with invalid parameters' do
         post workouts_path, params: { workout: invalid_attributes }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it 'does not set flash notice when creation fails' do
@@ -224,7 +224,7 @@ RSpec.describe '/workouts', type: :request do
       it 'renders edit with error status when update fails' do
         patch workout_path(workout), params: { workout: { duration: nil } }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.body).to include(I18n.t('error.saved'))
       end
 

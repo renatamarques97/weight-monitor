@@ -39,13 +39,27 @@ RSpec.describe Diet, type: :model do
     end
   end
 
+  describe 'weight formatting' do
+    let(:user) { create(:user) }
+
+    it 'rounds initial and target weight to one decimal place' do
+      diet = build(:diet, user: user, initial_weight: 77.87161889553765,
+                          target_weight: 70.246789)
+
+      diet.valid?
+
+      expect(diet.initial_weight).to eq(77.9)
+      expect(diet.target_weight).to eq(70.2)
+    end
+  end
+
   describe 'record-level unit persistence' do
     let(:user) { create(:user, weight_unit: WEIGHTS::KG) }
 
-    it 'stores values exactly as entered in the chosen unit' do
-      diet = create(:diet, user: user, initial_weight: 154.32, target_weight: 132.28, weight_unit: WEIGHTS::LBS)
-      expect(diet.initial_weight).to eq(154.32)
-      expect(diet.target_weight).to eq(132.28)
+    it 'stores values in the chosen unit' do
+      diet = create(:diet, user: user, initial_weight: 154.3, target_weight: 132.3, weight_unit: WEIGHTS::LBS)
+      expect(diet.initial_weight).to eq(154.3)
+      expect(diet.target_weight).to eq(132.3)
       expect(diet.weight_unit).to eq(WEIGHTS::LBS)
     end
   end

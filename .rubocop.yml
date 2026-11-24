@@ -6,6 +6,7 @@ AllCops:
   NewCops: enable
   Exclude:
     - 'db/schema.rb'
+    - 'db/migrate/20261122200000_create_solid_queue_tables.rb'
     - 'vendor/**/*'
     - 'coverage/**/*'
     - 'tmp/**/*'

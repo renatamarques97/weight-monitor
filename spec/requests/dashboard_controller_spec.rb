@@ -75,5 +75,13 @@ RSpec.describe '/dashboard', type: :request do
       expect(response.body).to include(I18n.t('weight.chart_label', unit: WEIGHTS::LBS))
       expect(response.body).to include('154.32')
     end
+
+    it 'shows the 30-day trend in the preferred unit' do
+      create(:weight, user: user, value: 69, weight_unit: WEIGHTS::KG, weight_date: Date.current)
+
+      get root_path
+
+      expect(response.body).to include(I18n.t('dashboard.weight_decreased', weight: 2.2, unit: WEIGHTS::LBS))
+    end
   end
 end

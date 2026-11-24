@@ -88,4 +88,26 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(html).to include('<p>#### Texto</p>')
     end
   end
+
+  describe '#weight_trend_direction' do
+    it 'marks weight loss as positive when the target is lower' do
+      expect(helper.weight_trend_direction(-2.0, 90, 80)).to eq('positive')
+    end
+
+    it 'marks weight gain as positive when the target is higher' do
+      expect(helper.weight_trend_direction(2.0, 70, 80)).to eq('positive')
+    end
+
+    it 'marks movement away from the target as negative' do
+      expect(helper.weight_trend_direction(2.0, 90, 80)).to eq('negative')
+    end
+
+    it 'returns neutral when there is no weight change' do
+      expect(helper.weight_trend_direction(0, 90, 80)).to eq('neutral')
+    end
+
+    it 'returns neutral without goal bounds' do
+      expect(helper.weight_trend_direction(-2.0, nil, 80)).to eq('neutral')
+    end
+  end
 end
