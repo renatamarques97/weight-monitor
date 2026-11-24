@@ -41,6 +41,18 @@ RSpec.describe 'UnitConversions', type: :request do
       end
     end
 
+    it 'reads feet and inches' do
+      get '/unit_conversions/convert', params: { value: %(5'9"), from_unit: HEIGHTS::FT, to_unit: HEIGHTS::CM, type: TYPES::HEIGHT }
+
+      expect(response.parsed_body).to eq('value' => 175.26, 'display' => '175.26')
+    end
+
+    it 'shows feet as feet and inches' do
+      get '/unit_conversions/convert', params: { value: '1.75', from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: TYPES::HEIGHT }
+
+      expect(response.parsed_body).to eq('value' => 5.74, 'display' => %(5'8.9"))
+    end
+
     context 'with invalid conversion parameters' do
       it 'rejects unknown unit types' do
         get '/unit_conversions/convert', params: { value: '1.80', from_unit: HEIGHTS::M, to_unit: HEIGHTS::FT, type: 'unknown' }

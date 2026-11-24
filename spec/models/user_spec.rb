@@ -34,6 +34,26 @@ RSpec.describe User, type: :model do
       user.height_unit = HEIGHTS::CM
       expect(user).to be_valid
     end
+
+    it 'accepts height in feet and inches' do
+      user.height = %(5'9")
+      user.validate
+
+      expect(user.height).to eq(5.75)
+    end
+
+    it 'rejects a height in feet that cannot be read' do
+      user.height = 'tall'
+
+      expect(user).not_to be_valid
+      expect(user.errors[:height]).to be_present
+    end
+
+    it 'does not read feet and inches for other units' do
+      user.assign_attributes(height_unit: HEIGHTS::M, height: %(5'9"))
+
+      expect(user).not_to be_valid
+    end
   end
 
   describe 'workout helpers' do

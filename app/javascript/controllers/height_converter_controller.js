@@ -1,10 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Converts the height input when the height unit select changes. The server parses
+// and formats the value, so feet can be typed and shown as feet and inches (5'9").
 // The base label comes from a value, not from the DOM: reading textContent on
 // connect would append the unit again when Turbo restores a cached page.
 export default class extends Controller {
   static targets = ["input", "select", "label"]
-  static values = { label: String }
+  static values = { label: String, placeholders: Object }
 
   connect() {
     this.currentUnit = this.selectTarget.value
@@ -18,20 +20,9 @@ export default class extends Controller {
 
     const rawValue = this.inputTarget.value.trim()
     if (rawValue) {
-      const value = Number(rawValue)
-      if (!Number.isFinite(value)) {
-        this.selectTarget.value = oldUnit
-        return
-      }
-
       this.selectTarget.disabled = true
       try {
-        const params = new URLSearchParams({
-          value: value.toString(),
-          from_unit: oldUnit,
-          to_unit: newUnit,
-          type: "height"
-        })
+        const params = new URLSearchParams({ value: rawValue, from_unit: oldUnit, to_unit: newUnit, type: "height" })
         const response = await fetch(`/unit_conversions/convert?${params}`, {
           headers: { Accept: "application/json" }
         })
@@ -40,7 +31,7 @@ export default class extends Controller {
         const data = await response.json()
         if (!Number.isFinite(data.value)) throw new Error("Conversion returned an invalid value")
 
-        this.inputTarget.value = data.value.toString()
+        this.inputTarget.value = data.display
       } catch (error) {
         console.error("Failed to convert height", error)
         this.selectTarget.value = oldUnit
@@ -50,12 +41,8 @@ export default class extends Controller {
       }
     }
 
-    this.inputTarget.placeholder = newUnit
-    this.updateLabel(newUnit)
+    this.inputTarget.placeholder = this.placeholdersValue[newUnit] || newUnit
+    this.labelTarget.textContent = `${this.labelValue} (${newUnit})`
     this.currentUnit = newUnit
-  }
-
-  updateLabel(unit) {
-    this.labelTarget.textContent = `${this.labelValue} (${unit})`
   }
 }
