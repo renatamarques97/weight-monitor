@@ -5,21 +5,23 @@
 class BackfillRunningAveragePace < ActiveRecord::Migration[8.0]
   RUNNING = 0
 
+  BACKFILL_SQL = <<~SQL.squish
+    UPDATE workouts
+    SET details = jsonb_set(
+      details,
+      '{avg_pace}',
+      to_jsonb(format('%s''%s"', paces.seconds / 60, lpad((paces.seconds % 60)::text, 2, '0')))
+    )
+    FROM (
+      SELECT id, round((duration * 60 / distance)::numeric)::integer AS seconds
+      FROM workouts
+      WHERE workout_type = #{RUNNING} AND distance > 0 AND duration IS NOT NULL
+    ) AS paces
+    WHERE workouts.id = paces.id
+  SQL
+
   def up
-    execute <<~SQL.squish
-      UPDATE workouts
-      SET details = jsonb_set(
-        details,
-        '{avg_pace}',
-        to_jsonb(format('%s''%s"', paces.seconds / 60, lpad((paces.seconds % 60)::text, 2, '0')))
-      )
-      FROM (
-        SELECT id, round((duration * 60 / distance)::numeric)::integer AS seconds
-        FROM workouts
-        WHERE workout_type = #{RUNNING} AND distance > 0 AND duration IS NOT NULL
-      ) AS paces
-      WHERE workouts.id = paces.id
-    SQL
+    execute BACKFILL_SQL
   end
 
   def down

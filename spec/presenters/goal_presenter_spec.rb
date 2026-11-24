@@ -36,27 +36,27 @@ RSpec.describe GoalPresenter do
         expect(described_class.new(user).achieved?).to be(true)
       end
 
-      it "converts the target to the recorded weight unit" do
+      it 'converts the target to the recorded weight unit' do
         create(:diet, target_weight: 70, weight_unit: WEIGHTS::KG, user: user)
         create(:weight, value: 154.32, weight_unit: WEIGHTS::LBS, user: user)
 
-        expect(described_class.new(user).achieved?).to eq(true)
+        expect(described_class.new(user).achieved?).to be(true)
       end
 
-      it "compares same-unit values without rounding" do
+      it 'compares same-unit values without rounding' do
         create(:diet, target_weight: 70.125, weight_unit: WEIGHTS::KG, user: user)
         create(:weight, value: 70.125, weight_unit: WEIGHTS::KG, user: user)
 
-        expect(described_class.new(user).achieved?).to eq(true)
+        expect(described_class.new(user).achieved?).to be(true)
       end
     end
 
-    context "when equal numbers use different units" do
-      it "does not consider the goal achieved" do
+    context 'when equal numbers use different units' do
+      it 'does not consider the goal achieved' do
         create(:diet, target_weight: 70, weight_unit: WEIGHTS::LBS, user: user)
         create(:weight, value: 70, weight_unit: WEIGHTS::KG, user: user)
 
-        expect(described_class.new(user).achieved?).to eq(false)
+        expect(described_class.new(user).achieved?).to be(false)
       end
     end
   end

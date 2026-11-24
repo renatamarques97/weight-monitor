@@ -27,10 +27,10 @@ RSpec.describe WeightQuery do
     end
   end
 
-  describe ".weights_for_chart" do
+  describe '.weights_for_chart' do
     let(:user) { create(:user, weight_unit: WEIGHTS::KG) }
 
-    it "normalizes mixed-unit records to user preferred unit" do
+    it 'normalizes mixed-unit records to user preferred unit' do
       date = Date.current
       # Record saved in kg
       create(:weight, user: user, weight_date: date - 1.day, value: 70.0, weight_unit: WEIGHTS::KG)
@@ -45,7 +45,7 @@ RSpec.describe WeightQuery do
       expect(result[date]).to eq(70.0)
     end
 
-    it "filters by period in days" do
+    it 'filters by period in days' do
       create(:weight, user: user, weight_date: 40.days.ago.to_date, value: 82.0, weight_unit: WEIGHTS::KG)
       create(:weight, user: user, weight_date: 10.days.ago.to_date, value: 79.0, weight_unit: WEIGHTS::KG)
 

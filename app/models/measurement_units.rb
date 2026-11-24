@@ -1,35 +1,37 @@
+# frozen_string_literal: true
+
 module MeasurementUnits
   module WEIGHTS
-    KG = 'kg'.freeze
-    LBS = 'lbs'.freeze
+    KG = 'kg'
+    LBS = 'lbs'
     ALL = [KG, LBS].freeze
   end
 
   module DISTANCES
-    KM = 'km'.freeze
-    MI = 'mi'.freeze
+    KM = 'km'
+    MI = 'mi'
     ALL = [KM, MI].freeze
   end
 
   module HEIGHTS
-    M = 'm'.freeze
-    FT = 'ft'.freeze
-    CM = 'cm'.freeze
+    M = 'm'
+    FT = 'ft'
+    CM = 'cm'
     ALL = [M, FT, CM].freeze
   end
 
   module TIMES
-    MINUTES = 'min'.freeze
-    SECONDS = 's'.freeze
+    MINUTES = 'min'
+    SECONDS = 's'
     ALL = [MINUTES, SECONDS].freeze
   end
 
   module TYPES
-    HEIGHT = 'height'.freeze
-    WEIGHT = 'weight'.freeze
-    DISTANCE = 'distance'.freeze
-    SPEED = 'speed'.freeze
-    TIME = 'time'.freeze
+    HEIGHT = 'height'
+    WEIGHT = 'weight'
+    DISTANCE = 'distance'
+    SPEED = 'speed'
+    TIME = 'time'
     ALL = [HEIGHT, WEIGHT, DISTANCE, SPEED, TIME].freeze
   end
 end

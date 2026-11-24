@@ -34,13 +34,13 @@ RSpec.describe ImcPresenter do
         expect(described_class.new(user).call).to eq(imc)
       end
 
-      it "calculates correctly when weight is in lbs and height is in ft" do
+      it 'calculates correctly when weight is in lbs and height is in ft' do
         user_lbs_ft = create(:user, height: 5.58, height_unit: HEIGHTS::FT)
         create(:weight, value: 176.37, weight_unit: WEIGHTS::LBS, user: user_lbs_ft)
         expect(described_class.new(user_lbs_ft).call).to eq(27.68)
       end
 
-      it "calculates correctly when height is in cm" do
+      it 'calculates correctly when height is in cm' do
         user_cm = create(:user, height: 170.0, height_unit: HEIGHTS::CM)
         create(:weight, value: 80.0, weight_unit: WEIGHTS::KG, user: user_cm)
         expect(described_class.new(user_cm).call).to eq(27.68)

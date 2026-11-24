@@ -17,12 +17,14 @@ class ImcPresenter
 
   def weight
     last_weight = user.weights.last
-    return nil if last_weight.nil?
+    return if last_weight.nil?
+
     UnitConverter.convert_weight_between(last_weight.value, last_weight.weight_unit, MeasurementUnits::WEIGHTS::KG)
   end
 
   def height
-    return nil if user.height.nil?
+    return if user.height.nil?
+
     UnitConverter.convert_height_between(user.height, user.height_unit, MeasurementUnits::HEIGHTS::M)
   end
 end

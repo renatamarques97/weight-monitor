@@ -156,7 +156,6 @@ RSpec.describe '/meal_diaries', type: :request do
           expect(response.body).to include('Invalid diary')
         end
       end
-
     end
 
     describe 'DELETE /destroy' do

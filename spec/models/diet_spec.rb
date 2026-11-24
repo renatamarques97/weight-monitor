@@ -39,10 +39,10 @@ RSpec.describe Diet, type: :model do
     end
   end
 
-  describe "record-level unit persistence" do
+  describe 'record-level unit persistence' do
     let(:user) { create(:user, weight_unit: WEIGHTS::KG) }
 
-    it "stores values exactly as entered in the chosen unit" do
+    it 'stores values exactly as entered in the chosen unit' do
       diet = create(:diet, user: user, initial_weight: 154.32, target_weight: 132.28, weight_unit: WEIGHTS::LBS)
       expect(diet.initial_weight).to eq(154.32)
       expect(diet.target_weight).to eq(132.28)
