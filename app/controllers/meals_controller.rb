@@ -5,7 +5,15 @@ class MealsController < ApplicationController
 
   # GET /meals
   def index
-    @meals = Meal.all
+    meals = if current_user
+              diet_meals = Meal.where(diet_id: current_user.diets.select(:id))
+              diary_meals = Meal.where(meal_diary_id: current_user.meal_diaries.select(:id))
+              diet_meals.or(diary_meals).order(schedule: :desc)
+            else
+              Meal.none
+            end
+
+    @pagy, @meals = pagy(meals, limit: 20)
   end
 
   # GET /meals/1

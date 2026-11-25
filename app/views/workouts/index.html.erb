@@ -60,126 +60,130 @@
   </div>
 </div>
 
-<section class="tw-card overflow-hidden">
+<section class="tw-card fit-list-card overflow-hidden">
   <div class="overflow-x-auto">
-    <table class="min-w-full text-sm">
-      <thead class="fit-surface-muted">
-        <tr>
-          <th scope="col" class="fit-th"><%= t('workout.type') %></th>
-          <th scope="col" class="fit-th"><%= t('workout.date') %></th>
-          <th scope="col" class="fit-th"><%= t('workout.duration') %></th>
-          <th scope="col" class="fit-th">
-            <%=
-              if params[:type].blank?
-                t('workout.highlights')
-              elsif %i[running walking cycling swimming].include?(params[:type].to_sym)
-                t('workout.distance_label')
-              elsif params[:type].to_sym == :soccer
-                t('workout.details.goals')
-              elsif params[:type].to_sym == :basketball
-                t('workout.details.points')
-              elsif params[:type].to_sym == :weightlifting
-                t('workout.details.exercises_count')
-              elsif params[:type].to_sym == :tennis
-                t('workout.details.sets_won')
-              else
-                t('workout.details.style')
-              end
-            %>
-          </th>
-          <th scope="col" class="fit-th fit-th--right"><%= t('actions') %></th>
-        </tr>
-      </thead>
-      <tbody class="fit-surface-card fit-divide-subtle">
-        <% @workouts.each do |workout| %>
-          <% details = workout.details %>
-          <tr class="fit-hover-surface-muted transition-colors">
-            <td class="fit-td fit-td--primary">
-              <div class="flex items-center gap-3">
-                <span class="fit-workout-icon-cell" style="color: <%= WorkoutType::COLORS[workout.workout_type.to_sym] %>;">
-                  <i class="fa <%= WorkoutType::ICONS[workout.workout_type.to_sym] %>"></i>
-                </span>
-                <span><%= t("workout.types.#{workout.workout_type}") %></span>
-              </div>
-            </td>
-            <td class="fit-td">
-              <%= workout.workout_date.strftime("%b %d, %Y") %>
-            </td>
-            <td class="fit-td">
-              <%= workout_duration(workout.duration) %> min
-            </td>
-            <td class="fit-td">
-              <% case workout.workout_type.to_sym %>
-              <% when :running %>
-                <%= distance_in_preferred_unit(workout.distance, workout.distance_unit) %>
-                <% pace = pace_in_preferred_unit(workout) %>
-                <% if pace %>
-                  <span class="block text-xs fit-text-secondary"><%= pace %></span>
-                <% end %>
-              <% when :walking, :cycling, :swimming %>
-                <%= distance_in_preferred_unit(workout.distance, workout.distance_unit) %>
-                <% if details.respond_to?(:steps) && details.steps.present? %>
-                  <span class="block text-xs fit-text-secondary"><%= details.steps %> <%= t('workout.details.steps') %></span>
-                <% elsif details.respond_to?(:avg_speed) && details.avg_speed.present? %>
-                  <span class="block text-xs fit-text-secondary"><%= speed_in_preferred_unit(details.avg_speed, workout.distance_unit) %></span>
-                <% elsif details.respond_to?(:laps) && details.laps.present? %>
-                  <span class="block text-xs fit-text-secondary"><%= details.laps %> <%= t('workout.details.laps') %></span>
-                <% end %>
-              <% when :weightlifting %>
-                <%= details.respond_to?(:exercises_count) && details.exercises_count.present? ? "#{details.exercises_count} #{t('workout.details.exercises_count')}" : "-" %>
-                <% if details.respond_to?(:volume) && details.volume.present? %>
-                  <span class="block text-xs fit-text-secondary"><%= weight_in_preferred_unit(details.volume, workout.weight_unit) %></span>
-                <% end %>
-              <% when :yoga %>
-                <%= details.respond_to?(:style) && details.style.present? ? details.style.titleize : "-" %>
-              <% when :soccer %>
-                <%= details.respond_to?(:goals) && details.goals.present? ? "#{details.goals} #{t('workout.details.goals')}" : "-" %>
-                <% if details.respond_to?(:position) && details.position.present? %>
-                  <span class="block text-xs fit-text-secondary"><%= details.position %></span>
-                <% end %>
-              <% when :basketball %>
-                <%= details.respond_to?(:points) && details.points.present? ? "#{details.points} #{t('workout.details.points')}" : "-" %>
-                <% if details.respond_to?(:rebounds) && details.rebounds.present? %>
-                  <span class="block text-xs fit-text-secondary"><%= details.rebounds %> <%= t('workout.details.rebounds') %></span>
-                <% end %>
-              <% when :tennis %>
-                <% sets_won = details.respond_to?(:sets_won) ? details.sets_won : nil %>
-                <% sets_lost = details.respond_to?(:sets_lost) ? details.sets_lost : nil %>
-                <%= sets_won.present? || sets_lost.present? ? "#{sets_won || 0}-#{sets_lost || 0}" : "-" %>
-              <% when :martial_arts %>
-                <%= details.respond_to?(:style) && details.style.present? ? details.style.titleize : "-" %>
-                <% if details.respond_to?(:belt) && details.belt.present? %>
-                  <span class="block text-xs fit-text-secondary"><%= details.belt %></span>
-                <% end %>
-              <% else %>
-                -
-              <% end %>
-            </td>
-            <td class="fit-td fit-td--right">
-              <div class="flex justify-end gap-2">
-                <%= link_to edit_workout_path(workout), data: { turbo_frame: "main" }, class: "fit-icon-btn fit-icon-btn-edit", title: t('edit'), aria: { label: t('edit') } do %>
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                <% end %>
-                <%= link_to workout_path(workout), data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: "fit-icon-btn fit-icon-btn-delete", title: t('remove'), aria: { label: t('remove') } do %>
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-        <% end %>
-
-        <% if @workouts.empty? %>
+    <div class="fit-list-table-shell">
+      <table class="min-w-full text-sm">
+        <thead class="fit-surface-muted">
           <tr>
-            <td colspan="5" class="px-6 py-12 text-center">
-              <div class="fit-text-secondary">
-                <i class="fa fa-calendar-o text-4xl mb-2"></i>
-                <p><%= t('workout.no_records', sport: t('workout.title')) %></p>
-              </div>
-            </td>
+            <th scope="col" class="fit-th"><%= t('workout.type') %></th>
+            <th scope="col" class="fit-th"><%= t('workout.date') %></th>
+            <th scope="col" class="fit-th"><%= t('workout.duration') %></th>
+            <th scope="col" class="fit-th">
+              <%=
+                if params[:type].blank?
+                  t('workout.highlights')
+                elsif %i[running walking cycling swimming].include?(params[:type].to_sym)
+                  t('workout.distance_label')
+                elsif params[:type].to_sym == :soccer
+                  t('workout.details.goals')
+                elsif params[:type].to_sym == :basketball
+                  t('workout.details.points')
+                elsif params[:type].to_sym == :weightlifting
+                  t('workout.details.exercises_count')
+                elsif params[:type].to_sym == :tennis
+                  t('workout.details.sets_won')
+                else
+                  t('workout.details.style')
+                end
+              %>
+            </th>
+            <th scope="col" class="fit-th fit-th--right"><%= t('actions') %></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="fit-surface-card fit-divide-subtle">
+          <% @workouts.each do |workout| %>
+            <% details = workout.details %>
+            <tr class="fit-hover-surface-muted transition-colors">
+              <td class="fit-td fit-td--primary">
+                <div class="flex items-center gap-3">
+                  <span class="fit-workout-icon-cell" style="color: <%= WorkoutType::COLORS[workout.workout_type.to_sym] %>;">
+                    <i class="fa <%= WorkoutType::ICONS[workout.workout_type.to_sym] %>"></i>
+                  </span>
+                  <span><%= t("workout.types.#{workout.workout_type}") %></span>
+                </div>
+              </td>
+              <td class="fit-td">
+                <%= workout.workout_date.strftime("%b %d, %Y") %>
+              </td>
+              <td class="fit-td">
+                <%= workout_duration(workout.duration) %> min
+              </td>
+              <td class="fit-td">
+                <% case workout.workout_type.to_sym %>
+                <% when :running %>
+                  <%= distance_in_preferred_unit(workout.distance, workout.distance_unit) %>
+                  <% pace = pace_in_preferred_unit(workout) %>
+                  <% if pace %>
+                    <span class="block text-xs fit-text-secondary"><%= pace %></span>
+                  <% end %>
+                <% when :walking, :cycling, :swimming %>
+                  <%= distance_in_preferred_unit(workout.distance, workout.distance_unit) %>
+                  <% if details.respond_to?(:steps) && details.steps.present? %>
+                    <span class="block text-xs fit-text-secondary"><%= details.steps %> <%= t('workout.details.steps') %></span>
+                  <% elsif details.respond_to?(:avg_speed) && details.avg_speed.present? %>
+                    <span class="block text-xs fit-text-secondary"><%= speed_in_preferred_unit(details.avg_speed, workout.distance_unit) %></span>
+                  <% elsif details.respond_to?(:laps) && details.laps.present? %>
+                    <span class="block text-xs fit-text-secondary"><%= details.laps %> <%= t('workout.details.laps') %></span>
+                  <% end %>
+                <% when :weightlifting %>
+                  <%= details.respond_to?(:exercises_count) && details.exercises_count.present? ? "#{details.exercises_count} #{t('workout.details.exercises_count')}" : "-" %>
+                  <% if details.respond_to?(:volume) && details.volume.present? %>
+                    <span class="block text-xs fit-text-secondary"><%= weight_in_preferred_unit(details.volume, workout.weight_unit) %></span>
+                  <% end %>
+                <% when :yoga %>
+                  <%= details.respond_to?(:style) && details.style.present? ? details.style.titleize : "-" %>
+                <% when :soccer %>
+                  <%= details.respond_to?(:goals) && details.goals.present? ? "#{details.goals} #{t('workout.details.goals')}" : "-" %>
+                  <% if details.respond_to?(:position) && details.position.present? %>
+                    <span class="block text-xs fit-text-secondary"><%= details.position %></span>
+                  <% end %>
+                <% when :basketball %>
+                  <%= details.respond_to?(:points) && details.points.present? ? "#{details.points} #{t('workout.details.points')}" : "-" %>
+                  <% if details.respond_to?(:rebounds) && details.rebounds.present? %>
+                    <span class="block text-xs fit-text-secondary"><%= details.rebounds %> <%= t('workout.details.rebounds') %></span>
+                  <% end %>
+                <% when :tennis %>
+                  <% sets_won = details.respond_to?(:sets_won) ? details.sets_won : nil %>
+                  <% sets_lost = details.respond_to?(:sets_lost) ? details.sets_lost : nil %>
+                  <%= sets_won.present? || sets_lost.present? ? "#{sets_won || 0}-#{sets_lost || 0}" : "-" %>
+                <% when :martial_arts %>
+                  <%= details.respond_to?(:style) && details.style.present? ? details.style.titleize : "-" %>
+                  <% if details.respond_to?(:belt) && details.belt.present? %>
+                    <span class="block text-xs fit-text-secondary"><%= details.belt %></span>
+                  <% end %>
+                <% else %>
+                  -
+                <% end %>
+              </td>
+              <td class="fit-td fit-td--right">
+                <div class="flex justify-end gap-2">
+                  <%= link_to edit_workout_path(workout), data: { turbo_frame: "main" }, class: "fit-icon-btn fit-icon-btn-edit", title: t('edit'), aria: { label: t('edit') } do %>
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                  <% end %>
+                  <%= link_to workout_path(workout), data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: "fit-icon-btn fit-icon-btn-delete", title: t('remove'), aria: { label: t('remove') } do %>
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+
+          <% if @workouts.empty? %>
+            <tr>
+              <td colspan="5" class="px-6 py-12 text-center">
+                <div class="fit-text-secondary">
+                  <i class="fa fa-calendar-o text-4xl mb-2"></i>
+                  <p><%= t('workout.no_records', sport: t('workout.title')) %></p>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%= render "shared/pagination", pagy: @pagy %>
   </div>
 </section>
 </turbo-frame>

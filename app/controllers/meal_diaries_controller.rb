@@ -6,7 +6,8 @@ class MealDiariesController < ApplicationController
   before_action :authorized!, only: %i[show edit update destroy]
 
   def index
-    @meal_diaries = MealDiary.authorized_user(current_user).order(diary_date: :desc)
+    meal_diaries = MealDiary.authorized_user(current_user).order(diary_date: :desc, created_at: :desc)
+    @pagy, @meal_diaries = pagy(meal_diaries, limit: 20)
   end
 
   def show; end
