@@ -37,8 +37,15 @@
           <i class="fa fa-cutlery" aria-hidden="true"></i>
         </span>
         <div>
-          <p class="fit-stat-label"><%= t('diet.title') %></p>
-          <p class="fit-stat-value"><%= @diets.count %></p>
+          <p class="fit-stat-label"><%= t('diet.nutrition') %></p>
+          <% if @nutrition_adherence.state == :not_set %>
+            <p class="fit-stat-value"><%= t('diet.not_set_up') %></p>
+          <% elsif @nutrition_adherence.state == :no_records %>
+            <p class="fit-stat-value"><%= t('diet.no_recent_records') %></p>
+          <% else %>
+            <p class="fit-stat-value"><%= @nutrition_adherence.adherence_percent %>%</p>
+            <p class="mt-1 text-xs font-semibold fit-text-secondary"><%= t('diet.goal_adherence') %></p>
+          <% end %>
         </div>
       <% end %>
     </div>

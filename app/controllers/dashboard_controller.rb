@@ -20,6 +20,7 @@ class DashboardController < ApplicationController
     assign_recent_weight_data
 
     @diets = ::Diet.authorized_user(current_user)
+    @nutrition_adherence = ::DietAdherencePresenter.new(current_user)
     @imc = ::ImcPresenter.new(current_user).call
   end
 

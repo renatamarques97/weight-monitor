@@ -29,6 +29,10 @@ en:
     unknown: "Unknown User"
   diet:
     title: "Diets"
+    nutrition: "Nutrition"
+    goal_adherence: "Goal adherence"
+    not_set_up: "Not set up"
+    no_recent_records: "No recent records"
     new: "New Diet"
     suggestions: "AI Nutrition & Health Coach"
     edit: "Editing Diet"
