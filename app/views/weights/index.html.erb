@@ -21,5 +21,6 @@
         <p class="p-4 text-sm fit-text-secondary"><%= t('dashboard.no_recent_activity') %></p>
       <% end %>
     </div>
+    <%= render "shared/pagination", pagy: @pagy %>
   </section>
 </turbo-frame>

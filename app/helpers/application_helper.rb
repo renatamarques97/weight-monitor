@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
+  include Pagy::Frontend
+
   def app_version
     ENV['APP_VERSION'] || '1.0.0'
   end
