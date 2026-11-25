@@ -22,6 +22,7 @@ gem 'rails', '~> 8.0.0'
 gem 'ruby-openai'
 gem 'stimulus-rails'
 gem 'turbo-rails'
+gem 'pagy', '~> 9.4'
 
 group :development, :test do
   gem 'byebug'
