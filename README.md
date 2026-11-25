@@ -1,5 +1,5 @@
-[![Build Status](https://circleci.com/gh/renatamarques97/weight-monitor.svg?style=svg)](https://app.circleci.com/)
-[![codecov](https://codecov.io/gh/renatamarques97/weight-monitor/branch/master/graph/badge.svg)](https://codecov.io/gh/renatamarques97/weight-monitor)
+[![Build Status](https://circleci.com/gh/code-master-it/MOVARA.svg?style=svg)](https://app.circleci.com/)
+[![codecov](https://codecov.io/gh/code-master-it/MOVARA/branch/master/graph/badge.svg)](https://codecov.io/gh/code-master-it/MOVARA)
 
 # MOVARA
 This is a web solution for managing meals, weight, runnings, sleep and water consumption.
