@@ -1,15 +1,15 @@
 <% if pagy.pages > 1 %>
   <div class="fit-pagination-shell">
     <div class="fit-pagination-info">
-      <span>Exibindo</span>
+      <span><%= t('pagination.showing') %></span>
       <strong><%= pagy.from %>–<%= pagy.to %></strong>
-      <span>de</span>
+      <span><%= t('pagination.of') %></span>
       <strong><%= pagy.count %></strong>
     </div>
 
-    <nav class="cdp" actpage="<%= pagy.page %>" aria-label="Pagination">
+    <nav class="cdp" actpage="<%= pagy.page %>" aria-label="<%= t('pagination.navigation') %>">
       <% if pagy.prev %>
-        <a class="cdp_i cdp_i--edge" href="<%= pagy_url_for(pagy, pagy.prev) %>" aria-label="Página anterior">
+        <a class="cdp_i cdp_i--edge" href="<%= pagy_url_for(pagy, pagy.prev) %>" aria-label="<%= t('pagination.previous') %>">
           <i class="fa fa-angle-left" aria-hidden="true"></i>
         </a>
       <% end %>
@@ -26,7 +26,7 @@
       <% end %>
 
       <% if pagy.next %>
-        <a class="cdp_i cdp_i--edge" href="<%= pagy_url_for(pagy, pagy.next) %>" aria-label="Próxima página">
+        <a class="cdp_i cdp_i--edge" href="<%= pagy_url_for(pagy, pagy.next) %>" aria-label="<%= t('pagination.next') %>">
           <i class="fa fa-angle-right" aria-hidden="true"></i>
         </a>
       <% end %>

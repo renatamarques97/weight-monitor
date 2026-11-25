@@ -152,6 +152,12 @@ en:
   hello: "Hello, "
   profile: "Profile"
   actions: "Actions"
+  pagination:
+    showing: "Showing"
+    of: "of"
+    navigation: "Pagination"
+    previous: "Previous page"
+    next: "Next page"
   unit: "Unit"
   sure: "Are you sure?"
   show: "Show"
