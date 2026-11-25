@@ -39,7 +39,7 @@ class DashboardController < ApplicationController
 
   def assign_weight_data
     @recent_weights = current_user.weights.order(weight_date: :desc, created_at: :desc).limit(3)
-    @weights = ::WeightQuery.weights(current_user, @period_in_days)
+    @weights = ::WeightQuery.weights_for_chart(current_user, @period_in_days)
     @weight_chart_bounds = build_weight_chart_bounds(@weights)
   end
 

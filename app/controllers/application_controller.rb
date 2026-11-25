@@ -7,13 +7,17 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up) do |u|
-      u.permit(:name, :email, :password, :password_confirmation, :height)
+    devise_parameter_sanitizer.permit(:sign_up) do |user|
+      user.permit(:name, :email, :password, :password_confirmation, :height, *unit_preference_attributes)
     end
 
-    devise_parameter_sanitizer.permit(:account_update) do |u|
-      u.permit(:name, :email, :password, :current_password, :height)
+    devise_parameter_sanitizer.permit(:account_update) do |user|
+      user.permit(:name, :email, :password, :current_password, :height, *unit_preference_attributes)
     end
+  end
+
+  def unit_preference_attributes
+    %i[weight_unit distance_unit height_unit]
   end
 
   private

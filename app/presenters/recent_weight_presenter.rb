@@ -6,7 +6,7 @@ class RecentWeightPresenter
   end
 
   def call
-    recent_weight&.kg
+    recent_weight
   end
 
   def trend_30_days
@@ -37,7 +37,12 @@ class RecentWeightPresenter
     oldest.present? && latest.present? && oldest.id != latest.id
   end
 
+  # Difference in the user's preferred unit, so records saved in other units still compare.
   def trend_between(oldest, latest)
-    (latest.kg - oldest.kg).round(1)
+    (in_preferred_unit(latest) - in_preferred_unit(oldest)).round(1)
+  end
+
+  def in_preferred_unit(weight)
+    UnitConverter.convert_weight_between(weight.value, weight.weight_unit, user.weight_unit)
   end
 end

@@ -11,10 +11,7 @@
       <%= f.text_field :name, autocomplete: "name", class: "tw-input" %>
     </div>
 
-    <div class="mb-3">
-      <%= f.label :height, class: "tw-label" %>
-      <%= f.text_field :height, class: "tw-input" %>
-    </div>
+    <%= render 'devise/registrations/unit_preferences', f: f, info_key: 'preferences.edit_info' %>
 
     <div class="mb-3">
       <%= f.label :email, class: "tw-label" %>

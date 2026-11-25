@@ -32,7 +32,18 @@ class ChatResponseContext
   attr_reader :user
 
   def identity_lines
-    ["Name: #{user.name}", "Email: #{user.email}"]
+    ["Name: #{user.name}", "Email: #{user.email}", *unit_preference_lines]
+  end
+
+  def unit_preference_lines
+    preferred_units = [user.weight_unit, user.distance_unit, user.height_unit].join(', ')
+
+    ["Weight Unit Preference: #{user.weight_unit}",
+     "Distance Unit Preference: #{user.distance_unit}",
+     "Height Unit Preference: #{user.height_unit}",
+     'Instruction to Assistant: The weight, diet and workout history below is provided with the exact unit ' \
+     'each record was saved in. You MUST convert where necessary and ALWAYS write recommendations, goals, ' \
+     "stats and text using the user's preferred units (#{preferred_units})."]
   end
 
   def diet_and_meal_lines
@@ -44,9 +55,10 @@ class ChatResponseContext
   def diet_lines(diet)
     return ['Current diet: not provided'] unless diet
 
-    height = user.height || 'not provided'
+    height = user.height ? "#{user.height} #{user.height_unit}" : 'not provided'
     ["Current diet: start=#{diet.start_date}, end=#{diet.end_date}, " \
-     "initial_weight=#{diet.initial_weight}, target_weight=#{diet.target_weight}, height=#{height}"]
+     "initial_weight=#{diet.initial_weight} #{diet.weight_unit}, " \
+     "target_weight=#{diet.target_weight} #{diet.weight_unit}, height=#{height}"]
   end
 
   def meal_lines(meals)
@@ -63,7 +75,11 @@ class ChatResponseContext
     weights = user.weights.order(weight_date: :desc, id: :desc).limit(30)
     return ['Weight history: empty'] unless weights.any?
 
-    ['Weight history (most recent):', *weights.map { |weight| "- date=#{weight.weight_date}, kg=#{weight.kg}" }]
+    ['Weight history (most recent):', *weights.map { |weight| weight_line(weight) }]
+  end
+
+  def weight_line(weight)
+    "- date=#{weight.weight_date}, value=#{weight.value} #{weight.weight_unit}"
   end
 
   def workout_history_lines
@@ -89,8 +105,17 @@ class ChatResponseContext
   end
 
   def workout_line(workout)
-    distance = workout.respond_to?(:distance) ? "distance=#{workout.distance}, " : ''
-    "- date=#{workout.workout_date}, #{distance}duration=#{workout.duration}, " \
-      "calories=#{workout.calories}, details=#{workout.details}"
+    "- date=#{workout.workout_date}, #{distance_field(workout)}duration=#{workout.duration}, " \
+      "calories=#{workout.calories}, details=#{workout.details}#{weight_unit_field(workout)}"
+  end
+
+  def distance_field(workout)
+    return '' if workout.distance.blank?
+
+    "distance=#{workout.distance} #{workout.distance_unit}, "
+  end
+
+  def weight_unit_field(workout)
+    workout.weightlifting? ? ", weight_unit=#{workout.weight_unit}" : ''
   end
 end

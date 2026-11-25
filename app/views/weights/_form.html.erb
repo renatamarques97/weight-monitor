@@ -10,11 +10,16 @@
     </div>
   <% end %>
 
-  <section class="tw-card">
-    <div class="grid gap-4 md:grid-cols-2">
+  <section class="tw-card" data-controller="unit-label">
+    <div class="grid gap-4 md:grid-cols-3">
       <div>
-        <%= form.label :kg, class: "tw-label" %>
-        <%= form.number_field :kg, step: :any, class: "tw-input" %>
+        <%= form.label :value, t('weight.value_label', unit: weight.weight_unit), class: "tw-label", data: unit_label_data('weight', 'weight.value_label') %>
+        <%= form.number_field :value, step: :any, class: "tw-input" %>
+      </div>
+
+      <div>
+        <%= form.label :weight_unit, t('unit'), class: "tw-label" %>
+        <%= form.select :weight_unit, unit_options(MeasurementUnits::WEIGHTS::ALL), {}, class: "tw-input", data: unit_select_data('weight') %>
       </div>
 
       <div>

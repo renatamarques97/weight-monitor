@@ -2,6 +2,6 @@
 
 module Details
   class Running < Base
-    attribute :avg_pace, :float
+    attribute :avg_pace, :string
   end
 end

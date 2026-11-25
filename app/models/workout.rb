@@ -32,4 +32,7 @@ class Workout < ApplicationRecord
   validates :strava_activity_id,
             uniqueness: { scope: :user_id },
             allow_nil: true
+
+  enum :distance_unit, { km: DISTANCES::KM, mi: DISTANCES::MI }, prefix: true, validate: true
+  enum :weight_unit, { kg: WEIGHTS::KG, lbs: WEIGHTS::LBS }, prefix: true, validate: true
 end

@@ -39,14 +39,23 @@ RSpec.describe '/workouts', type: :request do
       end
 
       it 'renders distance and running pace for running workouts' do
-        create(:running, user: user, distance: 5.2, duration: 30, details: { avg_pace: 5.77 })
+        create(:running, user: user, distance: 5.2, duration: 30)
 
         get workouts_path, params: { type: :running }
 
         expect(response).to be_successful
         expect(response.body).to include('5.2 km')
-        expect(response.body).to include('0.1 min/km')
-        expect(response.body).to include(I18n.t('workout.distance'))
+        expect(response.body).to include(ERB::Util.html_escape(%(5'46"/km)))
+        expect(response.body).to include(I18n.t('workout.distance_label'))
+      end
+
+      it 'converts workouts saved in other units to the preferred units' do
+        create(:running, user: user, distance: 3.1, duration: 30, distance_unit: MeasurementUnits::DISTANCES::MI)
+        create(:weightlifting, user: user, weight_unit: MeasurementUnits::WEIGHTS::LBS, details: { volume: 9000.5 })
+
+        get workouts_path
+
+        expect(response.body).to include('4.99 km', ERB::Util.html_escape(%(6'01"/km)), '4082.56 kg')
       end
 
       it 'renders goals and position for soccer workouts' do
@@ -110,6 +119,15 @@ RSpec.describe '/workouts', type: :request do
 
         expect(response).to be_successful
       end
+
+      it 'preselects the preferred units' do
+        user.update!(distance_unit: MeasurementUnits::DISTANCES::MI, weight_unit: MeasurementUnits::WEIGHTS::LBS)
+
+        get new_workout_path, params: { workout_type: :running }
+
+        expect(response.body).to include('<option selected="selected" value="mi">',
+                                         '<option selected="selected" value="lbs">')
+      end
     end
 
     describe 'GET /edit' do
@@ -154,6 +172,12 @@ RSpec.describe '/workouts', type: :request do
         expect do
           post workouts_path, params: { workout: valid_attributes }
         end.to change(Workout, :count).by(1)
+      end
+
+      it 'saves the unit chosen for the workout' do
+        post workouts_path, params: { workout: valid_attributes.merge(distance_unit: MeasurementUnits::DISTANCES::MI) }
+
+        expect(Workout.last).to have_attributes(distance: 5.2, distance_unit: MeasurementUnits::DISTANCES::MI)
       end
 
       it 'redirects to root path after create' do

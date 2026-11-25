@@ -15,19 +15,37 @@ class WorkoutQuery
     {
       translation_metric_key: metric_key(sport),
       color: WorkoutType::COLORS[sport],
-      data: grouped_metrics(sport_workouts, sport),
+      data: grouped_metrics(sport_workouts, sport, user.distance_unit),
       recent: sport_workouts.order(workout_date: :desc).limit(3)
     }
   end
 
   def self.metric_key(sport)
-    WorkoutType::DISTANCE_SPORTS.include?(sport) ? 'workout.chart_distance' : 'workout.chart_duration'
+    distance_sport?(sport) ? 'workout.chart_distance' : 'workout.chart_duration'
   end
 
-  def self.grouped_metrics(workouts, sport)
-    metric = WorkoutType::DISTANCE_SPORTS.include?(sport) ? :distance : :duration
-    workouts.order(workout_date: :asc).group(:workout_date).sum(metric).transform_values { |value| value.round(2) }
+  def self.grouped_metrics(workouts, sport, distance_unit)
+    workouts = workouts.order(workout_date: :asc)
+    metrics = if distance_sport?(sport)
+                distance_by_date(workouts, distance_unit)
+              else
+                workouts.group(:workout_date).sum(:duration)
+              end
+
+    metrics.transform_values { |value| value.round(2) }
   end
 
-  private_class_method :chart_for, :metric_key, :grouped_metrics
+  # Sums distances per day in the user's preferred unit, converting each stored unit first.
+  def self.distance_by_date(workouts, distance_unit)
+    workouts.group(:workout_date, :distance_unit).sum(:distance)
+            .each_with_object(Hash.new(0.0)) do |((date, unit), total), totals|
+      totals[date] += UnitConverter.convert_distance_between(total, unit, distance_unit)
+    end
+  end
+
+  def self.distance_sport?(sport)
+    WorkoutType::DISTANCE_SPORTS.include?(sport)
+  end
+
+  private_class_method :chart_for, :metric_key, :grouped_metrics, :distance_by_date, :distance_sport?
 end

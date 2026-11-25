@@ -29,6 +29,26 @@ RSpec.describe WorkoutQuery do
       expect(result[:yoga][:data][yoga_date]).to eq(80.0)
     end
 
+    it 'converts distance in chart data based on user preferred unit' do
+      user_mi = create(:user, distance_unit: Units::DISTANCES::MI)
+      running_date = 2.days.ago.to_date
+      create(:running, user: user_mi, workout_date: running_date, distance: 10.0) # 10 km = 6.21 miles
+
+      result = described_class.chart_data(user_mi, 30)
+
+      expect(result[:running][:data][running_date]).to eq(6.21)
+    end
+
+    it 'sums mixed-unit distances on the same day in the preferred unit' do
+      running_date = 1.day.ago.to_date
+      create(:running, user: user, workout_date: running_date, distance: 5.0, distance_unit: Units::DISTANCES::KM)
+      create(:running, user: user, workout_date: running_date, distance: 1.0, distance_unit: Units::DISTANCES::MI)
+
+      result = described_class.chart_data(user, 30)
+
+      expect(result[:running][:data][running_date]).to eq(6.61)
+    end
+
     it 'returns only 3 recent workouts ordered by date desc' do
       4.times do |index|
         create(:cycling, user: user, workout_date: index.days.ago.to_date)

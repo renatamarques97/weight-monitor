@@ -10,7 +10,7 @@ class WeightsController < ApplicationController
 
   # GET /weights/new
   def new
-    @weight = Weight.new
+    @weight = Weight.new(weight_unit: current_user.weight_unit)
   end
 
   # POST /weights
@@ -28,6 +28,6 @@ class WeightsController < ApplicationController
   private
 
   def weight_params
-    params.expect(weight: %i[kg weight_date user_id])
+    params.expect(weight: %i[value weight_unit weight_date])
   end
 end

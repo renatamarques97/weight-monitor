@@ -8,6 +8,15 @@ class WeightQuery
 
     weights.order(weight_date: :asc, created_at: :asc)
            .group_by(&:weight_date)
-           .transform_values { |weight| weight.last.kg }
+           .transform_values(&:last)
+  end
+
+  # Return chart-ready hash: { date => value_in_preferred_unit }
+  # Converts each record from its stored unit to the user's preferred display unit.
+  def self.weights_for_chart(user, period_in_days = nil)
+    target_unit = user.weight_unit
+    weights(user, period_in_days).transform_values do |weight|
+      UnitConverter.convert_weight_between(weight.value, weight.weight_unit, target_unit)
+    end
   end
 end

@@ -14,7 +14,7 @@
     </div>
   <% end %>
 
-  <section class="tw-card" data-controller="nested-form">
+  <section class="tw-card" data-controller="nested-form unit-label">
     <h2 class="mb-4 text-xl font-bold fit-text-primary"><%= t('diet.singular') %></h2>
 
     <div class="mb-5 rounded-xl border fit-border-subtle fit-surface-muted p-4">
@@ -41,13 +41,18 @@
       </div>
 
       <div>
-        <%= form.label :initial_weight, class: "tw-label" %>
+        <%= form.label :initial_weight, t('diet.initial_weight', unit: diet.weight_unit), class: "tw-label", data: unit_label_data('weight', 'diet.initial_weight') %>
         <%= form.number_field :initial_weight, step: 0.1, class: "tw-input" %>
       </div>
 
       <div>
-        <%= form.label :target_weight, class: "tw-label" %>
+        <%= form.label :target_weight, t('diet.target_weight', unit: diet.weight_unit), class: "tw-label", data: unit_label_data('weight', 'diet.target_weight') %>
         <%= form.number_field :target_weight, step: 0.1, class: "tw-input" %>
+      </div>
+
+      <div>
+        <%= form.label :weight_unit, t('unit'), class: "tw-label" %>
+        <%= form.select :weight_unit, unit_options(MeasurementUnits::WEIGHTS::ALL), {}, class: "tw-input", data: unit_select_data('weight') %>
       </div>
     </div>
 

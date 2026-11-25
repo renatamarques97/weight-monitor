@@ -55,6 +55,8 @@ RSpec.describe StravaActivitySyncService do
       expect(workout.workout_date).to eq(Date.new(2026, 11, 20))
       expect(workout.duration).to eq(42.38)
       expect(workout.distance).to eq(5.0)
+      expect(workout.distance_unit).to eq(MeasurementUnits::DISTANCES::KM)
+      expect(workout.details.avg_pace).to eq(%(8'29"))
       expect(workout.calories).to eq(420)
     end
 

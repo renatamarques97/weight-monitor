@@ -14,6 +14,7 @@ RSpec.describe Diet, type: :model do
     it { is_expected.to validate_presence_of(:end_date) }
     it { is_expected.to validate_numericality_of(:initial_weight).is_greater_than(0) }
     it { is_expected.to validate_numericality_of(:target_weight).is_greater_than(0) }
+    it { is_expected.to validate_inclusion_of(:weight_unit).in_array(Units::WEIGHTS::ALL) }
   end
 
   describe 'nested attributes' do
@@ -49,6 +50,17 @@ RSpec.describe Diet, type: :model do
 
       expect(diet.initial_weight).to eq(77.9)
       expect(diet.target_weight).to eq(70.2)
+    end
+  end
+
+  describe 'record-level unit persistence' do
+    let(:user) { create(:user, weight_unit: Units::WEIGHTS::KG) }
+
+    it 'stores values in the chosen unit' do
+      diet = create(:diet, user: user, initial_weight: 154.3, target_weight: 132.3, weight_unit: Units::WEIGHTS::LBS)
+      expect(diet.initial_weight).to eq(154.3)
+      expect(diet.target_weight).to eq(132.3)
+      expect(diet.weight_unit).to eq(Units::WEIGHTS::LBS)
     end
   end
 end

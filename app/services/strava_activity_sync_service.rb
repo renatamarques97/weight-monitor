@@ -105,6 +105,7 @@ class StravaActivitySyncService
       workout_date: workout_date(activity),
       duration: workout_duration(activity),
       distance: workout_distance(activity),
+      distance_unit: MeasurementUnits::DISTANCES::KM,
       calories: activity['calories']&.to_i,
       details: details_for(activity)
     }

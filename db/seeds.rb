@@ -17,13 +17,23 @@ Rails.logger.debug 'Seeding users...'
 SEED_DAYS = 90
 DIET_DURATION_DAYS = 30
 
+UNITS = MeasurementUnits
+
 USER_SEEDS = [
-  { email: 'demo1@fittracker.dev', objective: 'weight_loss' },
-  { email: 'demo2@fittracker.dev', objective: 'running_performance' },
-  { email: 'demo3@fittracker.dev', objective: 'hypertrophy' },
-  { email: 'demo4@fittracker.dev', objective: 'general_health' },
-  { email: 'demo5@fittracker.dev', objective: 'weight_loss' }
+  { email: 'demo1@fittracker.dev', objective: 'weight_loss',
+    weight_unit: UNITS::WEIGHTS::KG, distance_unit: UNITS::DISTANCES::KM, height_unit: UNITS::HEIGHTS::M },
+  { email: 'demo2@fittracker.dev', objective: 'running_performance',
+    weight_unit: UNITS::WEIGHTS::LBS, distance_unit: UNITS::DISTANCES::MI, height_unit: UNITS::HEIGHTS::FT },
+  { email: 'demo3@fittracker.dev', objective: 'hypertrophy',
+    weight_unit: UNITS::WEIGHTS::KG, distance_unit: UNITS::DISTANCES::KM, height_unit: UNITS::HEIGHTS::CM },
+  { email: 'demo4@fittracker.dev', objective: 'general_health',
+    weight_unit: UNITS::WEIGHTS::LBS, distance_unit: UNITS::DISTANCES::MI, height_unit: UNITS::HEIGHTS::CM },
+  { email: 'demo5@fittracker.dev', objective: 'weight_loss',
+    weight_unit: UNITS::WEIGHTS::KG, distance_unit: UNITS::DISTANCES::MI, height_unit: UNITS::HEIGHTS::FT }
 ].freeze
+
+# Chance of a record being saved in the unit opposite to the user's preference.
+ALTERNATE_UNIT_CHANCE = 0.10
 
 CHAT_MESSAGES = [
   { user: 'How is my progress?', assistant: 'Your weight is trending down and your consistency is great!' },
@@ -67,6 +77,33 @@ CHAT_MESSAGES = [
 ].freeze
 
 module DemoSeeder
+  module SeedUnits
+    module_function
+
+    def height_in(unit)
+      UnitConverter.convert_height_between(rand(1.60..1.90), UNITS::HEIGHTS::M, unit)
+    end
+
+    # Mostly the preferred unit, sometimes the other one, so the demo data exercises conversions.
+    def record_unit(preferred, units)
+      rand < ALTERNATE_UNIT_CHANCE ? (units - [preferred]).sample : preferred
+    end
+
+    def from_kg(value, unit)
+      UnitConverter.convert_weight_between(value, UNITS::WEIGHTS::KG, unit)
+    end
+
+    def weight_attributes(user, value_in_kg)
+      unit = record_unit(user.weight_unit, UNITS::WEIGHTS::ALL)
+      { value: from_kg(value_in_kg, unit), weight_unit: unit }
+    end
+
+    def workout_units(user)
+      { distance_unit: record_unit(user.distance_unit, UNITS::DISTANCES::ALL),
+        weight_unit: record_unit(user.weight_unit, UNITS::WEIGHTS::ALL) }
+    end
+  end
+
   module_function
 
   def seed_all
@@ -75,7 +112,7 @@ module DemoSeeder
 
   def seed_user(attributes)
     user = User.find_or_initialize_by(email: attributes[:email])
-    update_user(user)
+    update_user(user, attributes)
     Rails.logger.debug { "  -> User: #{user.email}" }
 
     initial_weight = rand(70.0..95.0)
@@ -87,12 +124,13 @@ module DemoSeeder
     seed_meal_diaries(user)
   end
 
-  def update_user(user)
+  def update_user(user, attributes)
     user.update!(
       name: FFaker::Name.name,
       password: 'password123',
       password_confirmation: 'password123',
-      height: rand(1.60..1.90).round(2)
+      **attributes.slice(:weight_unit, :distance_unit, :height_unit),
+      height: SeedUnits.height_in(attributes[:height_unit])
     )
   end
 
@@ -119,7 +157,8 @@ module DemoSeeder
     base_weight = initial_weight + ((target_weight - initial_weight) * progress)
     final_weight = (base_weight + rand(-1.0..0.3)).round(1)
 
-    FactoryBot.create(:weight, user: user, weight_date: index.days.ago.to_date, kg: final_weight)
+    FactoryBot.create(:weight, user: user, weight_date: index.days.ago.to_date,
+                               **SeedUnits.weight_attributes(user, final_weight))
   end
 
   def seed_diet(user, initial_weight, target_weight)
@@ -129,8 +168,9 @@ module DemoSeeder
       user: user,
       start_date: (DIET_DURATION_DAYS / 2).days.ago.to_date,
       end_date: (DIET_DURATION_DAYS / 2).days.from_now.to_date,
-      initial_weight: initial_weight,
-      target_weight: target_weight
+      initial_weight: SeedUnits.from_kg(initial_weight, user.weight_unit),
+      target_weight: SeedUnits.from_kg(target_weight, user.weight_unit),
+      weight_unit: user.weight_unit
     )
   end
 
@@ -144,7 +184,7 @@ module DemoSeeder
     frequencies = { running: 0.6, walking: 0.8, weightlifting: 0.5, swimming: 0.3 }
     return unless rand < frequencies.fetch(sport, 0.4)
 
-    FactoryBot.create(sport, user: user, workout_date: index.days.ago.to_date)
+    FactoryBot.create(sport, user: user, workout_date: index.days.ago.to_date, **SeedUnits.workout_units(user))
   end
 
   def seed_chat_messages(user)

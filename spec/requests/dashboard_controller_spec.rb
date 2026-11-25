@@ -17,8 +17,8 @@ RSpec.describe '/dashboard', type: :request do
 
     before do
       sign_in user
-      create(:weight, user: user, kg: 70.5, weight_date: 2.days.ago)
-      create(:weight, user: user, kg: 72.3, weight_date: 1.day.ago)
+      create(:weight, user: user, value: 70.5, weight_date: 2.days.ago)
+      create(:weight, user: user, value: 72.3, weight_date: 1.day.ago)
     end
 
     describe 'GET /index' do
@@ -71,6 +71,30 @@ RSpec.describe '/dashboard', type: :request do
         expect(response.body).to include(I18n.t('workout.training_duration', hours: 1, minutes: 35))
         expect(response.body).to include(I18n.t('workout.this_month'))
       end
+    end
+  end
+
+  describe 'when user prefers lbs and mi' do
+    let(:user) { create(:user, weight_unit: Units::WEIGHTS::LBS, distance_unit: Units::DISTANCES::MI) }
+
+    before do
+      sign_in user
+      create(:weight, user: user, value: 70, weight_unit: Units::WEIGHTS::KG, weight_date: 1.day.ago)
+    end
+
+    it 'labels and converts the weight chart in the preferred unit' do
+      get root_path
+
+      expect(response.body).to include(I18n.t('weight.chart_label', unit: Units::WEIGHTS::LBS))
+      expect(response.body).to include('154.32')
+    end
+
+    it 'shows the 30-day trend in the preferred unit' do
+      create(:weight, user: user, value: 69, weight_unit: Units::WEIGHTS::KG, weight_date: Date.current)
+
+      get root_path
+
+      expect(response.body).to include(I18n.t('dashboard.weight_decreased', weight: 2.2, unit: Units::WEIGHTS::LBS))
     end
   end
 end

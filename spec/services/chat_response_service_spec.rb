@@ -110,7 +110,7 @@ RSpec.describe ChatResponseService do
                     initial_weight: 80,
                     target_weight: 72)
       create(:meal, diet: diet, schedule: '2026-01-03 08:00:00', description: 'Eggs and toast', meal_type: 1)
-      create(:weight, user: user, weight_date: Date.new(2026, 1, 2), kg: 79.2)
+      create(:weight, user: user, weight_date: Date.new(2026, 1, 2), value: 79.2)
       create(:running, user: user, workout_date: Date.new(2026, 1, 2), duration: 30, distance: 5)
 
       captured_messages = nil
@@ -127,10 +127,31 @@ RSpec.describe ChatResponseService do
       expect(system_prompt).to include('Meals in current diet:')
       expect(system_prompt).to include('description=Eggs and toast')
       expect(system_prompt).to include('Weight history (most recent):')
-      expect(system_prompt).to include('kg=79.2')
+      expect(system_prompt).to include("value=79.2 #{Units::WEIGHTS::KG}")
       expect(system_prompt).to include('Running history (most recent):')
       expect(system_prompt).to include('date=2026-01-02')
-      expect(system_prompt).to include('distance=5.0')
+      expect(system_prompt).to include("distance=5.0 #{Units::DISTANCES::KM}")
+    end
+
+    it 'includes unit preferences and the unit of each record in user context' do
+      user.update!(weight_unit: Units::WEIGHTS::LBS, distance_unit: Units::DISTANCES::MI, height: 5.9, height_unit: Units::HEIGHTS::FT)
+      create(:diet, user: user, initial_weight: 180, target_weight: 170, weight_unit: Units::WEIGHTS::LBS)
+      create(:weightlifting, user: user, weight_unit: Units::WEIGHTS::LBS)
+
+      captured_messages = nil
+      allow(client).to receive(:chat) do |args|
+        captured_messages = args.dig(:parameters, :messages)
+      end
+
+      described_class.new(user: user, prompt: prompt, objective: 'hypertrophy', client: client).call
+
+      expect(captured_messages.first[:content]).to include(
+        "Weight Unit Preference: #{Units::WEIGHTS::LBS}",
+        "Distance Unit Preference: #{Units::DISTANCES::MI}",
+        "initial_weight=180.0 #{Units::WEIGHTS::LBS}",
+        "height=5.9 #{Units::HEIGHTS::FT}",
+        "weight_unit=#{Units::WEIGHTS::LBS}"
+      )
     end
 
     it 'builds empty workout sections when user has no workouts' do

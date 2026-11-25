@@ -6,6 +6,10 @@ require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 
+# Short alias for specs. It is not WEIGHTS, DISTANCES, etc. on purpose: app code that relies on
+# those names at the top level must fail here the same way it fails in production.
+Units = MeasurementUnits
+
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
