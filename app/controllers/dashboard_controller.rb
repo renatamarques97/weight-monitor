@@ -45,6 +45,10 @@ class DashboardController < ApplicationController
 
   def assign_workout_data
     @workout_charts = ::WorkoutQuery.chart_data(current_user, @period_in_days)
+    @monthly_training_minutes = current_user.workouts
+                                            .where(workout_date: Date.current.all_month)
+                                            .sum(:duration)
+                                            .round
   end
 
   private

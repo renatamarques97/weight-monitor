@@ -58,6 +58,19 @@ RSpec.describe '/dashboard', type: :request do
         expect(response).to be_successful
         expect(response.body).to include('data-tabs-active-tab-value="soccer"')
       end
+
+      it 'shows total workout duration for the current month' do
+        create(:running, user: user, workout_date: Time.current.to_date, duration: 75)
+        create(:cycling, user: user, workout_date: Time.current.to_date, duration: 20)
+        create(:running, user: user, workout_date: 1.month.ago.to_date, duration: 60)
+
+        get root_path
+
+        expect(response).to be_successful
+        expect(response.body).to include(I18n.t('workout.training'))
+        expect(response.body).to include(I18n.t('workout.training_duration', hours: 1, minutes: 35))
+        expect(response.body).to include(I18n.t('workout.this_month'))
+      end
     end
   end
 end

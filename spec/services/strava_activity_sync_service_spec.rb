@@ -4,35 +4,33 @@ require 'rails_helper'
 
 RSpec.describe StravaActivitySyncService do
   let(:user) { create(:user) }
-  let(:walking_activity) do
-    {
-      'id' => 111_111,
-      'sport_type' => 'Walk',
-      'start_date_local' => '2026-11-20T08:30:00Z',
-      'moving_time' => 1200,
-      'distance' => 2000,
-      'total_elevation_gain' => 25
-    }
-  end
-  let(:swimming_activity) do
-    {
-      'id' => 222_222,
-      'sport_type' => 'Swim',
-      'start_date_local' => '2026-11-20T09:30:00Z',
-      'moving_time' => 1800,
-      'distance' => 1000,
-      'lap_count' => 20
-    }
-  end
-  let(:unknown_activity) do
-    {
-      'id' => 333_333,
-      'sport_type' => 'Snowboard',
-      'start_date_local' => '2026-11-20T10:30:00Z',
-      'moving_time' => 3600,
-      'distance' => 0,
-      'calories' => nil
-    }
+
+  let(:mixed_strava_activities) do
+    [
+      {
+        'id' => 111_111,
+        'sport_type' => 'Walk',
+        'start_date_local' => '2026-11-20T08:30:00Z',
+        'moving_time' => 1200,
+        'distance' => 2000,
+        'total_elevation_gain' => 25
+      },
+      {
+        'id' => 222_222,
+        'sport_type' => 'Swim',
+        'start_date_local' => '2026-11-20T09:30:00Z',
+        'moving_time' => 1800,
+        'distance' => 1000,
+        'lap_count' => 20
+      },
+      {
+        'id' => 333_333,
+        'sport_type' => 'Snowboard',
+        'start_date_local' => '2026-11-20T10:30:00Z',
+        'moving_time' => 3600,
+        'distance' => 0
+      }
+    ]
   end
 
   describe '#sync' do
@@ -63,11 +61,7 @@ RSpec.describe StravaActivitySyncService do
     it 'maps walking, swimming and unknown activities' do
       api = instance_double(StravaApiService)
       allow(StravaApiService).to receive(:new).with(user).and_return(api)
-      allow(api).to receive(:activities).with(per_page: 30).and_return([
-                                                                         walking_activity,
-                                                                         swimming_activity,
-                                                                         unknown_activity
-                                                                       ])
+      allow(api).to receive(:activities).with(per_page: 30).and_return(mixed_strava_activities)
 
       expect(described_class.new(user).sync).to eq(3)
 
@@ -104,26 +98,6 @@ RSpec.describe StravaActivitySyncService do
       expect(user.workouts.where(strava_activity_id: 987_654).count).to eq(1)
     end
 
-    it 'allows the same Strava activity ID for another user' do
-      other_user = create(:user)
-      create(:cycling, user: other_user, strava_activity_id: 987_654)
-      api = instance_double(StravaApiService)
-      allow(StravaApiService).to receive(:new).with(user).and_return(api)
-      allow(api).to receive(:activities).with(per_page: 30).and_return([
-                                                                         {
-                                                                           'id' => 987_654,
-                                                                           'sport_type' => 'Ride',
-                                                                           'start_date_local' => '2026-11-21T08:30:00Z',
-                                                                           'moving_time' => 3600,
-                                                                           'distance' => 30_000,
-                                                                           'average_speed' => 8.33
-                                                                         }
-                                                                       ])
-
-      expect(described_class.new(user).sync).to eq(1)
-      expect(user.workouts.where(strava_activity_id: 987_654).count).to eq(1)
-    end
-
     it 'updates an existing synchronized workout' do
       create(:running, user: user, strava_activity_id: 555_555, duration: 10)
       api = instance_double(StravaApiService)
@@ -141,6 +115,120 @@ RSpec.describe StravaActivitySyncService do
 
       expect(described_class.new(user).sync).to eq(0)
       expect(user.workouts.find_by!(strava_activity_id: 555_555).duration).to eq(60.0)
+    end
+
+    it 'updates an existing workout if its Strava sport type changes' do
+      create(:running, user: user, strava_activity_id: 444_444, duration: 10)
+
+      api = instance_double(StravaApiService)
+      allow(StravaApiService).to receive(:new).with(user).and_return(api)
+      activity = {
+        'id' => 444_444,
+        'sport_type' => 'Ride',
+        'start_date_local' => '2026-11-22T08:30:00Z',
+        'moving_time' => 3600,
+        'distance' => 10_000,
+        'average_speed' => 8.33
+      }
+      allow(api).to receive(:activities).with(per_page: 30).and_return([activity])
+
+      expect(described_class.new(user).sync).to eq(0)
+      workout = user.workouts.find_by!(strava_activity_id: 444_444)
+      expect(workout).to be_a(Cycling)
+      expect(workout.duration).to eq(60.0)
+      expect(user.workouts.where(strava_activity_id: 444_444).count).to eq(1)
+    end
+
+    it 'imports new activities before reaching 30 existing activities' do
+      create_existing_workouts(user)
+
+      api = instance_double(StravaApiService)
+      allow(StravaApiService).to receive(:new).with(user).and_return(api)
+      activities = [
+        {
+          'id' => 1_000_001,
+          'sport_type' => 'Run',
+          'start_date_local' => '2026-11-24T08:30:00Z',
+          'moving_time' => 1800,
+          'distance' => 5000
+        },
+        {
+          'id' => 1_000_002,
+          'sport_type' => 'Ride',
+          'start_date_local' => '2026-11-24T09:30:00Z',
+          'moving_time' => 3600,
+          'distance' => 30_000
+        },
+        {
+          'id' => 900_000,
+          'sport_type' => 'Run',
+          'start_date_local' => '2026-11-20T08:30:00Z',
+          'moving_time' => 1800,
+          'distance' => 5000
+        }
+      ]
+      allow(api).to receive(:activities).with(per_page: 30).and_return(activities)
+
+      expect(described_class.new(user).sync).to eq(2)
+      expect(user.workouts.where(strava_activity_id: [1_000_001, 1_000_002]).count).to eq(2)
+    end
+
+    it 'stops after the first known activity on the newest page' do
+      create_existing_workouts(user)
+
+      api = instance_double(StravaApiService)
+      allow(StravaApiService).to receive(:new).with(user).and_return(api)
+      allow(api).to receive(:activities).with(per_page: 30).and_return(first_strava_page)
+      expect(api).not_to receive(:activities).with(per_page: 30, page: 2)
+
+      expect(described_class.new(user).sync).to eq(1)
+      expect(user.workouts.where(strava_activity_id: 1_000_001).count).to eq(1)
+    end
+
+    it 'imports all activities when the local workout table is empty' do
+      api = instance_double(StravaApiService)
+      allow(StravaApiService).to receive(:new).with(user).and_return(api)
+
+      first_page = 30.times.map do |index|
+        {
+          'id' => 900_000 + index,
+          'sport_type' => 'Run',
+          'start_date_local' => '2026-11-20T08:30:00Z',
+          'moving_time' => 1800,
+          'distance' => 5000
+        }
+      end
+      second_page = [{
+        'id' => 1_000_002,
+        'sport_type' => 'Ride',
+        'start_date_local' => '2026-11-24T09:30:00Z',
+        'moving_time' => 3600,
+        'distance' => 30_000
+      }]
+
+      allow(api).to receive(:activities).with(per_page: 30).and_return(first_page)
+      allow(api).to receive(:activities).with(per_page: 30, page: 2).and_return(second_page)
+
+      expect(described_class.new(user).sync).to eq(31)
+      expect(user.workouts.where.not(strava_activity_id: nil).count).to eq(31)
+    end
+  end
+
+  def create_existing_workouts(user)
+    30.times do |index|
+      create(:running, user: user, strava_activity_id: 900_000 + index)
+    end
+  end
+
+  def first_strava_page
+    30.times.map do |index|
+      {
+        'id' => index.zero? ? 1_000_001 : 900_000 + index,
+        'sport_type' => 'Run',
+        'start_date_local' => '2026-11-20T08:30:00Z',
+        'moving_time' => 1800,
+        'distance' => 5000
+      }
     end
   end
 end

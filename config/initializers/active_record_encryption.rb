@@ -6,8 +6,7 @@ key_derivation_salt = ENV.fetch('ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT', 
 
 unless primary_key && deterministic_key && key_derivation_salt
   secret = ENV.fetch('SECRET_KEY_BASE', nil)
-
-  secret ||= 'development-test-strava-encryption-secret' if Rails.env.local?
+  secret ||= Rails.application.secret_key_base if Rails.env.local?
 
   if secret.present?
     key_generator = ActiveSupport::KeyGenerator.new(secret)
