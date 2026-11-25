@@ -64,6 +64,6 @@ class WeightGoalPresenter
   end
 
   def current_diet
-    user.diets.order(start_date: :desc, created_at: :desc).first
+    user.current_diet
   end
 end

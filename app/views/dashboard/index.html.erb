@@ -42,6 +42,8 @@
             <p class="fit-stat-value"><%= t('diet.not_set_up') %></p>
           <% elsif @nutrition_adherence.state == :no_records %>
             <p class="fit-stat-value"><%= t('diet.no_recent_records') %></p>
+          <% elsif @nutrition_adherence.state == :no_plan %>
+            <p class="fit-stat-value"><%= t('diet.no_plan') %></p>
           <% else %>
             <p class="fit-stat-value"><%= @nutrition_adherence.adherence_percent %>%</p>
             <p class="mt-1 text-xs font-semibold fit-text-secondary"><%= t('diet.goal_adherence') %></p>

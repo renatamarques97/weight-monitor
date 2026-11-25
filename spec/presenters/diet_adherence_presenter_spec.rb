@@ -13,11 +13,28 @@ RSpec.describe DietAdherencePresenter do
   end
 
   it 'shows no recent records with a diet but no diary in the last week' do
-    create(:diet, user: user)
+    diet = create(:diet, user: user)
+    planned_meal = create(
+      :meal,
+      diet: diet,
+      meal_type: :breakfast,
+      schedule: Time.zone.parse('08:00'),
+      description: 'Breakfast'
+    )
+    create(:meal_food, meal: planned_meal, food_name: 'Oats')
 
     presenter = described_class.new(user)
 
     expect(presenter.state).to eq(:no_records)
+    expect(presenter.adherence_percent).to be_nil
+  end
+
+  it 'shows no plan when the diet has no meals' do
+    create(:diet, user: user)
+
+    presenter = described_class.new(user)
+
+    expect(presenter.state).to eq(:no_plan)
     expect(presenter.adherence_percent).to be_nil
   end
 
@@ -45,6 +62,33 @@ RSpec.describe DietAdherencePresenter do
       create(:meal_food, meal: executed_meal, food_name: 'Oats')
       create(:meal_food, meal: executed_meal, food_name: 'Banana')
     end
+
+    presenter = described_class.new(user)
+
+    expect(presenter.state).to eq(:tracked)
+    expect(presenter.adherence_percent).to be_between(95, 100)
+  end
+
+  it 'gives matching food a higher score when the meal type is the same' do
+    diet = create(:diet, user: user)
+    planned_meal = create(
+      :meal,
+      diet: diet,
+      meal_type: :breakfast,
+      schedule: Time.zone.parse('08:00'),
+      description: 'Morning meal'
+    )
+    create(:meal_food, meal: planned_meal, food_name: 'Pão')
+
+    diary = create(:meal_diary, user: user, diary_date: Date.current)
+    executed_meal = create(
+      :meal,
+      meal_diary: diary,
+      meal_type: :breakfast,
+      schedule: Time.zone.parse('08:10'),
+      description: 'Quick breakfast'
+    )
+    create(:meal_food, meal: executed_meal, food_name: 'Pao')
 
     presenter = described_class.new(user)
 

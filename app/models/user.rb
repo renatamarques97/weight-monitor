@@ -10,6 +10,10 @@ class User < ApplicationRecord
   has_many :workouts, dependent: :destroy
   has_many :chat_messages, dependent: :destroy
 
+  def current_diet
+    diets.order(start_date: :desc, created_at: :desc).first
+  end
+
   encrypts :strava_access_token, deterministic: false
   encrypts :strava_refresh_token, deterministic: false
 
