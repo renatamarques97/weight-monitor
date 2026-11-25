@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class StravaActivitySyncService
+  include StravaActivityDetailsMapper
+
   SPORT_TYPES = {
     'Run' => :running,
     'VirtualRun' => :running,
@@ -23,8 +25,10 @@ class StravaActivitySyncService
   def sync(per_page: 30)
     imported = 0
 
-    activities(per_page).each do |activity|
-      imported += import_activity(activity)
+    each_activity_page(per_page) do |page_activities|
+      page_imported, found_existing = import_page(page_activities)
+      imported += page_imported
+      break if found_existing
     end
 
     imported
@@ -32,8 +36,46 @@ class StravaActivitySyncService
 
   private
 
-  def activities(per_page)
-    StravaApiService.new(@user).activities(per_page: per_page).reject do |activity|
+  def each_activity_page(per_page)
+    page = 1
+
+    loop do
+      page_activities = activities(per_page: per_page, page: page)
+      break if page_activities.empty?
+
+      yield page_activities
+      break if page_activities.length < per_page
+
+      page += 1
+    end
+  end
+
+  def import_page(page_activities)
+    imported = 0
+
+    page_activities.each do |activity|
+      existing_workout = find_workout(activity)
+      if existing_workout.persisted?
+        update_existing_workout(existing_workout, activity)
+        return [imported, true]
+      end
+
+      imported += import_activity(activity)
+    end
+
+    [imported, false]
+  end
+
+  def update_existing_workout(workout, activity)
+    workout.assign_attributes(attributes_for(activity))
+    workout.save
+  end
+
+  def activities(per_page:, page:)
+    api = StravaApiService.new(@user)
+    response = page == 1 ? api.activities(per_page: per_page) : api.activities(per_page: per_page, page: page)
+
+    response.reject do |activity|
       activity.fetch('id').nil?
     end
   end
@@ -47,9 +89,14 @@ class StravaActivitySyncService
   end
 
   def find_workout(activity)
+    existing = @user.workouts.find_by(strava_activity_id: activity.fetch('id'))
+    return existing if existing
+
     sport_type = map_sport(activity)
-    workout_class = sport_type.to_s.camelize.constantize
-    workout_class.where(user: @user).find_or_initialize_by(strava_activity_id: activity.fetch('id'))
+    sport_type.to_s.camelize.constantize.find_or_initialize_by(
+      user: @user,
+      strava_activity_id: activity.fetch('id')
+    )
   end
 
   def attributes_for(activity)

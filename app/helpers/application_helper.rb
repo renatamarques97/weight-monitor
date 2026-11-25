@@ -43,6 +43,14 @@ module ApplicationHelper
     }.fetch(weight_trend_direction(trend, initial_weight, target_weight))
   end
 
+  def training_duration_hours(total_minutes)
+    total_minutes = total_minutes.round
+    hours = total_minutes / 60
+    minutes = total_minutes % 60
+
+    t('workout.training_duration', hours: hours, minutes: minutes)
+  end
+
   private
 
   def append_chat_markdown_line(line, html, list_items)

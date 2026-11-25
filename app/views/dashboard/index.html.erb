@@ -26,8 +26,9 @@
           <i class="fa fa-bolt" aria-hidden="true"></i>
         </span>
         <div>
-          <p class="fit-stat-label"><%= t('workout.total') %></p>
-          <p class="fit-stat-value"><%= current_user.workouts.count %></p>
+          <p class="fit-stat-label"><%= t('workout.training') %></p>
+          <p class="fit-stat-value"><%= training_duration_hours(@monthly_training_minutes) %></p>
+          <p class="mt-1 text-xs font-semibold fit-text-secondary"><%= t('workout.this_month') %></p>
         </div>
       <% end %>
 
