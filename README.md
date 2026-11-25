@@ -1,13 +1,11 @@
-[![Build Status](https://circleci.com/gh/renatamarques97/weight-monitor.svg?style=svg)](https://app.circleci.com/)
-[![codecov](https://codecov.io/gh/renatamarques97/weight-monitor/branch/master/graph/badge.svg)](https://codecov.io/gh/renatamarques97/weight-monitor)
+[![Build Status](https://circleci.com/gh/code-master-it/MOVARA.svg?style=svg)](https://app.circleci.com/)
+[![codecov](https://codecov.io/gh/code-master-it/MOVARA/branch/master/graph/badge.svg)](https://codecov.io/gh/code-master-it/MOVARA)
 
 # MOVARA
-This is a web solution for managing meals, weight, runnings, sleep and water consumption.
-The system allows the registration and updating of a diet, which has a predetermined
-beginning and end, in addition to the idealized weight.
-During the diet period, the user must periodically inform his weight.
-From that information, the system presents a graph of the
-evolution of weight over the period of the diet.
+
+MOVARA is a web platform for tracking weight, nutrition, diet plans and physical
+activities. It brings health and fitness information into a single workspace,
+helping users monitor progress, organize meal records and analyze workout history.
 
 ### Ruby version
 ```
@@ -119,45 +117,91 @@ Notes:
 - The development stack starts PostgreSQL, Redis and Rails.
 - The database is prepared automatically on container start.
 
-## Documentation
+## Platform Guide
 
-You will need an account to use the platform,
-you can create an account here: `http://localhost:3000/users/sign_up`,
-it requires `name`, `email` and `password`.
+### Account access
 
-If you already have an account, you can sign in here: `http://localhost:3000/users/sign_in`.
+Create an account at [Sign up](http://localhost:3000/users/sign_up). Registration
+requires a name, email address and password. Existing users can sign in at
+[Sign in](http://localhost:3000/users/sign_in).
 
-After you enter your account, you will see your dashboard (`http://localhost:3000/`),
-contains your `IMC` (`0` as default), your `Diets`, your `Goal` and your `Progress`.
+The account profile also allows users to configure preferred units for weight,
+height and distance. MOVARA uses these preferences when displaying measurements.
 
-Dashboard:
+### Dashboard
 
-- [Extra] IMC is calculated by your latest weight and your height.
-- You can see a list of your Diets in the second session or create a new one.
-- [Extra] Your `goal` is the target weight of your diet, you achieve the goal
-when your target weight is equal to your current weight, you receive a trophy
-when this happens (clock as default).
-- Progress is a chart of your weight during time.
-- Your dashboard only shows your informations, don't worry, no one (expect you)
-is allowed to view your confidential information.
+After signing in, the dashboard at [http://localhost:3000](http://localhost:3000)
+provides an overview of your fitness data.
 
-Diets:
+- **BMI:** Calculated from the most recent weight and the height saved in your
+  account profile. If one of these values is unavailable, the dashboard displays
+  `0`.
+- **Most recent weight:** Shows the latest recorded weight and the variation
+  over the previous 30 days, when sufficient history is available.
+- **Weight goal:** Uses the initial and target weights from the most recent diet.
+  The dashboard shows the completion percentage or a trophy once the target is
+  reached. For maintenance plans, achievement is recognized when the current
+  weight is within 0.5 kg of the target.
+- **Weight and workout progress:** Interactive charts display your weight and
+  workout history for configurable periods. The dashboard also summarizes monthly
+  workout time.
+- **Recent diets:** Lists the diets associated with the signed-in account.
 
-You can create a new diet in the menu button (`new diet`), a diet tracks your meals
-during day, you will need to inform your current weight, target weight, the start date,
-the end date, your height (for IMC purpose) and what you eat during the day.
-Remember that you are always able to edit or delete an existing diet and create a new one
-whenever you want.
+All information shown on the dashboard belongs to the authenticated user.
 
-Weight Progress:
+### Diet plans
 
-Your weight progress is represented by a chart, you can inform your weight once a day, everyday.
-To update your weight, you will need the value (kg) and the date, that's all.
+Use **New Diet** to create a nutritional plan. A diet contains:
+
+- Initial and target weight;
+- Start and end dates;
+- Preferred weight unit (`kg` or `lbs`);
+- Optional meals, with a food name and nutritional information.
+
+Meals can be searched through the FatSecret food database. MOVARA can complete
+serving and nutrition fields from the selected food result. Existing diet plans
+can be viewed, edited or removed at any time.
+
+### Meal diaries
+
+The **Meal Diaries** feature lets you record everything consumed on a specific
+date. Each diary entry can contain multiple meals and foods, including serving
+amount and nutritional values. This provides a flexible record that is separate
+from the recurring meals configured in a diet plan.
+
+### Weight records
+
+Weight records are available from the **Weights** section. Add a date and weight
+value, and select whether it was entered in kilograms or pounds. Your preferred
+unit is used for display, while historical entries remain available for tracking
+changes over time.
+
+### Workouts
+
+The **Workouts** section supports running, cycling, walking, swimming,
+weightlifting, yoga, soccer, basketball, tennis and martial arts. For each
+activity, users can record a date, duration, calories and sports-specific details
+such as distance, exercises, goals or sets won.
+
+Workouts can be created, edited and deleted manually. Users can also connect a
+Strava account, synchronize activities and disconnect the integration when
+needed.
+
+### AI fitness assistant
+
+The **Chat** feature provides a conversational fitness assistant. Users can select
+an objective such as weight loss, hypertrophy, running performance or general
+health and send questions for tailored guidance. Conversations are associated
+with the signed-in account.
 
 ### Author
 
 [Renata Marques](https://www.linkedin.com/in/renata-marques-b27877119/)
+[Alessandro Barros](https://br.linkedin.com/in/alessandro-barros-leal)
 
 ### License
 
-This project is licensed under the MIT License
+Copyright © 2026 Renata Marques and Alessandro Barros. All rights reserved.
+
+This software is proprietary and confidential. Unauthorized copying,
+distribution, modification or commercial use is prohibited.

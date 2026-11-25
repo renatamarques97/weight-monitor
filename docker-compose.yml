@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: weight_monitor_development
+      POSTGRES_DB: movara_development
     ports:
       - "5432:5432"
 
