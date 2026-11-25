@@ -1,41 +1,43 @@
-<section class="tw-card">
+<section class="tw-card fit-list-card">
   <div class="mb-4 flex items-center justify-between gap-3">
     <h1 class="text-2xl font-bold tracking-tight fit-text-primary"><%= t('meal.title') %></h1>
     <%= link_to t('meal.new'), new_meal_path, class: 'tw-btn-primary' %>
   </div>
 
-  <div class="overflow-x-auto rounded-xl border fit-border-subtle">
-    <table class="min-w-full text-sm">
-      <thead class="fit-surface-muted">
-        <tr>
-          <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('meal.schedule') %></th>
-          <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('meal.description') %></th>
-          <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('meal.type') %></th>
-          <th class="px-4 py-3 text-right font-semibold fit-text-primary"><%= t('actions') %></th>
-        </tr>
-      </thead>
-
-      <tbody class="fit-surface-card fit-divide-subtle">
-        <% @meals.each do |meal| %>
-          <tr class="fit-hover-surface-muted">
-            <td class="px-4 py-3"><%= meal.schedule %></td>
-            <td class="px-4 py-3"><%= meal.description %></td>
-            <td class="px-4 py-3"><%= meal.meal_type %></td>
-            <td class="px-4 py-3 text-right">
-              <%= link_to meal, class: 'fit-icon-btn fit-icon-btn-show', title: t('show'), aria: { label: t('show') } do %>
-                <i class="fa fa-eye" aria-hidden="true"></i>
-              <% end %>
-              <%= link_to edit_meal_path(meal), class: 'fit-icon-btn fit-icon-btn-edit', title: t('edit'), aria: { label: t('edit') } do %>
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              <% end %>
-              <%= link_to meal, data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: 'fit-icon-btn fit-icon-btn-delete', title: t('remove'), aria: { label: t('remove') } do %>
-                <i class="fa fa-trash" aria-hidden="true"></i>
-              <% end %>
-            </td>
+  <div class="fit-list-table-shell">
+    <div class="overflow-x-auto rounded-xl border fit-border-subtle">
+      <table class="min-w-full text-sm">
+        <thead class="fit-surface-muted">
+          <tr>
+            <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('meal.schedule') %></th>
+            <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('meal.description') %></th>
+            <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('meal.type') %></th>
+            <th class="px-4 py-3 text-right font-semibold fit-text-primary"><%= t('actions') %></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody class="fit-surface-card fit-divide-subtle">
+          <% @meals.each do |meal| %>
+            <tr class="fit-hover-surface-muted">
+              <td class="px-4 py-3"><%= meal.schedule %></td>
+              <td class="px-4 py-3"><%= meal.description %></td>
+              <td class="px-4 py-3"><%= meal.meal_type %></td>
+              <td class="px-4 py-3 text-right">
+                <%= link_to meal, class: 'fit-icon-btn fit-icon-btn-show', title: t('show'), aria: { label: t('show') } do %>
+                  <i class="fa fa-eye" aria-hidden="true"></i>
+                <% end %>
+                <%= link_to edit_meal_path(meal), class: 'fit-icon-btn fit-icon-btn-edit', title: t('edit'), aria: { label: t('edit') } do %>
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                <% end %>
+                <%= link_to meal, data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: 'fit-icon-btn fit-icon-btn-delete', title: t('remove'), aria: { label: t('remove') } do %>
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <%= render "shared/pagination", pagy: @pagy %>

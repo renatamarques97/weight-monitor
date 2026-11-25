@@ -1,25 +1,27 @@
 <%= render "dashboard/menu" %>
 
 <turbo-frame id="main">
-  <section class="tw-card">
+  <section class="tw-card fit-list-card">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold tracking-tight fit-text-primary"><%= t('weight.title') %></h1>
       <%= link_to t('weight.new') , new_weight_path, class: "tw-btn-primary" %>
     </div>
 
     <div class="rounded-2xl border fit-border-subtle fit-surface-card shadow-sm overflow-hidden">
-      <% if @weights.any? %>
-        <ul class="fit-divide-subtle">
-          <% @weights.each do |weight| %>
-            <li class="px-4 py-3 flex items-center justify-between">
-              <span class="text-sm font-semibold fit-text-primary"><%= weight.weight_date.strftime("%b %d, %Y") %></span>
-              <span class="text-sm fit-text-secondary"><%= weight_in_preferred_unit(weight.value, weight.weight_unit) %></span>
-            </li>
-          <% end %>
-        </ul>
-      <% else %>
-        <p class="p-4 text-sm fit-text-secondary"><%= t('dashboard.no_recent_activity') %></p>
-      <% end %>
+      <div class="fit-list-table-shell">
+        <% if @weights.any? %>
+          <ul class="fit-divide-subtle">
+            <% @weights.each do |weight| %>
+              <li class="px-4 py-3 flex items-center justify-between">
+                <span class="text-sm font-semibold fit-text-primary"><%= weight.weight_date.strftime("%b %d, %Y") %></span>
+                <span class="text-sm fit-text-secondary"><%= weight_in_preferred_unit(weight.value, weight.weight_unit) %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="p-4 text-sm fit-text-secondary"><%= t('dashboard.no_recent_activity') %></p>
+        <% end %>
+      </div>
     </div>
     <%= render "shared/pagination", pagy: @pagy %>
   </section>

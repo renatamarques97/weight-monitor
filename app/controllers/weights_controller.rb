@@ -6,7 +6,7 @@ class WeightsController < ApplicationController
   # GET /weights
   def index
     weights = current_user.weights.order(weight_date: :desc, created_at: :desc)
-    @pagy, @weights = pagy(weights, limit: 25)
+    @pagy, @weights = pagy(weights, limit: 20)
   end
 
   # GET /weights/new

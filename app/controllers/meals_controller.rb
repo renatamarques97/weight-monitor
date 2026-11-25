@@ -13,7 +13,7 @@ class MealsController < ApplicationController
               Meal.none
             end
 
-    @pagy, @meals = pagy(meals, limit: 25)
+    @pagy, @meals = pagy(meals, limit: 20)
   end
 
   # GET /meals/1

@@ -7,7 +7,7 @@ class WorkoutsController < ApplicationController
   def index
     workouts = current_user.workouts
     workouts = workouts.where(workout_type: params[:type]) if params[:type].present?
-    @pagy, @workouts = pagy(workouts.order(workout_date: :desc, created_at: :desc), limit: 25)
+    @pagy, @workouts = pagy(workouts.order(workout_date: :desc, created_at: :desc), limit: 20)
   end
 
   def new

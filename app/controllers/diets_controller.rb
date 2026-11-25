@@ -8,7 +8,7 @@ class DietsController < ApplicationController
   # GET /diets
   def index
     diets = Diet.authorized_user(current_user).order(start_date: :desc, created_at: :desc)
-    @pagy, @diets = pagy(diets, limit: 25)
+    @pagy, @diets = pagy(diets, limit: 20)
   end
 
   def show; end

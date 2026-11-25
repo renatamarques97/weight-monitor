@@ -7,7 +7,7 @@ class MealDiariesController < ApplicationController
 
   def index
     meal_diaries = MealDiary.authorized_user(current_user).order(diary_date: :desc, created_at: :desc)
-    @pagy, @meal_diaries = pagy(meal_diaries, limit: 25)
+    @pagy, @meal_diaries = pagy(meal_diaries, limit: 20)
   end
 
   def show; end
