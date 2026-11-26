@@ -151,6 +151,17 @@ en:
       description: "This is the space where you can log your meal diary, based on your diet (which is the model to be followed). Macros and calories are calculated automatically to help you track your routine."
   hello: "Hello, "
   profile: "Profile"
+  account:
+    type: "Account type"
+    types:
+      free: "Free user"
+      premium: "Premium user"
+      professional: "Professional"
+    professional_type: "Professional type"
+    professional_type_blank: "Select professional type"
+    professional_types:
+      nutritionist: "Nutrition professional"
+      physical_educator: "Physical education professional"
   actions: "Actions"
   pagination:
     showing: "Showing"
@@ -247,3 +258,11 @@ en:
     cta:
       choose: "Choose plan"
       view: "View plans"
+  country: "Country"
+  country_blank: "Select country"
+  countries:
+    br: "Brazil"
+    us: "United States"
+  credential: "Professional credential"
+  credential_placeholder: "CRN, CREF, RDN, NASM, ISSA, ACE..."
+  registration_number: "Registration or certification number"

@@ -17,6 +17,54 @@ RSpec.describe User, type: :model do
     it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity }
   end
 
+  describe 'account types' do
+    it 'defaults to a free account' do
+      expect(build(:user).account_type).to eq('free')
+    end
+
+    it 'requires a professional type for professional accounts' do
+      user = build(:user, account_type: :professional)
+
+      expect(user).not_to be_valid
+      expect(user.errors[:professional_type]).to be_present
+    end
+
+    it 'requires generic credentials for nutrition professionals' do
+      user = build(:user, account_type: :professional, professional_type: :nutritionist)
+
+      expect(user).not_to be_valid
+      expect(user.errors[:country_code]).to be_present
+      expect(user.errors[:professional_credential]).to be_present
+      expect(user.errors[:professional_registration_number]).to be_present
+    end
+
+    it 'accepts a Brazilian nutrition professional with CRN' do
+      user = build(
+        :user,
+        account_type: :professional,
+        professional_type: :nutritionist,
+        country_code: 'BR',
+        professional_credential: 'CRN',
+        professional_registration_number: '12345'
+      )
+
+      expect(user).to be_valid
+    end
+
+    it 'accepts a United States physical education professional with NASM' do
+      user = build(
+        :user,
+        account_type: :professional,
+        professional_type: :physical_educator,
+        country_code: 'US',
+        professional_credential: 'NASM',
+        professional_registration_number: '123456'
+      )
+
+      expect(user).to be_valid
+    end
+  end
+
   describe 'unit preferences' do
     let(:user) { build(:user, height: 1.75, height_unit: Units::HEIGHTS::FT) }
 
