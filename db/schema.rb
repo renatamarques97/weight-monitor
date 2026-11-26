@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_11_24_120100) do
+ActiveRecord::Schema[8.0].define(version: 2026_11_26_165557) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -252,6 +252,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_24_120100) do
     t.datetime "strava_sync_finished_at"
     t.text "strava_sync_error"
     t.integer "strava_sync_imported_count", default: 0, null: false
+    t.integer "account_type", default: 0, null: false
+    t.integer "professional_type"
+    t.string "country_code"
+    t.string "professional_credential"
+    t.string "professional_registration_number"
+    t.index ["account_type"], name: "index_users_on_account_type"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["strava_athlete_id"], name: "index_users_on_strava_athlete_id", unique: true
