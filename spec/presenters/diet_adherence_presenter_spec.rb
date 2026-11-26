@@ -121,4 +121,68 @@ RSpec.describe DietAdherencePresenter do
     expect(presenter.state).to eq(:tracked)
     expect(presenter.adherence_percent).to be < 20
   end
+
+  it 'returns zero when the meal type matches but no planned food was eaten' do
+    diet = create(:diet, user: user)
+    planned_meal = create(
+      :meal,
+      diet: diet,
+      meal_type: :breakfast,
+      schedule: Time.zone.parse('08:00'),
+      description: 'Breakfast'
+    )
+    create(:meal_food, meal: planned_meal, food_name: 'Chicken')
+
+    diary = create(:meal_diary, user: user, diary_date: Date.current)
+    executed_meal = create(
+      :meal,
+      meal_diary: diary,
+      meal_type: :breakfast,
+      schedule: Time.zone.parse('08:10'),
+      description: 'Breakfast'
+    )
+    create(:meal_food, meal: executed_meal, food_name: 'Pizza')
+
+    presenter = described_class.new(user)
+
+    expect(presenter.state).to eq(:tracked)
+    expect(presenter.adherence_percent).to eq(0)
+  end
+
+  it 'does not reuse an eaten food for another meal type in the plan' do
+    diet = create(:diet, user: user)
+
+    breakfast = create(
+      :meal,
+      diet: diet,
+      meal_type: :breakfast,
+      schedule: Time.zone.parse('08:00'),
+      description: 'Breakfast'
+    )
+    create(:meal_food, meal: breakfast, food_name: 'Eggs')
+
+    lunch = create(
+      :meal,
+      diet: diet,
+      meal_type: :lunch,
+      schedule: Time.zone.parse('12:00'),
+      description: 'Lunch'
+    )
+    create(:meal_food, meal: lunch, food_name: 'Eggs')
+
+    diary = create(:meal_diary, user: user, diary_date: Date.current)
+    breakfast_record = create(
+      :meal,
+      meal_diary: diary,
+      meal_type: :breakfast,
+      schedule: Time.zone.parse('08:10'),
+      description: 'Breakfast'
+    )
+    create(:meal_food, meal: breakfast_record, food_name: 'Eggs')
+
+    presenter = described_class.new(user)
+
+    expect(presenter.state).to eq(:tracked)
+    expect(presenter.adherence_percent).to eq(49)
+  end
 end

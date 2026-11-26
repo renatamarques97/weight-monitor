@@ -21,6 +21,8 @@ class DietMealAdherenceCalculator
   private
 
   def score_for_meal(planned, executed)
+    return SCORE_MIN unless executed.meal_type.to_s == planned.meal_type.to_s
+
     food_score = food_similarity(planned, executed)
     return SCORE_MIN if food_score.zero?
 
