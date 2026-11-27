@@ -50,6 +50,7 @@ en:
     created: "Diet was successfully created."
     updated: "Diet was successfully updated."
     destroyed: "Diet was successfully destroyed."
+    unauthorized_create: "Only assigned nutritionists can create diets."
   weight:
     new: "New Weight"
     title: "Weight"
@@ -220,6 +221,10 @@ en:
     no_sessions: "This workout plan has no sessions."
     no_upcoming_sessions: "No upcoming sessions in this plan."
     none: "No workout plan assigned."
+    unauthorized_create: "Only assigned physical educators can create workout plans."
+    created: "Workout plan created."
+    updated: "Workout plan updated."
+    destroyed: "Workout plan destroyed."
   preferences:
     height: "Height"
     weight_unit: "Weight Unit"

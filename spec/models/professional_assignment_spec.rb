@@ -23,5 +23,19 @@ RSpec.describe ProfessionalAssignment, type: :model do
 
       expect(described_class.new(client: user, nutritionist: user)).not_to be_valid
     end
+
+    it 'rejects an invalid nutritionist' do
+      assignment = described_class.new(client: create(:user), nutritionist: create(:user, account_type: :free))
+
+      expect(assignment).not_to be_valid
+      expect(assignment.errors[:nutritionist]).to be_present
+    end
+
+    it 'rejects an invalid physical educator' do
+      assignment = described_class.new(client: create(:user), physical_educator: create(:user, account_type: :free))
+
+      expect(assignment).not_to be_valid
+      expect(assignment.errors[:physical_educator]).to be_present
+    end
   end
 end

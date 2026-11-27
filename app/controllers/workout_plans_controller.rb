@@ -23,11 +23,7 @@ class WorkoutPlansController < ApplicationController
 
   def new
     target = client_from_params
-    policy = target ? WorkoutPlanPolicy.new(current_user, WorkoutPlan.new(user: target)) : nil
-    unless policy&.create?(target)
-      redirect_to workout_plans_path, alert: 'Only assigned physical educators can create workout plans.'
-      return
-    end
+    return unauthorized_new unless can_create_for?(target)
 
     @workout_plan = target.workout_plans.build(
       physical_educator: current_user,
@@ -44,20 +40,12 @@ class WorkoutPlansController < ApplicationController
 
   def create
     target = client_from_params_for_create
-    policy = target ? WorkoutPlanPolicy.new(current_user, WorkoutPlan.new(user: target)) : nil
-    unless policy&.create?(target)
-      redirect_to workout_plans_path, alert: 'Only assigned physical educators can create workout plans.'
-      return
-    end
+    return unauthorized_new unless can_create_for?(target)
 
     @workout_plan = target.workout_plans.build(plan_params)
     @workout_plan.physical_educator = current_user
 
-    if @workout_plan.save
-      redirect_to workout_plan_path(@workout_plan), notice: 'Workout plan created.'
-    else
-      render :new, status: :unprocessable_content
-    end
+    save_workout_plan
   end
 
   def update
@@ -67,7 +55,7 @@ class WorkoutPlansController < ApplicationController
     end
 
     if @plan.update(plan_params)
-      redirect_to workout_plan_path(@plan), notice: 'Workout plan updated.'
+      redirect_to workout_plan_path(@plan), notice: t('workout_plan.updated')
     else
       render :edit, status: :unprocessable_content
     end
@@ -80,7 +68,7 @@ class WorkoutPlansController < ApplicationController
     end
 
     @plan.destroy
-    redirect_to workout_plans_path, notice: 'Workout plan destroyed.'
+    redirect_to workout_plans_path, notice: t('workout_plan.destroyed')
   end
 
   private
@@ -98,7 +86,26 @@ class WorkoutPlansController < ApplicationController
   end
 
   def plan_params
-    params.expect(workout_plan: [:start_date, :end_date,
-                                 { sessions_attributes: %i[id session_date workout_type duration distance distance_unit weight_unit title notes details _destroy] }])
+    params.expect(workout_plan: [:start_date, :end_date, { sessions_attributes: session_attributes }])
+  end
+
+  def session_attributes
+    %i[id session_date workout_type duration distance distance_unit weight_unit title notes details _destroy]
+  end
+
+  def unauthorized_new
+    redirect_to workout_plans_path, alert: t('workout_plan.unauthorized_create')
+  end
+
+  def can_create_for?(target)
+    target && WorkoutPlanPolicy.new(current_user, WorkoutPlan.new(user: target)).create?(target)
+  end
+
+  def save_workout_plan
+    if @workout_plan.save
+      redirect_to workout_plan_path(@workout_plan), notice: t('workout_plan.created')
+    else
+      render :new, status: :unprocessable_content
+    end
   end
 end

@@ -371,4 +371,36 @@ RSpec.describe Workout, type: :model do
       expect(build(:running, user: user, strava_activity_id: nil)).to be_valid
     end
   end
+
+  describe 'planned workout sessions' do
+    it 'rejects a workout planned for another user' do
+      plan = create(:workout_plan)
+      session = create(:workout_plan_session, workout_plan: plan, session_date: Date.current)
+      workout = build(:running, user: create(:user), workout_plan_session: session, workout_date: session.session_date)
+
+      expect(workout).not_to be_valid
+      expect(workout.errors[:workout_plan_session]).to be_present
+    end
+
+    it 'rejects a workout on a date different from its planned session' do
+      plan = create(:workout_plan)
+      session = create(:workout_plan_session, workout_plan: plan, session_date: Date.current)
+      workout = build(:running, user: plan.user, workout_plan_session: session,
+                                workout_date: session.session_date + 1.day)
+
+      expect(workout).not_to be_valid
+      expect(workout.errors[:workout_plan_session]).to be_present
+    end
+
+    it 'rejects two workouts linked to the same planned session' do
+      plan = create(:workout_plan)
+      session = create(:workout_plan_session, workout_plan: plan, session_date: Date.current)
+      create(:running, user: plan.user, workout_plan_session: session, workout_date: session.session_date)
+
+      duplicate = build(:running, user: plan.user, workout_plan_session: session,
+                                  workout_date: session.session_date)
+
+      expect(duplicate).not_to be_valid
+    end
+  end
 end

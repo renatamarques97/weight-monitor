@@ -181,13 +181,13 @@ RSpec.describe StravaActivitySyncService do
       api = instance_double(StravaApiService)
       allow(StravaApiService).to receive(:new).with(user).and_return(api)
       allow(api).to receive(:activities).with(per_page: 30).and_return([
-                                                                          { 'id' => 1_000_001, 'sport_type' => 'Run',
-                                                                            'start_date_local' => '2026-11-24T08:30:00Z',
-                                                                            'moving_time' => 1800, 'distance' => 5000 },
-                                                                          { 'id' => 1_000_002, 'sport_type' => 'Ride',
-                                                                            'start_date_local' => '2026-11-24T09:30:00Z',
-                                                                            'moving_time' => 3600, 'distance' => 30000 }
-                                                                        ])
+                                                                         { 'id' => 1_000_001, 'sport_type' => 'Run',
+                                                                           'start_date_local' => '2026-11-24T08:30:00Z',
+                                                                           'moving_time' => 1800, 'distance' => 5000 },
+                                                                         { 'id' => 1_000_002, 'sport_type' => 'Ride',
+                                                                           'start_date_local' => '2026-11-24T09:30:00Z',
+                                                                           'moving_time' => 3600, 'distance' => 30_000 }
+                                                                       ])
 
       expect(described_class.new(user).sync).to eq(1)
       expect(user.workouts.where(strava_activity_id: 1_000_002).count).to eq(1)

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class DietsController < ApplicationController
+  MEAL_FOOD_ATTRIBUTES = %i[id food_name fatsecret_food_id metric_serving_amount calories protein carbs fat
+                            metric_serving_unit _destroy].freeze
+
   before_action :set_diet, only: %i[show edit update destroy]
   before_action :authenticate_user!
   before_action :authorized?, only: %i[show edit update destroy]
@@ -21,40 +24,29 @@ class DietsController < ApplicationController
 
   # GET /diets/new
   def new
-    target = User.find_by(id: params[:user_id])
-    target ||= current_user if current_user.account_type_admin?
-
-    unless target && ::UserDietPolicy.new(current_user, target.diets.build).create?(target)
-      redirect_to diets_path, alert: 'Only assigned nutritionists can create diets.'
+    target = diet_target
+    unless authorized_diet_target?(target)
+      redirect_to diets_path, alert: t('diet.unauthorized_create')
       return
     end
 
-    @diet = target.diets.build(nutritionist: current_user, weight_unit: target.weight_unit)
-    meal = @diet.meals.build
-    meal.meal_foods.build
+    build_diet_for(target)
   end
 
   def edit; end
 
   # POST /diets
   def create
-    target = User.find_by(id: params[:user_id])
-    target ||= current_user if current_user.account_type_admin?
-
-    unless target && ::UserDietPolicy.new(current_user, target.diets.build).create?(target)
-      redirect_to diets_path, alert: 'Only assigned nutritionists can create diets.'
+    target = diet_target
+    unless authorized_diet_target?(target)
+      redirect_to diets_path, alert: t('diet.unauthorized_create')
       return
     end
 
     @diet = target.diets.build(diet_params)
     @diet.nutritionist = current_user
 
-    if @diet.save
-      flash[:notice] = t('diet.created')
-      redirect_to(root_path)
-    else
-      render :new
-    end
+    save_diet
   end
 
   # PATCH/PUT /diets/1
@@ -107,14 +99,32 @@ class DietsController < ApplicationController
     [
       :id, :schedule, :description, :meal_type, :food_name, :fatsecret_food_id,
       :calories, :protein, :carbs, :fat, :metric_serving_unit, :_destroy,
-      { meal_foods_attributes: meal_food_attributes }
+      { meal_foods_attributes: MEAL_FOOD_ATTRIBUTES }
     ]
   end
 
-  def meal_food_attributes
-    %i[
-      id food_name fatsecret_food_id metric_serving_amount calories protein carbs fat
-      metric_serving_unit _destroy
-    ]
+  def build_diet_for(target)
+    @diet = target.diets.build(nutritionist: current_user, weight_unit: target.weight_unit)
+    meal = @diet.meals.build
+    meal.meal_foods.build
+  end
+
+  def diet_target
+    target = User.find_by(id: params[:user_id])
+    target ||= current_user if current_user.account_type_admin?
+    target
+  end
+
+  def authorized_diet_target?(target)
+    target && ::UserDietPolicy.new(current_user, target.diets.build).create?(target)
+  end
+
+  def save_diet
+    if @diet.save
+      flash[:notice] = t('diet.created')
+      redirect_to(root_path)
+    else
+      render :new
+    end
   end
 end

@@ -15,30 +15,39 @@ class StravaController < ApplicationController
   end
 
   def sync
-    unless current_user.start_strava_sync?
-      redirect_to workouts_path, alert: t('strava.already_syncing')
-      return
-    end
+    return already_syncing unless current_user.start_strava_sync?
 
-    begin
-      imported = StravaActivitySyncService.new(current_user).sync
-      current_user.update!(
-        strava_sync_status: 'synced',
-        strava_sync_finished_at: Time.current,
-        strava_sync_imported_count: imported,
-        strava_sync_error: nil
-      )
+    perform_strava_sync
+  end
 
-      redirect_to workouts_path, notice: t('strava.sync_success', count: imported)
-    rescue StandardError => e
-      current_user.update!(
-        strava_sync_status: 'failed',
-        strava_sync_finished_at: Time.current,
-        strava_sync_error: e.message
-      )
+  def perform_strava_sync
+    imported = StravaActivitySyncService.new(current_user).sync
+    mark_strava_synced(imported)
+    redirect_to workouts_path, notice: t('strava.sync_success', count: imported)
+  rescue StandardError => e
+    mark_strava_failed(e)
+  end
 
-      redirect_to workouts_path, alert: t('strava.sync_error', message: e.message)
-    end
+  def already_syncing
+    redirect_to workouts_path, alert: t('strava.already_syncing')
+  end
+
+  def mark_strava_synced(imported)
+    current_user.update!(
+      strava_sync_status: 'synced',
+      strava_sync_finished_at: Time.current,
+      strava_sync_imported_count: imported,
+      strava_sync_error: nil
+    )
+  end
+
+  def mark_strava_failed(error)
+    current_user.update!(
+      strava_sync_status: 'failed',
+      strava_sync_finished_at: Time.current,
+      strava_sync_error: error.message
+    )
+    redirect_to workouts_path, alert: t('strava.sync_error', message: error.message)
   end
 
   def status
