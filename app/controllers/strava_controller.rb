@@ -20,9 +20,25 @@ class StravaController < ApplicationController
       return
     end
 
-    StravaSyncJob.perform_later(current_user.id)
+    begin
+      imported = StravaActivitySyncService.new(current_user).sync
+      current_user.update!(
+        strava_sync_status: 'synced',
+        strava_sync_finished_at: Time.current,
+        strava_sync_imported_count: imported,
+        strava_sync_error: nil
+      )
 
-    redirect_to workouts_path
+      redirect_to workouts_path, notice: t('strava.sync_success', count: imported)
+    rescue StandardError => e
+      current_user.update!(
+        strava_sync_status: 'failed',
+        strava_sync_finished_at: Time.current,
+        strava_sync_error: e.message
+      )
+
+      redirect_to workouts_path, alert: t('strava.sync_error', message: e.message)
+    end
   end
 
   def status

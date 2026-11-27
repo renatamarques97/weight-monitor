@@ -52,23 +52,25 @@ RSpec.describe '/strava', type: :request do
   end
 
   describe 'POST /strava/sync' do
-    it 'enqueues synchronization and redirects immediately' do
-      expect do
-        post strava_sync_path
-      end.to have_enqueued_job(StravaSyncJob).with(user.id)
+    it 'runs synchronization directly and redirects after completion' do
+      sync_service = instance_double(StravaActivitySyncService, sync: 3)
+      allow(StravaActivitySyncService).to receive(:new).with(user).and_return(sync_service)
 
+      post strava_sync_path
+
+      expect(StravaActivitySyncService).to have_received(:new).with(user)
       expect(response).to redirect_to(workouts_path)
-      expect(flash[:notice]).to be_nil
-      expect(user.reload.strava_sync_status).to eq('syncing')
+      expect(flash[:notice]).to eq(I18n.t('strava.sync_success', count: 3))
+      expect(user.reload).to have_attributes(strava_sync_status: 'synced', strava_sync_imported_count: 3)
     end
 
-    it 'does not enqueue a second job while synchronization is active' do
+    it 'does not run a second sync while synchronization is active' do
       user.update!(strava_sync_status: 'syncing', strava_sync_started_at: 1.minute.ago)
+      allow(StravaActivitySyncService).to receive(:new)
 
-      expect do
-        post strava_sync_path
-      end.not_to have_enqueued_job(StravaSyncJob)
+      post strava_sync_path
 
+      expect(StravaActivitySyncService).not_to have_received(:new)
       expect(response).to redirect_to(workouts_path)
       expect(flash[:alert]).to eq(I18n.t('strava.already_syncing'))
     end
