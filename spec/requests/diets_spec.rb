@@ -31,7 +31,7 @@ RSpec.describe '/diets', type: :request do
   end
 
   describe 'When User is signed in' do
-    let!(:user) { create(:user) }
+    let!(:user) { create(:user, account_type: :admin) }
     let(:valid_attributes) { attributes_for(:diet, user_id: user.id) }
     let(:invalid_attributes) do
       attributes_for(:diet, target_weight: nil, user_id: user.id)

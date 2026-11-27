@@ -22,6 +22,8 @@ class DietsController < ApplicationController
   # GET /diets/new
   def new
     target = User.find_by(id: params[:user_id])
+    target ||= current_user if current_user.account_type_admin?
+
     unless target && ::UserDietPolicy.new(current_user, target.diets.build).create?(target)
       redirect_to diets_path, alert: 'Only assigned nutritionists can create diets.'
       return
@@ -37,6 +39,8 @@ class DietsController < ApplicationController
   # POST /diets
   def create
     target = User.find_by(id: params[:user_id])
+    target ||= current_user if current_user.account_type_admin?
+
     unless target && ::UserDietPolicy.new(current_user, target.diets.build).create?(target)
       redirect_to diets_path, alert: 'Only assigned nutritionists can create diets.'
       return

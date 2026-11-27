@@ -3,7 +3,7 @@
 <section class="tw-card fit-list-card">
   <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
     <h1 class="text-2xl font-bold tracking-tight fit-text-primary"><%= t('diet.title') %></h1>
-    <%= link_to t('diet.new'), new_diet_path, class: "tw-btn-primary" %>
+    <%= link_to t('diet.new'), new_diet_path, class: "tw-btn-primary" if current_user.valid_nutritionist? || current_user.account_type_admin? %>
   </div>
 
   <div class="fit-list-table-shell">
@@ -21,6 +21,7 @@
 
         <tbody class="fit-surface-card fit-divide-subtle">
           <% @diets.each do |diet| %>
+            <% can_manage = ::UserDietPolicy.new(current_user, diet).manage? || current_user.account_type_admin? %>
             <tr class="fit-hover-surface-muted">
               <td class="px-4 py-3"><%= diet.start_date.strftime("%m/%d/%Y") %></td>
               <td class="px-4 py-3"><%= diet.end_date.strftime("%m/%d/%Y") %></td>
@@ -30,11 +31,13 @@
                 <%= link_to diet, class: "fit-icon-btn fit-icon-btn-show", title: t('show'), aria: { label: t('show') } do %>
                   <i class="fa fa-eye" aria-hidden="true"></i>
                 <% end %>
-                <%= link_to edit_diet_path(diet), data: { turbo_frame: "main" }, class: "fit-icon-btn fit-icon-btn-edit", title: t('edit'), aria: { label: t('edit') } do %>
-                  <i class="fa fa-pencil text-lg"></i>
-                <% end %>
-                <%= link_to diet, data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: "fit-icon-btn fit-icon-btn-delete", title: t('remove'), aria: { label: t('remove') } do %>
-                  <i class="fa fa-trash" aria-hidden="true"></i>
+                <% if can_manage %>
+                  <%= link_to edit_diet_path(diet), data: { turbo_frame: "main" }, class: "fit-icon-btn fit-icon-btn-edit", title: t('edit'), aria: { label: t('edit') } do %>
+                    <i class="fa fa-pencil text-lg"></i>
+                  <% end %>
+                  <%= link_to diet, data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: "fit-icon-btn fit-icon-btn-delete", title: t('remove'), aria: { label: t('remove') } do %>
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  <% end %>
                 <% end %>
               </td>
             </tr>

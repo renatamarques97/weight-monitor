@@ -18,10 +18,12 @@ class UserDietPolicy
   end
 
   def manage?
-    user.valid_nutritionist? && diet.nutritionist == user && diet.user.nutritionist == user
+    user.account_type_admin? ||
+      (user.valid_nutritionist? && diet.nutritionist == user && diet.user.nutritionist == user)
   end
 
   def create?(target_user)
-    user.valid_nutritionist? && target_user.nutritionist == user
+    user.account_type_admin? ||
+      (user.valid_nutritionist? && target_user.nutritionist == user)
   end
 end
