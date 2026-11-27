@@ -9,6 +9,13 @@ class User < ApplicationRecord
   has_many :meal_diaries, dependent: :destroy
   has_many :workouts, dependent: :destroy
   has_many :chat_messages, dependent: :destroy
+  has_one :professional_assignment, foreign_key: :client_id, dependent: :destroy,
+                                    inverse_of: :client
+  has_many :nutritionist_assignments, class_name: 'ProfessionalAssignment',
+                                      foreign_key: :nutritionist_id, dependent: :nullify, inverse_of: :nutritionist
+  has_many :physical_educator_assignments, class_name: 'ProfessionalAssignment',
+                                           foreign_key: :physical_educator_id, dependent: :nullify, inverse_of: :physical_educator
+  has_many :workout_plans, dependent: :destroy
 
   def current_diet
     diets.order(start_date: :desc, created_at: :desc).first
@@ -20,10 +27,13 @@ class User < ApplicationRecord
   validates :email, uniqueness: true
   validates :name, presence: true
   validates :height, numericality: { greater_than: 0 }, allow_nil: true
+  validate :professional_fields_consistent
 
   enum :weight_unit, { kg: WEIGHTS::KG, lbs: WEIGHTS::LBS }, prefix: true, validate: true
   enum :distance_unit, { km: DISTANCES::KM, mi: DISTANCES::MI }, prefix: true, validate: true
   enum :height_unit, { m: HEIGHTS::M, ft: HEIGHTS::FT, cm: HEIGHTS::CM }, prefix: true, validate: true
+  enum :account_type, { free: 0, premium: 1, professional: 2, admin: 3 }, prefix: true, validate: true
+  enum :professional_type, { nutritionist: 0, physical_educator: 1 }, prefix: true
 
   before_validation :parse_height_in_feet, if: :height_unit_ft?
 
@@ -75,7 +85,41 @@ class User < ApplicationRecord
     )
   end
 
+  def valid_nutritionist?
+    account_type_professional? && professional_type_nutritionist? && professional_credentials_present?
+  end
+
+  def valid_physical_educator?
+    account_type_professional? && professional_type_physical_educator? && professional_credentials_present?
+  end
+
+  def nutritionist
+    professional_assignment&.nutritionist
+  end
+
+  def physical_educator
+    professional_assignment&.physical_educator
+  end
+
+  def current_workout_plan
+    workout_plans.order(start_date: :desc, created_at: :desc).first
+  end
+
+  def professional_credentials_present?
+    country_code.present? && professional_credential.present? && professional_registration_number.present?
+  end
+
   private
+
+  def professional_fields_consistent
+    return unless account_type_professional?
+
+    if professional_type.blank?
+      errors.add(:professional_type, 'must be selected')
+    elsif professional_credentials_present? == false
+      errors.add(:base, 'country, credential and registration number are required')
+    end
+  end
 
   # Accepts 5'9" as well as decimal feet; unparseable input is kept so validation reports it.
   def parse_height_in_feet
