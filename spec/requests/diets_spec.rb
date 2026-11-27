@@ -55,6 +55,19 @@ RSpec.describe '/diets', type: :request do
         get diet_url(diet)
         expect(response).to be_successful
       end
+
+      it 'shows meal schedules, foods, servings and macros' do
+        diet = Diet.create! valid_attributes
+        meal = diet.meals.create!(schedule: '07:30', description: 'Morning meal', meal_type: :breakfast)
+        meal.meal_foods.create!(
+          food_name: 'Oats', metric_serving_amount: 80, metric_serving_unit: 'g',
+          calories: 300, protein: 10, carbs: 54, fat: 6
+        )
+
+        get diet_url(diet)
+
+        expect(response.body).to include('07:30', 'Morning meal', 'Oats', '80', 'g', '300', '10', '54', '6')
+      end
     end
 
     describe 'GET /new' do
