@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ImcPresenter
+class BmiPresenter
   def initialize(user)
     @user = user
   end
