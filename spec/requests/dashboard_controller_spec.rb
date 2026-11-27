@@ -71,6 +71,42 @@ RSpec.describe '/dashboard', type: :request do
         expect(response.body).to include(I18n.t('workout.training_duration', hours: 1, minutes: 35))
         expect(response.body).to include(I18n.t('workout.this_month'))
       end
+
+      it 'shows the current workout plan and upcoming sessions' do
+        plan = create(:workout_plan, user: user,
+                                     start_date: Date.current,
+                                     end_date: 2.weeks.from_now.to_date)
+        plan.sessions.create!(
+          session_date: Date.current,
+          workout_type: :running,
+          duration: 45,
+          title: 'Easy run'
+        )
+
+        get root_path
+
+        expect(response.body).to include(I18n.t('workout_plan.title'))
+        expect(response.body).to include('/workout_plans')
+        expect(response.body).to include('>1</p>')
+      end
+
+      it 'shows the workout plan metric above the progress charts' do
+        plan = create(:workout_plan, user: user,
+                                     start_date: Date.current,
+                                     end_date: 2.weeks.from_now.to_date)
+        plan.sessions.create!(
+          session_date: Date.current,
+          workout_type: :running,
+          duration: 45,
+          title: 'Easy run'
+        )
+
+        get root_path
+
+        expect(response.body).to include(I18n.t('workout_plan.title'))
+        expect(response.body).to include('/workout_plans')
+        expect(response.body).to include('>1</p>')
+      end
     end
   end
 

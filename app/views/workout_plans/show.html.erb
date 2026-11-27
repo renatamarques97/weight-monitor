@@ -1,0 +1,52 @@
+<%= render "dashboard/menu" %>
+
+<turbo-frame id="main">
+  <section class="tw-card">
+    <div class="mb-5 flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <h1 class="text-2xl font-bold fit-text-primary"><%= t('workout_plan.title') %></h1>
+        <p class="mt-1 fit-text-secondary"><%= @plan.user.name %></p>
+      </div>
+
+      <% if WorkoutPlanPolicy.new(current_user, @plan).manage? || current_user.account_type_admin? %>
+        <%= link_to t('edit'), edit_workout_plan_path(@plan), class: 'tw-btn-primary', data: { turbo_frame: '_top' } %>
+      <% end %>
+    </div>
+
+    <div class="mb-5 grid gap-3 md:grid-cols-2">
+      <div class="rounded-lg border fit-border-subtle fit-surface-card p-3">
+        <strong><%= t('workout_plan.start_date') %>:</strong> <%= l(@plan.start_date, format: :short) %>
+      </div>
+      <div class="rounded-lg border fit-border-subtle fit-surface-card p-3">
+        <strong><%= t('workout_plan.end_date') %>:</strong> <%= l(@plan.end_date, format: :short) %>
+      </div>
+    </div>
+
+    <% if @plan.sessions.any? %>
+      <div class="grid gap-3">
+        <% @plan.sessions.includes(:workout).order(:session_date).each do |session| %>
+          <%= link_to workout_plan_session_path(@plan, session),
+                      data: { turbo_frame: '_top' },
+                      class: 'rounded-xl border fit-border-subtle fit-surface-muted p-4' do %>
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="font-semibold fit-text-primary"><%= session.title.presence || t("workout.types.#{session.workout_type}") %></p>
+                <p class="mt-1 text-sm fit-text-secondary"><%= l(session.session_date, format: :long) %></p>
+              </div>
+              <span class="rounded-full fit-surface-card px-3 py-1 text-xs font-bold fit-text-secondary">
+                <%= session.workout.present? ? t('workout_plan.completed') : t('workout_plan.pending') %>
+              </span>
+            </div>
+            <% if session.notes.present? %>
+              <p class="mt-3 text-sm fit-text-secondary"><%= session.notes %></p>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="fit-text-secondary"><%= t('workout_plan.no_sessions') %></p>
+    <% end %>
+
+    <%= link_to t('back'), workout_plans_path, class: 'tw-btn-secondary mt-5', data: { turbo_frame: '_top' } %>
+  </section>
+</turbo-frame>

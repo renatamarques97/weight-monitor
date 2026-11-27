@@ -32,6 +32,23 @@
         </div>
       <% end %>
 
+      <%= link_to workout_plans_path, data: { turbo_frame: "_top" }, class: "fit-stat-card fit-stat-card-link" do %>
+        <span class="fit-stat-icon fit-stat-icon--workout">
+          <i class="fa fa-calendar-check" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="fit-stat-label"><%= t('workout_plan.title') %></p>
+          <% if @current_workout_plan %>
+            <p class="fit-stat-value"><%= @workout_plan_sessions.count %></p>
+            <p class="mt-1 text-xs font-semibold fit-text-secondary">
+              <%= l(@current_workout_plan.start_date, format: :short) %> — <%= l(@current_workout_plan.end_date, format: :short) %>
+            </p>
+          <% else %>
+            <p class="fit-stat-value"><%= t('workout_plan.none') %></p>
+          <% end %>
+        </div>
+      <% end %>
+
       <%= link_to diets_path, data: { turbo_frame: "_top" }, class: "fit-stat-card fit-stat-card-link" do %>
         <span class="fit-stat-icon fit-stat-icon--diet">
           <i class="fa fa-cutlery" aria-hidden="true"></i>

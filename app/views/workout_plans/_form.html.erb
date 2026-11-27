@@ -1,0 +1,30 @@
+<%= form_with(model: workout_plan, local: true) do |form| %>
+  <% if workout_plan.errors.any? %>
+    <div class="fit-form-error mb-4">
+      <%= pluralize(workout_plan.errors.count, t('error.single')) %>
+      <ul>
+        <% workout_plan.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= hidden_field_tag :user_id, workout_plan.user_id %>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <div>
+      <%= form.label :start_date, t('workout_plan.start_date'), class: 'tw-label' %>
+      <%= form.date_field :start_date, class: 'tw-input' %>
+    </div>
+    <div>
+      <%= form.label :end_date, t('workout_plan.end_date'), class: 'tw-label' %>
+      <%= form.date_field :end_date, class: 'tw-input' %>
+    </div>
+  </div>
+
+  <div class="mt-5 flex gap-3">
+    <%= form.submit class: 'tw-btn-primary' %>
+    <%= link_to t('back'), workout_plans_path, class: 'tw-btn-secondary', data: { turbo_frame: '_top' } %>
+  </div>
+<% end %>
