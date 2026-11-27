@@ -2,6 +2,7 @@
 
 class Workout < ApplicationRecord
   belongs_to :user
+  belongs_to :workout_plan_session, optional: true
 
   self.inheritance_column = :workout_type
 
@@ -32,7 +33,21 @@ class Workout < ApplicationRecord
   validates :strava_activity_id,
             uniqueness: { scope: :user_id },
             allow_nil: true
+  validate :planned_session_matches_execution
+  validates :workout_plan_session_id, uniqueness: true, allow_nil: true
 
   enum :distance_unit, { km: DISTANCES::KM, mi: DISTANCES::MI }, prefix: true, validate: true
   enum :weight_unit, { kg: WEIGHTS::KG, lbs: WEIGHTS::LBS }, prefix: true, validate: true
+
+  private
+
+  def planned_session_matches_execution
+    return unless workout_plan_session
+
+    if workout_plan_session.workout_plan.user_id != user_id
+      errors.add(:workout_plan_session, 'must belong to the workout user')
+    elsif workout_plan_session.session_date != workout_date
+      errors.add(:workout_plan_session, 'must match the workout date')
+    end
+  end
 end

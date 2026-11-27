@@ -175,16 +175,22 @@ RSpec.describe StravaActivitySyncService do
       expect(user.workouts.where(strava_activity_id: [1_000_001, 1_000_002]).count).to eq(2)
     end
 
-    it 'stops after the first known activity on the newest page' do
-      create_existing_workouts(user)
+    it 'continues scanning after known activities and imports missing activities on the same page' do
+      create(:running, user: user, strava_activity_id: 1_000_001)
 
       api = instance_double(StravaApiService)
       allow(StravaApiService).to receive(:new).with(user).and_return(api)
-      allow(api).to receive(:activities).with(per_page: 30).and_return(first_strava_page)
-      expect(api).not_to receive(:activities).with(per_page: 30, page: 2)
+      allow(api).to receive(:activities).with(per_page: 30).and_return([
+                                                                         { 'id' => 1_000_001, 'sport_type' => 'Run',
+                                                                           'start_date_local' => '2026-11-24T08:30:00Z',
+                                                                           'moving_time' => 1800, 'distance' => 5000 },
+                                                                         { 'id' => 1_000_002, 'sport_type' => 'Ride',
+                                                                           'start_date_local' => '2026-11-24T09:30:00Z',
+                                                                           'moving_time' => 3600, 'distance' => 30_000 }
+                                                                       ])
 
       expect(described_class.new(user).sync).to eq(1)
-      expect(user.workouts.where(strava_activity_id: 1_000_001).count).to eq(1)
+      expect(user.workouts.where(strava_activity_id: 1_000_002).count).to eq(1)
     end
 
     it 'imports all activities when the local workout table is empty' do

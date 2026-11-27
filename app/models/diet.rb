@@ -2,6 +2,7 @@
 
 class Diet < ApplicationRecord
   belongs_to :user
+  belongs_to :nutritionist, class_name: 'User', optional: true
   has_many :meals, dependent: :destroy
 
   validates :initial_weight, presence: true

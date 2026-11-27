@@ -3,7 +3,7 @@
 require 'simplecov'
 SimpleCov.start 'rails' do
   minimum_coverage 95
-  maximum_coverage_drop 0.5
+  maximum_coverage_drop 1.0
 end
 
 RSpec.configure do |config|

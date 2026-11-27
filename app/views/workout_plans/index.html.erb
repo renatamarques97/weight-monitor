@@ -1,0 +1,61 @@
+<%= render "dashboard/menu" %>
+
+<turbo-frame id="main">
+  <section class="tw-card fit-list-card">
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <h1 class="text-2xl font-bold tracking-tight fit-text-primary"><%= t('workout_plan.title') %></h1>
+
+      <% if current_user.account_type_admin? || current_user.valid_physical_educator? %>
+        <%= link_to t('workout_plan.new'), new_workout_plan_path, class: 'tw-btn-primary', data: { turbo_frame: '_top' } %>
+      <% end %>
+    </div>
+
+    <% if @workout_plans.any? %>
+      <div class="fit-list-table-shell">
+        <div class="overflow-x-auto rounded-xl border fit-border-subtle">
+          <table class="min-w-full text-sm">
+            <thead class="fit-surface-muted">
+              <tr>
+                <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('workout_plan.client') %></th>
+                <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('workout_plan.start_date') %></th>
+                <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('workout_plan.end_date') %></th>
+                <th class="px-4 py-3 text-left font-semibold fit-text-primary"><%= t('workout_plan.sessions') %></th>
+                <th class="px-4 py-3 text-right font-semibold fit-text-primary"><%= t('actions') %></th>
+              </tr>
+            </thead>
+            <tbody class="fit-surface-card fit-divide-subtle">
+              <% @workout_plans.each do |plan| %>
+                <% can_manage = WorkoutPlanPolicy.new(current_user, plan).manage? || current_user.account_type_admin? %>
+                <tr class="fit-hover-surface-muted">
+                  <td class="px-4 py-3 font-semibold fit-text-primary"><%= plan.user.name %></td>
+                  <td class="px-4 py-3"><%= l(plan.start_date, format: :short) %></td>
+                  <td class="px-4 py-3"><%= l(plan.end_date, format: :short) %></td>
+                  <td class="px-4 py-3"><%= plan.sessions.count %></td>
+                  <td class="px-4 py-3 text-right">
+                    <%= link_to workout_plan_path(plan), class: 'fit-icon-btn fit-icon-btn-show', title: t('show'), aria: { label: t('show') } do %>
+                      <i class="fa fa-eye" aria-hidden="true"></i>
+                    <% end %>
+                    <% if can_manage %>
+                      <%= link_to edit_workout_plan_path(plan), class: 'fit-icon-btn fit-icon-btn-edit', title: t('edit'), aria: { label: t('edit') } do %>
+                        <i class="fa fa-pencil text-lg"></i>
+                      <% end %>
+                      <%= link_to workout_plan_path(plan), data: { turbo_method: :delete, turbo_confirm: t('sure') }, class: 'fit-icon-btn fit-icon-btn-delete', title: t('remove'), aria: { label: t('remove') } do %>
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% else %>
+      <div class="rounded-xl border border-dashed fit-border-subtle fit-surface-muted p-8 text-center">
+        <p class="fit-text-secondary"><%= t('workout_plan.none') %></p>
+      </div>
+    <% end %>
+
+    <%= render 'shared/pagination', pagy: @pagy %>
+  </section>
+</turbo-frame>

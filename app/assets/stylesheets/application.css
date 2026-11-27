@@ -95,11 +95,11 @@
   --btn-delete-text: #b71c1c;
 
   /* Stat card icon colors */
-  --stat-icon-health: #f43f5e;
-  --stat-icon-diet: #0ea5e9;
-  --stat-icon-goal: #f59e0b;
-  --stat-icon-workout: #f59e0b;
-  --stat-icon-weight: #10b981;
+  --stat-icon-health: #49747f;
+  --stat-icon-diet: #cdbbb9;
+  --stat-icon-goal: #49747f;
+  --stat-icon-workout: #e34b26;
+  --stat-icon-weight: #49747f;
 
   /* Nav accent (AI button) */
   --nav-accent-bg: #e34b26;
@@ -210,11 +210,11 @@
   --btn-edit-text: #6ee7b7;
   --btn-delete-text: #ef9a9a;
 
-  --stat-icon-health: #fb7185;
-  --stat-icon-diet: #38bdf8;
-  --stat-icon-goal: #fbbf24;
-  --stat-icon-workout: #fbbf24;
-  --stat-icon-weight: #34d399;
+  --stat-icon-health: #78a0a9;
+  --stat-icon-diet: #d9caca;
+  --stat-icon-goal: #78a0a9;
+  --stat-icon-workout: #f16a49;
+  --stat-icon-weight: #78a0a9;
 
   --nav-accent-bg: rgba(245, 158, 11, 0.18);
   --nav-accent-text: #fbbf24;
@@ -581,6 +581,10 @@ h6,
 
 .fit-stat-icon--weight {
   color: var(--stat-icon-weight);
+}
+
+.fit-stat-icon--green {
+  color: #10b981;
 }
 
 .fit-stat-label {

@@ -34,7 +34,7 @@ class MealsController < ApplicationController
     respond_to do |format|
       if @meal.save
         format.html { redirect_to @meal, notice: t('meal.created') }
-        format.json { render :show, status: :created, location: @meal }
+        format.json { render json: @meal, status: :created, location: @meal }
       else
         format.html { render :new }
         format.json { render json: @meal.errors, status: :unprocessable_content }
@@ -47,7 +47,7 @@ class MealsController < ApplicationController
     respond_to do |format|
       if @meal.update(meal_params)
         format.html { redirect_to @meal, notice: t('meal.updated') }
-        format.json { render :show, status: :ok, location: @meal }
+        format.json { render json: @meal, status: :ok, location: @meal }
       else
         format.html { render :edit }
         format.json { render json: @meal.errors, status: :unprocessable_content }

@@ -26,9 +26,7 @@ class StravaActivitySyncService
     imported = 0
 
     each_activity_page(per_page) do |page_activities|
-      page_imported, found_existing = import_page(page_activities)
-      imported += page_imported
-      break if found_existing
+      imported += import_page(page_activities)
     end
 
     imported
@@ -57,13 +55,13 @@ class StravaActivitySyncService
       existing_workout = find_workout(activity)
       if existing_workout.persisted?
         update_existing_workout(existing_workout, activity)
-        return [imported, true]
+        next
       end
 
       imported += import_activity(activity)
     end
 
-    [imported, false]
+    imported
   end
 
   def update_existing_workout(workout, activity)

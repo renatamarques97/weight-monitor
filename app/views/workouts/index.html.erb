@@ -5,15 +5,11 @@
   <h1 class="text-2xl font-bold tracking-tight fit-text-primary"><%= t('workout.title') %></h1>
   <div class="flex items-center gap-2">
     <% if current_user.strava_athlete_id.present? %>
-      <div data-controller="strava-sync"
-           data-strava-sync-status-url-value="<%= strava_status_path %>"
-           class="flex items-center gap-2">
-        <span data-strava-sync-target="message" class="text-sm fit-text-secondary"></span>
+      <div class="flex items-center gap-2">
         <%= button_to strava_sync_path,
               method: :post,
               class: "tw-btn-primary",
-              form: { data: { turbo: false } },
-              data: { strava_sync_target: "button" } do %>
+              form: { data: { turbo: false } } do %>
           <i class="fa fa-arrows-rotate mr-2"></i>Sync Strava
         <% end %>
       </div>

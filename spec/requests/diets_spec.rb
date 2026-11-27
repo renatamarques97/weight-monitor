@@ -31,7 +31,7 @@ RSpec.describe '/diets', type: :request do
   end
 
   describe 'When User is signed in' do
-    let!(:user) { create(:user) }
+    let!(:user) { create(:user, account_type: :admin) }
     let(:valid_attributes) { attributes_for(:diet, user_id: user.id) }
     let(:invalid_attributes) do
       attributes_for(:diet, target_weight: nil, user_id: user.id)
@@ -54,6 +54,19 @@ RSpec.describe '/diets', type: :request do
         diet = Diet.create! valid_attributes
         get diet_url(diet)
         expect(response).to be_successful
+      end
+
+      it 'shows meal schedules, foods, servings and macros' do
+        diet = Diet.create! valid_attributes
+        meal = diet.meals.create!(schedule: '07:30', description: 'Morning meal', meal_type: :breakfast)
+        meal.meal_foods.create!(
+          food_name: 'Oats', metric_serving_amount: 80, metric_serving_unit: 'g',
+          calories: 300, protein: 10, carbs: 54, fat: 6
+        )
+
+        get diet_url(diet)
+
+        expect(response.body).to include('07:30', 'Morning meal', 'Oats', '80', 'g', '300', '10', '54', '6')
       end
     end
 
@@ -158,6 +171,42 @@ RSpec.describe '/diets', type: :request do
         delete diet_url(diet)
         expect(response).to redirect_to(root_path)
       end
+    end
+  end
+
+  describe 'when signed in as a nutritionist' do
+    let(:client) { create(:user) }
+    let(:nutritionist) do
+      create(:user, account_type: :professional, professional_type: :nutritionist,
+                    country_code: 'BR', professional_credential: 'CRN',
+                    professional_registration_number: '123')
+    end
+
+    before do
+      create(:professional_assignment, client:, nutritionist:)
+      sign_in nutritionist
+    end
+
+    it 'lists diets for assigned clients' do
+      create(:diet, user: client, nutritionist:)
+      get diets_url
+      expect(response).to be_successful
+    end
+
+    it 'creates a diet for an assigned client' do
+      expect do
+        post diets_url, params: { user_id: client.id,
+                                  diet: attributes_for(:diet).except(:user) }
+      end.to change(Diet, :count).by(1)
+
+      expect(Diet.last).to have_attributes(user: client, nutritionist: nutritionist)
+    end
+
+    it 'redirects instead of creating for an unassigned client' do
+      unassigned = create(:user)
+      post diets_url, params: { user_id: unassigned.id,
+                                diet: attributes_for(:diet).except(:user) }
+      expect(response).to redirect_to(diets_path)
     end
   end
 end

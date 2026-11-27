@@ -20,7 +20,8 @@ class DashboardController < ApplicationController
     assign_recent_weight_data
 
     @nutrition_adherence = ::DietAdherencePresenter.new(current_user)
-    @imc = ::ImcPresenter.new(current_user).call
+    @workout_adherence = ::WorkoutAdherencePresenter.new(current_user)
+    @bmi = ::ImcPresenter.new(current_user).call
   end
 
   def assign_weight_goal_data
@@ -44,11 +45,53 @@ class DashboardController < ApplicationController
   end
 
   def assign_workout_data
+    assign_workout_charts
+    assign_monthly_training_minutes
+    assign_workout_plans
+  end
+
+  def assign_workout_charts
     @workout_charts = ::WorkoutQuery.chart_data(current_user, @period_in_days)
+  end
+
+  def assign_monthly_training_minutes
     @monthly_training_minutes = current_user.workouts
                                             .where(workout_date: Date.current.all_month)
                                             .sum(:duration)
                                             .round
+  end
+
+  def assign_workout_plans
+    @workout_plans = visible_workout_plans
+    @current_workout_plan = current_workout_plan || @workout_plans.first
+    @workout_plan_sessions = workout_plan_sessions
+  end
+
+  def current_workout_plan
+    @workout_plans
+      .where('start_date <= ? AND end_date >= ?', Date.current, Date.current)
+      .order(start_date: :desc)
+      .first
+  end
+
+  def workout_plan_sessions
+    return WorkoutPlanSession.none unless @current_workout_plan
+
+    @current_workout_plan.sessions
+                         .includes(:workout)
+                         .where(session_date: Date.current..@current_workout_plan.end_date)
+                         .order(:session_date)
+                         .limit(7)
+  end
+
+  def visible_workout_plans
+    if current_user.account_type_admin?
+      WorkoutPlan.all
+    elsif current_user.valid_physical_educator?
+      WorkoutPlan.where(physical_educator: current_user)
+    else
+      current_user.workout_plans
+    end.order(end_date: :desc, start_date: :desc)
   end
 
   private

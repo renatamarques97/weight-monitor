@@ -128,6 +128,17 @@ RSpec.describe '/workouts', type: :request do
         expect(response.body).to include('<option selected="selected" value="mi">',
                                          '<option selected="selected" value="lbs">')
       end
+
+      it 'preselects values from a planned session' do
+        plan = create(:workout_plan, user: user)
+        session = create(:workout_plan_session, workout_plan: plan, session_date: Date.current,
+                                                workout_type: :running, duration: 50, distance: 8)
+
+        get new_workout_path, params: { workout_plan_session_id: session.id }
+
+        expect(response).to be_successful
+        expect(response.body).to include('50', '8')
+      end
     end
 
     describe 'GET /edit' do

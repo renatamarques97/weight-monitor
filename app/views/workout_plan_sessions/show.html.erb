@@ -1,0 +1,11 @@
+<section class="mx-auto max-w-3xl rounded-2xl border fit-border-subtle fit-surface-card p-6">
+  <h1 class="text-2xl font-bold fit-text-primary"><%= @session.title.presence || t('workout.singular') %></h1>
+  <p class="mt-2 fit-text-secondary"><%= @session.session_date %></p>
+
+  <% if @session.workout.present? %>
+    <p class="mt-4 font-semibold">Treino realizado</p>
+  <% else %>
+    <%= link_to 'Treino realizado', new_workout_path(workout_plan_session_id: @session.id),
+                class: 'tw-btn-primary mt-4 inline-block' %>
+  <% end %>
+</section>

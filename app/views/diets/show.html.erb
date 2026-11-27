@@ -10,15 +10,54 @@
     <div class="rounded-lg border fit-border-subtle fit-surface-card p-3"><strong><%= t('diet.target_weight_label') %>:</strong> <%= weight_in_preferred_unit(@diet.target_weight, @diet.weight_unit) %></div>
   </div>
 
-  <h2 class="mb-2 text-lg font-semibold fit-text-primary"><%= t('meal.title') %></h2>
-  <div class="mb-5 flex flex-col gap-2">
-    <% @diet.meals.each do |meal| %>
-      <div class="rounded-lg border fit-border-subtle fit-surface-muted p-3">
-        <strong><%= meal.meal_type %></strong> - <%= meal.description %> - <%= meal.schedule.strftime("%H:%M") %>
-      </div>
+  <h2 class="mb-3 text-lg font-semibold fit-text-primary"><%= t('meal.title') %></h2>
+  <div class="mb-5 flex flex-col gap-3">
+    <% @diet.meals.includes(:meal_foods).order(:schedule).each do |meal| %>
+      <article class="rounded-xl border fit-border-subtle fit-surface-muted p-4">
+        <div class="flex flex-wrap items-start justify-between gap-2">
+          <div>
+            <p class="font-semibold fit-text-primary"><%= meal.meal_type.text %></p>
+            <p class="mt-1 fit-text-secondary"><%= meal.description %></p>
+          </div>
+          <div class="rounded-lg border fit-border-subtle fit-surface-card px-3 py-2 text-sm font-semibold fit-text-primary">
+            <i class="fa fa-clock mr-1" aria-hidden="true"></i>
+            <%= meal.schedule.strftime("%H:%M") %>
+          </div>
+        </div>
+
+        <% if meal.meal_foods.any? %>
+          <div class="mt-4">
+            <p class="mb-2 text-sm font-semibold fit-text-primary"><%= t('meal.foods_title') %></p>
+            <div class="grid gap-2">
+              <% meal.meal_foods.each do |food| %>
+                <div class="rounded-lg border fit-border-subtle fit-surface-card p-3">
+                  <div class="flex flex-wrap items-baseline justify-between gap-2">
+                    <strong class="fit-text-primary"><%= food.food_name %></strong>
+                    <% if food.metric_serving_amount.present? %>
+                      <span class="text-sm fit-text-secondary">
+                        <%= number_with_precision(food.metric_serving_amount, strip_insignificant_zeros: true) %>
+                        <%= food.metric_serving_unit %>
+                      </span>
+                    <% end %>
+                  </div>
+
+                  <div class="mt-2 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+                    <span><strong><%= t('meal.calories') %>:</strong> <%= number_with_precision(food.calories, precision: 1, strip_insignificant_zeros: true) || '-' %></span>
+                    <span><strong><%= t('meal.protein') %>:</strong> <%= number_with_precision(food.protein, precision: 1, strip_insignificant_zeros: true) || '-' %></span>
+                    <span><strong><%= t('meal.carbs') %>:</strong> <%= number_with_precision(food.carbs, precision: 1, strip_insignificant_zeros: true) || '-' %></span>
+                    <span><strong><%= t('meal.fat') %>:</strong> <%= number_with_precision(food.fat, precision: 1, strip_insignificant_zeros: true) || '-' %></span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </article>
     <% end %>
   </div>
 
-  <%= link_to t('edit'), edit_diet_path(@diet), class: "tw-btn-primary" %>
+  <% if ::UserDietPolicy.new(current_user, @diet).manage? || current_user.account_type_admin? %>
+    <%= link_to t('edit'), edit_diet_path(@diet), class: "tw-btn-primary" %>
+  <% end %>
 </section>
 
