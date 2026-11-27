@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   devise_for :users
   resources :chats, only: [:index]
   resource :chat_responses, only: [:show]
+  get '/plans', to: 'plans#index', as: :plans
   get 'unit_conversions/convert', to: 'unit_conversions#convert'
 
   get '/strava/connect', to: 'strava#connect', as: :strava_connect

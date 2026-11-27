@@ -29,6 +29,11 @@
     </div>
 
     <div class="py-2">
+      <%= link_to plans_path, class: "user-menu-theme w-full flex items-center gap-3 px-4 py-2 fit-text-primary fit-hover-surface-muted transition-colors border-0 bg-transparent font-inherit" do %>
+        <i class="fa fa-tags w-4 fit-text-accent" aria-hidden="true"></i>
+        <span><%= t('plans.nav') %></span>
+      <% end %>
+
       <%= link_to edit_user_registration_path, class: "user-menu-theme w-full flex items-center gap-3 px-4 py-2 fit-text-primary fit-hover-surface-muted transition-colors border-0 bg-transparent font-inherit" do %>
         <i class="fa fa-user w-4 fit-text-accent" aria-hidden="true"></i>
         <span><%= t('profile') %></span>

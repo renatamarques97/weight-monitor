@@ -1,0 +1,65 @@
+<%= render "dashboard/menu" %>
+
+<section class="tw-card mx-auto max-w-7xl rounded-2xl p-5 md:p-8">
+  <header class="mx-auto max-w-3xl text-center">
+    <p class="mb-2 text-sm font-bold uppercase tracking-[0.18em] fit-text-accent"><%= t('plans.eyebrow') %></p>
+    <h1 class="text-3xl font-bold tracking-tight fit-text-primary md:text-4xl"><%= t('plans.title') %></h1>
+    <p class="mx-auto mt-3 max-w-2xl fit-text-secondary"><%= t('plans.subtitle') %></p>
+  </header>
+
+  <div class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+    <% @plans.each do |plan| %>
+      <% plan_key = plan[:key] %>
+      <% is_free = plan_key == :free %>
+      <article class="relative flex min-h-[31rem] flex-col rounded-2xl border p-5 fit-surface-card fit-border-subtle <%= 'ring-2 ring-[var(--brand-accent)]' if plan[:featured] %>">
+        <% if plan[:featured] %>
+          <span class="absolute right-4 top-4 rounded-full px-3 py-1 text-xs font-bold text-white" style="background: var(--brand-accent)">
+            <%= t('plans.best_value') %>
+          </span>
+        <% end %>
+
+        <div class="pr-16">
+          <h2 class="text-xl font-bold fit-text-primary"><%= t("plans.names.#{plan_key}") %></h2>
+          <p class="mt-1 min-h-10 text-sm fit-text-secondary"><%= t("plans.descriptions.#{plan_key}") %></p>
+        </div>
+
+        <div class="mt-6 border-y py-5 fit-border-subtle">
+          <div class="flex items-end gap-1">
+            <span class="text-4xl font-bold tracking-tight fit-text-primary"><%= plan[:price] %></span>
+            <% if plan[:period] %>
+              <span class="pb-1 text-sm fit-text-secondary">/ <%= t("plans.periods.#{plan[:period]}") %></span>
+            <% end %>
+          </div>
+          <% if is_free %>
+            <p class="mt-1 text-xs fit-text-secondary"><%= t('plans.free_forever') %></p>
+          <% else %>
+            <p class="mt-1 text-xs fit-text-secondary"><%= t('plans.provisional_price') %></p>
+          <% end %>
+        </div>
+
+        <ul class="mt-5 flex-1 space-y-3 text-sm fit-text-primary">
+          <% plan[:features].each do |feature| %>
+            <% included = !feature.to_s.end_with?('_no') %>
+            <li class="flex items-start gap-2">
+              <i class="fa <%= included ? 'fa-check text-emerald-500' : 'fa-minus text-slate-400' %> mt-1 w-4" aria-hidden="true"></i>
+              <span><%= t("plans.features.#{feature}") %></span>
+            </li>
+          <% end %>
+        </ul>
+
+        <div class="mt-6">
+          <% if current_user.present? %>
+            <%= link_to t('plans.cta.view'), plans_path, class: "tw-btn-secondary w-full" %>
+          <% else %>
+            <%= link_to t('plans.cta.choose'), new_user_registration_path, class: "#{plan[:featured] ? 'tw-btn-primary' : 'tw-btn-secondary'} w-full" %>
+          <% end %>
+        </div>
+      </article>
+    <% end %>
+  </div>
+
+  <aside class="mt-6 rounded-xl border px-4 py-3 text-center text-sm fit-surface-muted fit-border-subtle fit-text-secondary" role="note">
+    <i class="fa fa-circle-info mr-2 fit-text-accent" aria-hidden="true"></i>
+    <%= t('plans.payment_notice') %>
+  </aside>
+</section>

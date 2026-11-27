@@ -217,3 +217,38 @@ en:
       title: "Page Not Found"
       description: "The page you are looking for does not exist, has been moved, or the record could not be found."
       home_button: "Home Page"
+  plans:
+    nav: "Plans"
+    eyebrow: "Choose your plan"
+    title: "Find the right MOVARA experience"
+    subtitle: "From essential progress tracking to premium integrations and professional follow-up tools."
+    best_value: "Best value"
+    free_forever: "Free plan"
+    provisional_price: "Provisional price"
+    payment_notice: "Payment and plan activation are not available yet. Choosing a plan does not change your account or activate a subscription."
+    names:
+      free: "Free"
+      premium_monthly: "Premium Monthly"
+      premium_semiannual: "Premium Semiannual"
+      premium_annual: "Premium Annual"
+      professional: "Professional"
+    descriptions:
+      free: "A simple start to track your health and fitness routine."
+      premium_monthly: "Full premium access with maximum flexibility."
+      premium_semiannual: "Premium access with a more economical commitment."
+      premium_annual: "Our complete premium experience at the best annual value."
+      professional: "Designed for nutritionists and physical educators."
+    periods:
+      month: "month"
+      six_months: "6 months"
+      year: "year"
+    features:
+      tracking: "Meal, diet, weight, and workout tracking"
+      strava: "Strava integration"
+      strava_no: "No Strava integration"
+      ai: "AI Nutrition & Health Coach"
+      ai_no: "No AI Coach"
+      professional_tools: "Tools for professional client follow-up"
+    cta:
+      choose: "Choose plan"
+      view: "View plans"
