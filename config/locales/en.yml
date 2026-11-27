@@ -168,7 +168,7 @@ en:
   show: "Show"
   remove: "Remove"
   edit: "Edit"
-  imc: "IMC"
+  bmi: "BMI"
   weight_goal: "WEIGHT GOAL"
   progress: "Your Progress "
   send: "Send"
@@ -205,6 +205,12 @@ en:
     weight_increased: "+%{weight} %{unit}"
     weight_decreased: "-%{weight} %{unit}"
     weight_unchanged: "No change"
+    streak_weeks:
+      one: "%{count} week streak"
+      other: "%{count} week streak"
+    total_weeks:
+      one: "%{count} week with records"
+      other: "%{count} weeks with records"
   preferences:
     height: "Height"
     weight_unit: "Weight Unit"
