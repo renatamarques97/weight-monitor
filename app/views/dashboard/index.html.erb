@@ -11,6 +11,24 @@
 
   <div class="mb-6 grid gap-4 lg:grid-cols-2">
     <div class="grid gap-3">
+      <%= link_to diets_path, data: { turbo_frame: "_top" }, class: "fit-stat-card fit-stat-card-link" do %>
+        <span class="fit-stat-icon fit-stat-icon--diet">
+          <i class="fa fa-cutlery" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="fit-stat-label"><%= t('diet.nutrition') %></p>
+          <% if @nutrition_adherence.state == :not_set %>
+            <p class="fit-stat-value"><%= t('diet.not_set_up') %></p>
+          <% elsif @nutrition_adherence.state == :no_records %>
+            <p class="fit-stat-value"><%= t('diet.no_recent_records') %></p>
+          <% elsif @nutrition_adherence.state == :no_plan %>
+            <p class="fit-stat-value"><%= t('diet.no_plan') %></p>
+          <% else %>
+            <p class="fit-stat-value"><%= @nutrition_adherence.adherence_percent %>%</p>
+            <p class="mt-1 text-xs font-semibold fit-text-secondary"><%= t('diet.goal_adherence') %></p>
+          <% end %>
+        </div>
+      <% end %>
       <%= link_to meal_diaries_path, data: { turbo_frame: "_top" }, class: "fit-stat-card fit-stat-card-link" do %>
         <span class="fit-stat-icon fit-stat-icon--diet">
           <i class="fa fa-book" aria-hidden="true"></i>
@@ -48,25 +66,6 @@
           <% end %>
         </div>
       <% end %>
-
-      <%= link_to diets_path, data: { turbo_frame: "_top" }, class: "fit-stat-card fit-stat-card-link" do %>
-        <span class="fit-stat-icon fit-stat-icon--diet">
-          <i class="fa fa-cutlery" aria-hidden="true"></i>
-        </span>
-        <div>
-          <p class="fit-stat-label"><%= t('diet.nutrition') %></p>
-          <% if @nutrition_adherence.state == :not_set %>
-            <p class="fit-stat-value"><%= t('diet.not_set_up') %></p>
-          <% elsif @nutrition_adherence.state == :no_records %>
-            <p class="fit-stat-value"><%= t('diet.no_recent_records') %></p>
-          <% elsif @nutrition_adherence.state == :no_plan %>
-            <p class="fit-stat-value"><%= t('diet.no_plan') %></p>
-          <% else %>
-            <p class="fit-stat-value"><%= @nutrition_adherence.adherence_percent %>%</p>
-            <p class="mt-1 text-xs font-semibold fit-text-secondary"><%= t('diet.goal_adherence') %></p>
-          <% end %>
-        </div>
-      <% end %>
     </div>
 
     <div class="grid gap-3">
@@ -82,7 +81,7 @@
 
       <article class="fit-stat-card">
         <span class="fit-stat-icon fit-stat-icon--goal">
-          <i class="fa fa-star" aria-hidden="true"></i>
+          <i class="fa fa-bullseye text-2xl" aria-hidden="true"></i>
         </span>
         <div class="w-full">
           <p class="fit-stat-label"><%= t('weight_goal') %></p>
@@ -133,6 +132,23 @@
             </p>
           <% elsif @recent_weight.present? %>
             <p class="mt-1 text-xs fit-text-secondary"><%= t('dashboard.no_30_day_trend') %></p>
+          <% end %>
+        </div>
+      </article>
+
+      <article class="fit-stat-card">
+        <span class="fit-stat-icon fit-stat-icon--workout">
+          <i class="fa fa-dumbbell" aria-hidden="true"></i>
+        </span>
+        <div>
+          <p class="fit-stat-label"><%= t('workout_plan.adherence') %></p>
+          <% if @workout_adherence.state == :not_set %>
+            <p class="fit-stat-value"><%= t('workout_plan.no_plan') %></p>
+          <% elsif @workout_adherence.state == :no_plan %>
+            <p class="fit-stat-value"><%= t('workout_plan.no_sessions') %></p>
+          <% else %>
+            <p class="fit-stat-value"><%= @workout_adherence.adherence_percent %>%</p>
+            <p class="mt-1 text-xs font-semibold fit-text-secondary"><%= t('workout_plan.goal_adherence') %></p>
           <% end %>
         </div>
       </article>

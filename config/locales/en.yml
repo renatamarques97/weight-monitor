@@ -225,6 +225,9 @@ en:
     created: "Workout plan created."
     updated: "Workout plan updated."
     destroyed: "Workout plan destroyed."
+    adherence: "Workout adherence"
+    goal_adherence: "Plan adherence"
+    no_plan: "No workout plan"
   preferences:
     height: "Height"
     weight_unit: "Weight Unit"
