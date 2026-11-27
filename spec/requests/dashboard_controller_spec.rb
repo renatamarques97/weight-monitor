@@ -59,6 +59,17 @@ RSpec.describe '/dashboard', type: :request do
         expect(response.body).to include('data-tabs-active-tab-value="soccer"')
       end
 
+      it 'shows meal diary streak and total weeks with records' do
+        create(:meal_diary, user: user, diary_date: Date.current)
+        create(:meal_diary, user: user, diary_date: 1.week.ago.to_date)
+
+        get root_path
+
+        expect(response).to be_successful
+        expect(response.body).to include(I18n.t('dashboard.streak_weeks', count: 2))
+        expect(response.body).to include(I18n.t('dashboard.total_weeks', count: 2))
+      end
+
       it 'shows total workout duration for the current month' do
         create(:running, user: user, workout_date: Time.current.to_date, duration: 75)
         create(:cycling, user: user, workout_date: Time.current.to_date, duration: 20)
