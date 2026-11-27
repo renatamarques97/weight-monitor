@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_11_24_120100) do
+ActiveRecord::Schema[8.0].define(version: 2026_11_27_010110) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -33,6 +33,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_24_120100) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "weight_unit", default: "kg", null: false
+    t.bigint "nutritionist_id"
+    t.index ["nutritionist_id"], name: "index_diets_on_nutritionist_id"
     t.index ["user_id"], name: "index_diets_on_user_id"
   end
 
@@ -77,6 +79,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_24_120100) do
     t.bigint "meal_diary_id"
     t.index ["diet_id"], name: "index_meals_on_diet_id"
     t.index ["meal_diary_id"], name: "index_meals_on_meal_diary_id"
+  end
+
+  create_table "professional_assignments", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "nutritionist_id"
+    t.bigint "physical_educator_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_professional_assignments_on_client_id", unique: true
+    t.index ["nutritionist_id"], name: "index_professional_assignments_on_nutritionist_id"
+    t.index ["physical_educator_id"], name: "index_professional_assignments_on_physical_educator_id"
   end
 
   create_table "solid_queue_batch_executions", force: :cascade do |t|
@@ -252,6 +265,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_24_120100) do
     t.datetime "strava_sync_finished_at"
     t.text "strava_sync_error"
     t.integer "strava_sync_imported_count", default: 0, null: false
+    t.integer "account_type", default: 0, null: false
+    t.integer "professional_type"
+    t.string "country_code"
+    t.string "professional_credential"
+    t.string "professional_registration_number"
+    t.index ["account_type"], name: "index_users_on_account_type"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["strava_athlete_id"], name: "index_users_on_strava_athlete_id", unique: true
@@ -267,6 +286,35 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_24_120100) do
     t.index ["user_id"], name: "index_weights_on_user_id"
   end
 
+  create_table "workout_plan_sessions", force: :cascade do |t|
+    t.bigint "workout_plan_id", null: false
+    t.date "session_date", null: false
+    t.integer "workout_type", null: false
+    t.float "duration"
+    t.float "distance"
+    t.string "distance_unit", default: "km", null: false
+    t.string "weight_unit", default: "kg", null: false
+    t.jsonb "details", default: {}, null: false
+    t.string "title"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workout_plan_id", "session_date"], name: "idx_on_workout_plan_id_session_date_9e3a6a351d", unique: true
+    t.index ["workout_plan_id"], name: "index_workout_plan_sessions_on_workout_plan_id"
+  end
+
+  create_table "workout_plans", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "physical_educator_id", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["physical_educator_id"], name: "index_workout_plans_on_physical_educator_id"
+    t.index ["user_id", "start_date"], name: "index_workout_plans_on_user_id_and_start_date"
+    t.index ["user_id"], name: "index_workout_plans_on_user_id"
+  end
+
   create_table "workouts", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "workout_type", default: 0, null: false
@@ -280,16 +328,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_24_120100) do
     t.string "distance_unit", default: "km", null: false
     t.string "weight_unit", default: "kg", null: false
     t.bigint "strava_activity_id"
+    t.bigint "workout_plan_session_id"
     t.index ["user_id", "strava_activity_id"], name: "index_workouts_on_user_id_and_strava_activity_id", unique: true, where: "(strava_activity_id IS NOT NULL)"
     t.index ["user_id"], name: "index_workouts_on_user_id"
+    t.index ["workout_plan_session_id"], name: "index_workouts_on_workout_plan_session_id", unique: true
   end
 
   add_foreign_key "chat_messages", "users"
   add_foreign_key "diets", "users"
+  add_foreign_key "diets", "users", column: "nutritionist_id"
   add_foreign_key "meal_diaries", "users"
   add_foreign_key "meal_foods", "meals"
   add_foreign_key "meals", "diets"
   add_foreign_key "meals", "meal_diaries"
+  add_foreign_key "professional_assignments", "users", column: "client_id"
+  add_foreign_key "professional_assignments", "users", column: "nutritionist_id"
+  add_foreign_key "professional_assignments", "users", column: "physical_educator_id"
   add_foreign_key "solid_queue_batch_executions", "solid_queue_batches", column: "batch_id", on_delete: :cascade
   add_foreign_key "solid_queue_batch_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
@@ -300,5 +354,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_24_120100) do
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "weights", "users"
+  add_foreign_key "workout_plan_sessions", "workout_plans"
+  add_foreign_key "workout_plans", "users"
+  add_foreign_key "workout_plans", "users", column: "physical_educator_id"
   add_foreign_key "workouts", "users"
+  add_foreign_key "workouts", "workout_plan_sessions"
 end
