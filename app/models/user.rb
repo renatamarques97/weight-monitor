@@ -75,6 +75,18 @@ class User < ApplicationRecord
     )
   end
 
+  def meal_diary_streak
+    @meal_diary_streak ||= MealDiaryStreakPresenter.new(self)
+  end
+
+  def weight_streak
+    @weight_streak ||= WeightStreakPresenter.new(self)
+  end
+
+  def workout_streak
+    @workout_streak ||= WorkoutStreakPresenter.new(self)
+  end
+
   private
 
   # Accepts 5'9" as well as decimal feet; unparseable input is kept so validation reports it.
