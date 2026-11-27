@@ -7,8 +7,8 @@ class WorkoutPlanSessionsController < ApplicationController
     @session = WorkoutPlanSession.find(params.expect(:id))
     plan = @session.workout_plan
 
-    unless WorkoutPlanPolicy.new(current_user, plan).view?
-      render file: 'public/404.html', status: :unauthorized
-    end
+    return if WorkoutPlanPolicy.new(current_user, plan).view?
+
+    render file: 'public/404.html', status: :unauthorized
   end
 end
