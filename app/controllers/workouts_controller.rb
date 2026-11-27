@@ -12,9 +12,18 @@ class WorkoutsController < ApplicationController
 
   def new
     workout_type = params[:workout_type] || WorkoutType::OTHER
+    session = planned_session_from_params
 
-    @workout = Workout.new(workout_type: workout_type, workout_date: Date.current,
-                           distance_unit: current_user.distance_unit, weight_unit: current_user.weight_unit)
+    @workout = Workout.new(
+      workout_type: session&.workout_type || workout_type,
+      workout_plan_session: session,
+      workout_date: session&.session_date || Date.current,
+      duration: session&.duration,
+      distance: session&.distance,
+      distance_unit: session&.distance_unit || current_user.distance_unit,
+      weight_unit: session&.weight_unit || current_user.weight_unit,
+      details: session&.details || {}
+    )
   end
 
   def edit; end
@@ -55,7 +64,14 @@ class WorkoutsController < ApplicationController
   def workout_params
     params.expect(
       workout: [:duration, :distance, :distance_unit, :weight_unit, :calories, :workout_date, :workout_type,
-                { details: {} }]
+                :workout_plan_session_id, { details: {} }]
     )
+  end
+
+  def planned_session_from_params
+    return unless params[:workout_plan_session_id]
+
+    session = WorkoutPlanSession.find_by(id: params[:workout_plan_session_id])
+    session if session&.workout_plan&.user_id == current_user.id
   end
 end

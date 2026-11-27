@@ -7,15 +7,27 @@ class DietsController < ApplicationController
 
   # GET /diets
   def index
-    diets = Diet.authorized_user(current_user).order(start_date: :desc, created_at: :desc)
-    @pagy, @diets = pagy(diets, limit: 20)
+    diets = if current_user.account_type_admin?
+              Diet.all
+            elsif current_user.valid_nutritionist?
+              Diet.where(user: User.where(id: current_user.nutritionist_assignments.select(:client_id)))
+            else
+              Diet.authorized_user(current_user)
+            end
+    @pagy, @diets = pagy(diets.order(start_date: :desc, created_at: :desc), limit: 20)
   end
 
   def show; end
 
   # GET /diets/new
   def new
-    @diet = Diet.new(weight_unit: current_user.weight_unit)
+    target = User.find_by(id: params[:user_id])
+    unless target && ::UserDietPolicy.new(current_user, target.diets.build).create?(target)
+      redirect_to diets_path, alert: 'Only assigned nutritionists can create diets.'
+      return
+    end
+
+    @diet = target.diets.build(nutritionist: current_user, weight_unit: target.weight_unit)
     meal = @diet.meals.build
     meal.meal_foods.build
   end
@@ -24,7 +36,14 @@ class DietsController < ApplicationController
 
   # POST /diets
   def create
-    @diet = current_user.diets.build(diet_params)
+    target = User.find_by(id: params[:user_id])
+    unless target && ::UserDietPolicy.new(current_user, target.diets.build).create?(target)
+      redirect_to diets_path, alert: 'Only assigned nutritionists can create diets.'
+      return
+    end
+
+    @diet = target.diets.build(diet_params)
+    @diet.nutritionist = current_user
 
     if @diet.save
       flash[:notice] = t('diet.created')
@@ -60,7 +79,14 @@ class DietsController < ApplicationController
   end
 
   def authorized?
-    return false if ::UserDietPolicy.new(current_user, @diet).diet_belongs_to_user?
+    policy = ::UserDietPolicy.new(current_user, @diet)
+    allowed = if action_name.in?(%w[show])
+                policy.view?
+              else
+                policy.manage?
+              end
+
+    return false if allowed
 
     render file: 'public/404.html', status: :unauthorized
   end
