@@ -20,6 +20,13 @@ class User < ApplicationRecord
   enum :weight_unit, { kg: WEIGHTS::KG, lbs: WEIGHTS::LBS }, prefix: true, validate: true
   enum :distance_unit, { km: DISTANCES::KM, mi: DISTANCES::MI }, prefix: true, validate: true
   enum :height_unit, { m: HEIGHTS::M, ft: HEIGHTS::FT, cm: HEIGHTS::CM }, prefix: true, validate: true
+  enum :account_type, { free: 0, premium: 1, professional: 2 }, prefix: true, validate: true
+  enum :professional_type, { nutritionist: 0, physical_educator: 1 }, prefix: true, validate: { allow_nil: true }
+
+  validates :professional_type, presence: true, if: :account_type_professional?
+  validates :country_code, presence: true, if: :account_type_professional?
+  validates :professional_credential, presence: true, if: :account_type_professional?
+  validates :professional_registration_number, presence: true, if: :account_type_professional?
 
   before_validation :parse_height_in_feet, if: :height_unit_ft?
 

@@ -28,6 +28,20 @@ RSpec.describe 'User Registrations & Updates', type: :request do
         expect(response).to redirect_to(root_path)
       end
 
+      it 'saves the chosen account type and professional credential' do
+        post user_registration_path, params: {
+          user: valid_params[:user].merge(
+            account_type: 'professional', professional_type: 'nutritionist', country_code: 'BR',
+            professional_credential: 'CRN', professional_registration_number: '12345'
+          )
+        }
+
+        expect(User.last).to have_attributes(
+          account_type: 'professional', professional_type: 'nutritionist', country_code: 'BR',
+          professional_credential: 'CRN', professional_registration_number: '12345'
+        )
+      end
+
       it 'saves the chosen unit preferences' do
         units = { weight_unit: Units::WEIGHTS::LBS, distance_unit: Units::DISTANCES::MI, height_unit: Units::HEIGHTS::FT }
         post user_registration_path, params: { user: valid_params[:user].merge(units, height: 5.97) }

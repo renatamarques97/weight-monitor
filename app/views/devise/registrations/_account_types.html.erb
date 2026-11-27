@@ -1,0 +1,33 @@
+<div class="mb-3 grid gap-3 md:grid-cols-2">
+  <div>
+    <%= f.label :account_type, t('account.type'), class: "tw-label" %>
+    <%= f.select :account_type,
+                 [[t('account.types.free'), 'free'], [t('account.types.premium'), 'premium'], [t('account.types.professional'), 'professional']],
+                 {}, class: "tw-input" %>
+  </div>
+
+  <div>
+    <%= f.label :professional_type, t('account.professional_type'), class: "tw-label" %>
+    <%= f.select :professional_type,
+                 [[t('account.professional_types.nutritionist'), 'nutritionist'], [t('account.professional_types.physical_educator'), 'physical_educator']],
+                 { include_blank: t('account.professional_type_blank') }, class: "tw-input" %>
+  </div>
+</div>
+
+<div class="mb-3 grid gap-3 md:grid-cols-3">
+  <div>
+    <%= f.label :country_code, t('account.country'), class: "tw-label" %>
+    <%= f.select :country_code,
+                 [[t('account.countries.br'), 'BR'], [t('account.countries.us'), 'US']],
+                 { include_blank: t('account.country_blank') }, class: "tw-input" %>
+  </div>
+  <div>
+    <%= f.label :professional_credential, t('account.credential'), class: "tw-label" %>
+    <%= f.text_field :professional_credential, class: "tw-input", autocomplete: "off",
+                     placeholder: t('account.credential_placeholder') %>
+  </div>
+  <div>
+    <%= f.label :professional_registration_number, t('account.registration_number'), class: "tw-label" %>
+    <%= f.text_field :professional_registration_number, class: "tw-input", autocomplete: "off" %>
+  </div>
+</div>
