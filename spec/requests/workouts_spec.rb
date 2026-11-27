@@ -203,6 +203,20 @@ RSpec.describe '/workouts', type: :request do
 
         expect(flash[:notice]).to be_nil
       end
+
+      it 'saves swimming style and laps' do
+        attributes = {
+          workout_type: :swimming,
+          workout_date: Date.current,
+          duration: 45,
+          distance: 1.5,
+          details: { style: 'backstroke', laps: 60 }
+        }
+
+        post workouts_path, params: { workout: attributes }
+
+        expect(Workout.last.details).to have_attributes(style: 'backstroke', laps: 60)
+      end
     end
 
     describe 'PATCH /update' do
