@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   resources :meals
   root to: 'dashboard#index'
   resources :workouts
+  resources :workout_plans do
+    resources :sessions, controller: 'workout_plan_sessions', only: %i[show]
+  end
   resources :diets
   resources :meal_diaries
   resources :fatsecret_foods, only: %i[index show]
