@@ -109,4 +109,22 @@ RSpec.describe '/meals', type: :request do
       expect(response).to redirect_to(meals_url)
     end
   end
+
+  describe 'JSON responses' do
+    it 'creates a meal with JSON' do
+      post meals_url, params: { meal: valid_attributes }, as: :json
+      expect(response).to have_http_status(:created)
+    end
+
+    it 'returns errors for invalid JSON creation' do
+      post meals_url, params: { meal: invalid_attributes }, as: :json
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+
+    it 'updates a meal with JSON' do
+      meal = Meal.create! valid_attributes
+      patch meal_url(meal), params: { meal: valid_attributes }, as: :json
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end

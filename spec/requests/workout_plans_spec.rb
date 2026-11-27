@@ -74,4 +74,23 @@ RSpec.describe '/workout_plans', type: :request do
 
     expect(response).to be_successful
   end
+
+  it 'does not allow a client to destroy or update a plan' do
+    plan = create(:workout_plan, user: client, physical_educator: educator)
+    sign_in client
+
+    patch workout_plan_path(plan), params: { workout_plan: { end_date: 8.weeks.from_now.to_date } }
+    expect(response).to have_http_status(:unauthorized)
+
+    delete workout_plan_path(plan)
+    expect(response).to have_http_status(:unauthorized)
+  end
+
+  it 'allows an assigned educator to destroy a plan' do
+    plan = create(:workout_plan, user: client, physical_educator: educator)
+    sign_in educator
+
+    expect { delete workout_plan_path(plan) }.to change(WorkoutPlan, :count).by(-1)
+    expect(response).to redirect_to(workout_plans_path)
+  end
 end

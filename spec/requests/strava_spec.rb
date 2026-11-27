@@ -74,6 +74,18 @@ RSpec.describe '/strava', type: :request do
       expect(response).to redirect_to(workouts_path)
       expect(flash[:alert]).to eq(I18n.t('strava.already_syncing'))
     end
+
+    it 'redirects with an alert when direct synchronization fails' do
+      sync_service = instance_double(StravaActivitySyncService)
+      allow(StravaActivitySyncService).to receive(:new).with(user).and_return(sync_service)
+      allow(sync_service).to receive(:sync).and_raise(StravaApiService::Error, 'Strava unavailable')
+
+      post strava_sync_path
+
+      expect(response).to redirect_to(workouts_path)
+      expect(flash[:alert]).to include('Strava unavailable')
+      expect(user.reload.strava_sync_status).to eq('failed')
+    end
   end
 
   describe 'GET /strava/status' do

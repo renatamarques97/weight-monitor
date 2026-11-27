@@ -173,4 +173,40 @@ RSpec.describe '/diets', type: :request do
       end
     end
   end
+
+  describe 'when signed in as a nutritionist' do
+    let(:client) { create(:user) }
+    let(:nutritionist) do
+      create(:user, account_type: :professional, professional_type: :nutritionist,
+                    country_code: 'BR', professional_credential: 'CRN',
+                    professional_registration_number: '123')
+    end
+
+    before do
+      create(:professional_assignment, client:, nutritionist:)
+      sign_in nutritionist
+    end
+
+    it 'lists diets for assigned clients' do
+      create(:diet, user: client, nutritionist:)
+      get diets_url
+      expect(response).to be_successful
+    end
+
+    it 'creates a diet for an assigned client' do
+      expect do
+        post diets_url, params: { user_id: client.id,
+                                  diet: attributes_for(:diet).except(:user) }
+      end.to change(Diet, :count).by(1)
+
+      expect(Diet.last).to have_attributes(user: client, nutritionist: nutritionist)
+    end
+
+    it 'redirects instead of creating for an unassigned client' do
+      unassigned = create(:user)
+      post diets_url, params: { user_id: unassigned.id,
+                                diet: attributes_for(:diet).except(:user) }
+      expect(response).to redirect_to(diets_path)
+    end
+  end
 end
