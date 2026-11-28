@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe ImcPresenter do
+RSpec.describe BmiPresenter do
   describe '#call' do
     let(:user) { create(:user, height: 1.70) }
     let(:diet) { create(:diet, user_id: user.id) }
     let(:weight) { create(:weight, value: 80, user_id: user.id) }
-    let(:imc) { 27.68 }
+    let(:bmi) { 27.68 }
 
-    context 'when imc is not valid' do
+    context 'when bmi is not valid' do
       let(:user) { create(:user, height: nil) }
 
       it 'weight and height is nil' do
@@ -27,11 +27,11 @@ RSpec.describe ImcPresenter do
       end
     end
 
-    context 'when imc is valid' do
+    context 'when bmi is valid' do
       it 'weight and height exist' do
         diet
         weight
-        expect(described_class.new(user).call).to eq(imc)
+        expect(described_class.new(user).call).to eq(bmi)
       end
 
       it 'calculates correctly when weight is in lbs and height is in ft' do
@@ -43,7 +43,7 @@ RSpec.describe ImcPresenter do
       it 'uses the latest weight by date, not the last one created' do
         create(:weight, value: 80, weight_date: Date.current, user: user)
         create(:weight, value: 90, weight_date: 3.days.ago, user: user)
-        expect(described_class.new(user).call).to eq(imc)
+        expect(described_class.new(user).call).to eq(bmi)
       end
 
       it 'calculates correctly when height is in cm' do

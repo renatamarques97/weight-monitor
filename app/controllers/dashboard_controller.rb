@@ -20,7 +20,8 @@ class DashboardController < ApplicationController
     assign_recent_weight_data
 
     @nutrition_adherence = ::DietAdherencePresenter.new(current_user)
-    @imc = ::ImcPresenter.new(current_user).call
+    @meal_diary_streak = ::MealDiaryStreakPresenter.new(current_user)
+    @bmi = ::BmiPresenter.new(current_user).call
   end
 
   def assign_weight_goal_data
