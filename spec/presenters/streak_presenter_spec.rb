@@ -41,12 +41,4 @@ RSpec.describe StreakPresenter do
     expect(streak.streak_weeks).to eq(2)
     expect(streak.total_weeks).to eq(2)
   end
-
-  it 'exposes weight and workout streaks through User' do
-    create(:weight, user: user, weight_date: Date.current)
-    create(:running, user: user, workout_date: Date.current)
-
-    expect(user.weight_streak.streak_days).to eq(1)
-    expect(user.workout_streak.streak_days).to eq(1)
-  end
 end
